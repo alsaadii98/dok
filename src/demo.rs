@@ -540,3 +540,83 @@ pub fn logs() -> Vec<(&'static str, &'static str, bool)> {
         ("demo-shop-redis-1", "1:M * Background saving terminated with success", false),
     ]
 }
+
+/// A believable minute of daemon events, newest last, for `dok events --demo`.
+pub fn events() -> Vec<EventMessage> {
+    let t0 = now() - 15 * 60;
+    let ev = |offset: i64,
+              typ: EventMessageTypeEnum,
+              action: &str,
+              id: &str,
+              attrs: &[(&str, &str)]| EventMessage {
+        typ: Some(typ),
+        action: Some(action.to_string()),
+        actor: Some(EventActor {
+            id: Some(id.to_string()),
+            attributes: Some(attrs.iter().map(|(k, v)| (k.to_string(), v.to_string())).collect()),
+        }),
+        scope: Some(EventMessageScopeEnum::LOCAL),
+        time: Some(t0 + offset),
+        time_nano: Some((t0 + offset) * 1_000_000_000),
+    };
+    let c = EventMessageTypeEnum::CONTAINER;
+    let img = EventMessageTypeEnum::IMAGE;
+    let net = EventMessageTypeEnum::NETWORK;
+    let vol = EventMessageTypeEnum::VOLUME;
+
+    vec![
+        ev(0, img, "pull", "ghcr.io/demo/api:1.9.2", &[("name", "ghcr.io/demo/api:1.9.2")]),
+        ev(3, net, "create", "5a4f9c1e7b20", &[("name", "demo-shop_default"), ("type", "bridge")]),
+        ev(5, vol, "create", "demo-shop_pgdata", &[("driver", "local")]),
+        ev(
+            9,
+            c,
+            "create",
+            "9c1d0a41f8b2",
+            &[("name", "demo-shop-postgres-1"), ("image", "postgres:16-alpine")],
+        ),
+        ev(
+            10,
+            c,
+            "start",
+            "9c1d0a41f8b2",
+            &[("name", "demo-shop-postgres-1"), ("image", "postgres:16-alpine")],
+        ),
+        ev(
+            14,
+            c,
+            "create",
+            "3f6b8d02ac57",
+            &[("name", "demo-shop-api-1"), ("image", "ghcr.io/demo/api:1.9.2")],
+        ),
+        ev(
+            15,
+            c,
+            "start",
+            "3f6b8d02ac57",
+            &[("name", "demo-shop-api-1"), ("image", "ghcr.io/demo/api:1.9.2")],
+        ),
+        ev(31, c, "health_status: healthy", "9c1d0a41f8b2", &[("name", "demo-shop-postgres-1")]),
+        ev(48, c, "health_status: unhealthy", "7d2e5b90c114", &[("name", "demo-shop-worker-1")]),
+        ev(
+            52,
+            c,
+            "die",
+            "7d2e5b90c114",
+            &[
+                ("name", "demo-shop-worker-1"),
+                ("image", "ghcr.io/demo/worker:1.9.2"),
+                ("exitCode", "137"),
+            ],
+        ),
+        ev(53, c, "kill", "7d2e5b90c114", &[("name", "demo-shop-worker-1"), ("signal", "9")]),
+        ev(
+            55,
+            c,
+            "restart",
+            "7d2e5b90c114",
+            &[("name", "demo-shop-worker-1"), ("image", "ghcr.io/demo/worker:1.9.2")],
+        ),
+        ev(61, img, "untag", "ghcr.io/demo/api:1.9.1", &[("name", "ghcr.io/demo/api:1.9.1")]),
+    ]
+}

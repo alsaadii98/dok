@@ -44,7 +44,7 @@
   "codeRepository": "https://github.com/alsaadii98/cool-docker-commands",
   "programmingLanguage": "Rust",
   "license": "https://opensource.org/licenses/MIT",
-  "softwareVersion": "0.1.0",
+  "softwareVersion": "0.1.1",
   "keywords": "docker, cli, containers, docker ps, docker inspect, docker logs, rust, terminal, themes",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "author": {
@@ -102,12 +102,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
+  /* Same values the cast SVGs are drawn with, so images and cards match. */
   --bg:#000;
   --card:#0a0a0a;
   --card-2:#0f0f0f;
   --line:#1f1f1f;
   --line-2:#2e2e2e;
   --fg:#a1a1a1;
+  --mut:#6b6b6b;
   --head:#ededed;
   --green:#98c379;
   --blue:#61afef;
@@ -123,27 +125,29 @@
 html{scroll-behavior:smooth}
 body{
   margin:0;background:var(--bg);color:var(--fg);
-  font:15px/1.6 var(--sans);letter-spacing:-.01em;
+  font:15px/1.6 var(--sans);letter-spacing:-.011em;
   -webkit-font-smoothing:antialiased;overflow-x:hidden;
 }
 a{color:inherit;text-decoration:none}
 code,.mono{font-family:var(--mono);font-size:.92em}
-.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+svg.i{width:16px;height:16px;flex:0 0 auto;stroke:currentColor;fill:none;
+  stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 
-/* ── ambient background: grid + slow drifting glow ── */
+/* ── ambient background ── */
 .bg{position:fixed;inset:0;z-index:-1;pointer-events:none}
 .bg .grid{
   position:absolute;inset:-2px;
   background-image:linear-gradient(var(--line) 1px,transparent 1px),
                    linear-gradient(90deg,var(--line) 1px,transparent 1px);
   background-size:64px 64px;
-  mask-image:radial-gradient(120% 80% at 50% 0%,#000 20%,transparent 75%);
-  opacity:.5;
+  mask-image:radial-gradient(120% 78% at 50% 0%,#000 18%,transparent 72%);
+  opacity:.45;
 }
 .bg .glow{
-  position:absolute;left:50%;top:-340px;width:900px;height:640px;transform:translateX(-50%);
-  background:radial-gradient(closest-side,rgba(152,195,121,.14),transparent 70%);
-  filter:blur(20px);animation:drift 16s ease-in-out infinite alternate;
+  position:absolute;left:50%;top:-360px;width:960px;height:660px;transform:translateX(-50%);
+  background:radial-gradient(closest-side,rgba(152,195,121,.13),transparent 70%);
+  filter:blur(22px);animation:drift 18s ease-in-out infinite alternate;
 }
 @keyframes drift{from{transform:translateX(-56%) scale(1)}to{transform:translateX(-44%) scale(1.12)}}
 
@@ -156,17 +160,19 @@ header .wrap{display:flex;align-items:center;gap:20px;height:60px}
   box-shadow:0 0 0 0 rgba(152,195,121,.6);animation:pulse 2.6s ease-out infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(152,195,121,.55)}70%{box-shadow:0 0 0 9px rgba(152,195,121,0)}100%{box-shadow:0 0 0 0 rgba(152,195,121,0)}}
 .brand small{color:#555;font-weight:400}
-header nav{margin-left:auto;display:flex;gap:6px;font-size:13.5px}
+header nav{margin-left:auto;display:flex;align-items:center;gap:4px;font-size:13.5px}
 header nav a{color:var(--fg);padding:7px 11px;border-radius:8px;transition:background .16s,color .16s}
 header nav a:hover{color:var(--head);background:#111}
-.gh{border:1px solid var(--line);border-radius:8px;padding:7px 13px!important}
+.gh{border:1px solid var(--line);border-radius:8px;padding:7px 12px!important;
+  display:inline-flex;align-items:center;gap:7px;color:var(--head)!important}
 .gh:hover{border-color:var(--line-2)}
 
 /* ── hero ── */
-.hero{padding:104px 0 56px;text-align:center;position:relative}
-.pill{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);
-  border-radius:999px;padding:5px 13px;font-size:12.5px;color:var(--fg);background:#080808}
-.pill b{color:var(--head);font-weight:500}
+.hero{padding:96px 0 40px;text-align:center}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);
+  border-radius:999px;padding:5px 13px 5px 8px;font-size:12.5px;color:var(--fg);background:#080808}
+.pill .v{background:#141414;border-radius:999px;padding:1px 8px;color:var(--head);font-size:11.5px;
+  font-family:var(--mono)}
 h1{
   margin:22px 0 0;font-size:clamp(38px,7.4vw,78px);line-height:1.02;font-weight:600;
   letter-spacing:-.045em;color:var(--head);
@@ -179,10 +185,12 @@ h1 em{font-style:normal;
 }
 .sub{margin:20px auto 0;max-width:60ch;font-size:17px;color:var(--fg)}
 .sub code{color:var(--head)}
+.sub a.u{color:var(--head);text-decoration:underline;text-underline-offset:3px}
 .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:30px}
 .copy,.ghost{
-  display:inline-flex;align-items:center;gap:12px;border-radius:10px;padding:11px 16px;
-  font:inherit;font-size:13.5px;cursor:pointer;transition:transform .16s,border-color .16s,background .16s,color .16s;
+  display:inline-flex;align-items:center;gap:11px;border-radius:10px;padding:11px 16px;
+  font:inherit;font-size:13.5px;cursor:pointer;
+  transition:transform .16s,border-color .16s,background .16s,color .16s;
 }
 .copy{border:1px solid var(--line);background:var(--card);color:var(--head);font-family:var(--mono)}
 .copy:hover{border-color:var(--line-2);transform:translateY(-1px)}
@@ -192,42 +200,87 @@ h1 em{font-style:normal;
 .ghost.alt{background:transparent;border-color:var(--line);color:var(--head)}
 .ghost.alt:hover{border-color:var(--line-2);background:#0c0c0c}
 
-/* ── bento ── */
-.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;padding:26px 0 56px}
-.box{
-  position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r);
-  padding:22px;grid-column:span 3;overflow:hidden;transition:border-color .2s,transform .2s;
-}
-.box:hover{border-color:var(--line-2);transform:translateY(-2px)}
-/* cursor spotlight */
-.box::before{
-  content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .25s;
-  background:radial-gradient(360px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.055),transparent 40%);
-}
-.box:hover::before{opacity:1}
-.wide{grid-column:span 6}
-.half{grid-column:span 3}
-.third{grid-column:span 2}
-.box h2{font-size:15px;color:var(--head);margin:0 0 5px;font-weight:600;letter-spacing:-.02em}
-.box p.k{color:#6f6f6f;font-size:13.5px;margin:0 0 16px}
-.box.shot{padding:0}
-.box.shot img{display:block;width:100%;height:auto}
-.box.shot figcaption{padding:13px 18px;border-top:1px solid var(--line);color:#6f6f6f;font-size:12.5px}
-.box.shot figcaption b{color:var(--head);font-weight:500;font-family:var(--mono)}
+/* Hero cast: the SVG already carries the card chrome, so it needs none. */
+.stage{position:relative;margin:44px auto 0;max-width:900px}
+.stage::after{content:"";position:absolute;left:8%;right:8%;bottom:-24px;height:60px;
+  background:radial-gradient(closest-side,rgba(152,195,121,.16),transparent);filter:blur(14px);
+  pointer-events:none}
 
-/* lists */
+/* Terminal frames scroll sideways on narrow screens instead of shrinking the
+   monospace text into illegibility. */
+.frame{overflow-x:auto;border-radius:var(--r);-webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:#2a2a2a transparent}
+.frame::-webkit-scrollbar{height:6px}
+.frame::-webkit-scrollbar-thumb{background:#242424;border-radius:99px}
+.frame img{display:block;width:100%;height:auto;border-radius:var(--r)}
+
+/* ── section headings ── */
+.sec{margin:86px 0 22px}
+.sec .eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--mut);font-size:12px;
+  letter-spacing:.14em;text-transform:uppercase;font-family:var(--mono)}
+.sec h2{margin:12px 0 0;font-size:clamp(24px,3.4vw,34px);line-height:1.15;font-weight:600;
+  letter-spacing:-.035em;color:var(--head)}
+.sec p{margin:9px 0 0;max-width:62ch}
+
+/* ── bento ── */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+/* Grid and flex children default to min-width:auto, which lets a wide terminal
+   frame push the whole layout past the viewport. */
+.tile,.frame,.stage{min-width:0;max-width:100%}
+.tile{
+  position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px;grid-column:span 3;overflow:hidden;
+  transition:border-color .2s,transform .2s;
+}
+.tile:hover{border-color:var(--line-2);transform:translateY(-2px)}
+.tile::before{ /* cursor spotlight */
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .25s;
+  background:radial-gradient(340px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.05),transparent 42%);
+}
+.tile:hover::before{opacity:1}
+.s2{grid-column:span 2}.s3{grid-column:span 3}.s4{grid-column:span 4}.s6{grid-column:span 6}
+
+.thead{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+  border:1px solid var(--line);background:var(--card-2);color:var(--fg)}
+.ic svg.i{width:15px;height:15px}
+.tile h3{margin:0;font-size:15px;color:var(--head);font-weight:600;letter-spacing:-.02em}
+.tile p.k{color:var(--mut);font-size:13.5px;margin:0 0 15px}
+
+/* cast tiles: no chrome of their own, the SVG supplies it */
+.cast{background:none;border:0;padding:0;margin:0}
+.cast::before{display:none}
+.cast:hover{transform:translateY(-3px)}
+.cast figcaption{display:flex;align-items:center;gap:9px;padding:11px 4px 0;
+  color:var(--mut);font-size:12.5px}
+.cast figcaption b{color:var(--head);font-weight:500;font-family:var(--mono);font-size:12.5px}
+.cast figcaption svg.i{width:14px;height:14px;color:var(--fg)}
+
+/* command list */
 ul.rows{list-style:none;margin:0;padding:0;font-size:13.5px}
-ul.rows li{display:flex;gap:14px;padding:8px 0;border-bottom:1px solid #141414;transition:padding-left .18s}
+ul.rows li{display:flex;align-items:center;gap:11px;padding:8px 0;border-bottom:1px solid #141414;
+  transition:padding-left .18s}
 ul.rows li:last-child{border-bottom:0}
 ul.rows li:hover{padding-left:5px}
-ul.rows b{color:var(--head);font-weight:400;font-family:var(--mono);min-width:120px}
-ul.rows span{color:#6f6f6f}
+ul.rows li:hover svg.i{color:var(--head)}
+ul.rows svg.i{color:#4d4d4d;transition:color .18s}
+ul.rows b{color:var(--head);font-weight:400;font-family:var(--mono);min-width:104px}
+ul.rows span{color:var(--mut)}
 
 /* code */
 pre{margin:0;background:#060606;border:1px solid var(--line);border-radius:10px;
   padding:15px 17px;overflow-x:auto;font-family:var(--mono);font-size:12.8px;line-height:1.75;color:#d4d4d4}
 pre .c{color:#5a5a5a}
 pre .p{color:var(--green)}
+.sh{position:relative}
+.cbtn{position:absolute;top:8px;right:8px;display:inline-flex;align-items:center;gap:6px;
+  border:1px solid var(--line);background:#0d0d0d;color:var(--mut);border-radius:7px;
+  padding:5px 9px;font:inherit;font-size:11px;cursor:pointer;opacity:0;transition:.16s}
+.sh:hover .cbtn,.cbtn:focus-visible{opacity:1}
+.cbtn:hover{color:var(--head);border-color:var(--line-2)}
+.cbtn.done{color:var(--green);border-color:#25361d;opacity:1}
+.cbtn svg.i{width:13px;height:13px}
+@media(hover:none){.cbtn{opacity:1}}
 
 /* tabs */
 .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px}
@@ -240,25 +293,27 @@ pre .p{color:var(--green)}
 @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
 /* theme chips */
-.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}
-.chip{border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:var(--card-2);transition:.18s}
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(146px,1fr));gap:10px}
+.chip{border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:var(--card-2);
+  transition:.18s}
 .chip:hover{border-color:var(--line-2);transform:translateY(-2px)}
 .chip .n{font-size:12.5px;color:var(--head);font-family:var(--mono)}
 .chip .s{display:flex;gap:3px;margin-top:8px}
 .chip .s i{height:13px;flex:1;border-radius:3px;transition:transform .18s}
 .chip:hover .s i{transform:scaleY(1.35)}
 
-/* stat counters */
-.nums{display:flex;gap:30px;flex-wrap:wrap;margin-top:18px}
-.num b{display:block;color:var(--head);font-size:26px;line-height:1.15;font-weight:600;letter-spacing:-.03em}
-.num span{color:#6f6f6f;font-size:12px}
+/* stats */
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.num{border:1px solid var(--line);background:var(--card-2);border-radius:10px;padding:13px 14px}
+.num b{display:block;color:var(--head);font-size:24px;line-height:1.2;font-weight:600;letter-spacing:-.03em}
+.num span{color:var(--mut);font-size:11.5px}
 
-footer{border-top:1px solid var(--line);padding:26px 0 52px;color:#6f6f6f;font-size:13px}
+footer{border-top:1px solid var(--line);margin-top:88px;padding:26px 0 52px;color:var(--mut);font-size:13px}
 footer .wrap{display:flex;flex-wrap:wrap;gap:18px;align-items:center}
 footer a:hover{color:var(--head)}
 footer .sp{margin-left:auto}
 
-/* ── entrance + scroll reveal ── */
+/* ── reveal ── */
 [data-anim]{opacity:0;transform:translateY(16px)}
 [data-anim].in{opacity:1;transform:none;
   transition:opacity .6s cubic-bezier(.22,.7,.3,1),transform .6s cubic-bezier(.22,.7,.3,1)}
@@ -267,10 +322,42 @@ footer .sp{margin-left:auto}
   .bg .glow,.brand .led{animation:none}
   *{transition:none!important}
 }
-@media(max-width:860px){
-  .bento{grid-template-columns:repeat(2,1fr)}
-  .box,.wide,.half,.third{grid-column:span 2}
-  .hero{padding:72px 0 36px}
+/* ── responsive ── */
+@media(max-width:1000px){
+  .bento{grid-template-columns:repeat(4,1fr)}
+  .tile,.s3,.s4,.s6{grid-column:span 4}
+  .s2{grid-column:span 2}
+}
+@media(max-width:760px){
+  .wrap{padding:0 18px}
+  .bento{grid-template-columns:1fr;gap:14px}
+  .tile,.s2,.s3,.s4,.s6{grid-column:span 1}
+  .hero{padding:56px 0 24px}
+  .sec{margin:60px 0 16px}
+  .stage{margin-top:32px}
+  .frame img{min-width:640px}      /* keep the terminal text legible; scroll it */
+  .nums{grid-template-columns:repeat(3,1fr)}
+  .chips{grid-template-columns:repeat(auto-fill,minmax(128px,1fr))}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{white-space:nowrap}
+}
+@media(max-width:560px){
+  body{font-size:14.5px}
+  h1{font-size:clamp(29px,8.4vw,38px);letter-spacing:-.032em}
+  .pill{font-size:11.5px}
+  header .wrap{gap:10px}
+  header nav a:not(.gh){display:none}
+  .brand small{display:none}
+  .hero{text-align:left}
+  .actions{justify-content:flex-start}
+  .copy{max-width:100%;overflow:hidden}
+  .copy>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sub{font-size:15.5px}
+  .tile{padding:16px}
+  ul.rows b{min-width:92px}
+  pre{font-size:12px;padding:13px 14px}
+  footer .sp{margin-left:0;width:100%}
 }
 </style>
 </head>
@@ -278,101 +365,163 @@ footer .sp{margin-left:auto}
 
 <div class="bg"><div class="grid"></div><div class="glow"></div></div>
 
+<!-- icon sprite: one stroke style everywhere on the page -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-ps" viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="m3 7.5 9 4.5 9-4.5M12 12v9"/></symbol>
+    <symbol id="i-images" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></symbol>
+    <symbol id="i-df" viewBox="0 0 24 24"><path d="M3 13h18"/><path d="m5 13 2.2-7.3A1 1 0 0 1 8.2 5h7.6a1 1 0 0 1 1 .7L19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/><path d="M8 16h.01M11.5 16h.01"/></symbol>
+    <symbol id="i-inspect" viewBox="0 0 24 24"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M8 12h8M8 9h5M8 15h6"/></symbol>
+    <symbol id="i-logs" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></symbol>
+    <symbol id="i-top" viewBox="0 0 24 24"><path d="M3 12h4l3 8 4-16 3 8h4"/></symbol>
+    <symbol id="i-tree" viewBox="0 0 24 24"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M6 16.5V6a1 1 0 0 1 1-1h8.5"/><path d="M6 12h9.5"/></symbol>
+    <symbol id="i-stats" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="m12 13 4-4M12 3v1"/></symbol>
+    <symbol id="i-events" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.6"/><path d="M8.6 8.6a4.8 4.8 0 0 0 0 6.8M15.4 15.4a4.8 4.8 0 0 0 0-6.8"/><path d="M5.6 5.6a9 9 0 0 0 0 12.8M18.4 18.4a9 9 0 0 0 0-12.8"/></symbol>
+    <symbol id="i-themes" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 9-9c0 2-1.6 3-3 3h-1.5a2 2 0 0 0-1.4 3.4A2 2 0 0 1 12 21z"/><circle cx="8" cy="10" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16" cy="10" r="1"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-socket" viewBox="0 0 24 24"><path d="M9 2v6M15 2v6"/><path d="M6 8h12v3a6 6 0 0 1-12 0z"/><path d="M12 17v5"/></symbol>
+    <symbol id="i-binary" viewBox="0 0 24 24"><path d="m21 8-9-5-9 5 9 5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></symbol>
+    <symbol id="i-pipe" viewBox="0 0 24 24"><path d="m4 17 6-5-6-5"/><path d="M12 19h8"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/><path d="M9 5v4M15 10v4M7 15v4"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m10 8.5 6 3.5-6 3.5z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 21h16"/></symbol>
+    <symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-4 1.5-4-2-6-2.5m12 4.5v-3.6a3 3 0 0 0-.9-2.4c2.9-.3 6-1.4 6-6.4a4.7 4.7 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.3s-1-.3-3.4 1.3a11.6 11.6 0 0 0-6 0C6.9 2.7 5.9 3 5.9 3a4.3 4.3 0 0 0-.1 3.3A4.7 4.7 0 0 0 4.5 9.5c0 5 3 6.1 5.9 6.4a3 3 0 0 0-.9 2.3V22"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m20 6-11 11-5-5"/></symbol>
+  </defs>
+</svg>
+
 <header>
   <div class="wrap">
     <a class="brand" href="#top"><span class="led"></span>cool-docker-commands <small>/ dok</small></a>
     <nav>
       <a href="#commands">commands</a>
-      <a href="#themes">themes</a>
       <a href="#install">install</a>
-      <a class="gh" href="https://github.com/alsaadii98/cool-docker-commands">GitHub ↗</a>
+      <a href="#themes">themes</a>
+      <a class="gh" href="https://github.com/alsaadii98/cool-docker-commands">
+        <svg class="i"><use href="#i-gh"/></svg>GitHub
+      </a>
     </nav>
   </div>
 </header>
 
-<main class="wrap" id="top">
+<main id="top">
+<div class="wrap">
 
   <section class="hero">
     <span class="pill" data-anim style="transition-delay:.03s">
-      <b>v0.1</b> · Rust · reads the docker socket · MIT
+      <span class="v">v0.1.1</span> Rust · reads the docker socket · MIT
     </span>
-    <h1 data-anim style="transition-delay:.08s">Docker output,<br>made <em>readable</em>.</h1>
+    <h1 data-anim style="transition-delay:.08s">Every docker command,<br><em>finally legible</em>.</h1>
     <p class="sub" data-anim style="transition-delay:.14s">
       <code>cool-docker-commands</code> ships one binary — <code>dok</code>. It reads the
       Docker socket and prints it for humans: colour that means something, compose
       grouping, human sizes and ages, and real themes.
-      What <a href="https://eza.rocks/" style="color:var(--head);text-decoration:underline;text-underline-offset:3px">eza</a> is to <code>ls</code>.
+      What <a class="u" href="https://eza.rocks/">eza</a> is to <code>ls</code>.
     </p>
     <div class="actions" data-anim style="transition-delay:.2s">
       <button class="copy" data-copy="brew install alsaadii98/tap/dok">
         <span><span style="color:var(--green)">$</span> brew install alsaadii98/tap/dok</span>
         <span class="tag">copy</span>
       </button>
-      <a class="ghost" href="#install">Install</a>
+      <a class="ghost" href="#install">Install <svg class="i" style="stroke-width:2"><use href="#i-arrow"/></svg></a>
       <a class="ghost alt" href="https://github.com/alsaadii98/cool-docker-commands">Source</a>
     </div>
+    <div class="stage" data-anim style="transition-delay:.26s">
+      <div class="frame"><img src="img/cast-hero.svg" width="838" height="414"
+           alt="Animated terminal: dok ps -a, dok images, dok logs and dok events being typed and rendered"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="commands" data-anim>
+    <span class="eyebrow"><svg class="i"><use href="#i-pipe"/></svg>commands</span>
+    <h2>Ten screens, one binary.</h2>
+    <p>Each command prints one static screen and exits. No TUI to learn, no state to
+       keep — it pipes into <code>grep</code> like anything else, and drops colour and
+       icons automatically when it is not a terminal.</p>
   </section>
 
   <div class="bento">
 
-    <figure class="box wide shot" style="margin:0" data-anim>
-      <img src="img/ps.svg" alt="dok ps -a output with containers grouped by compose project">
-      <figcaption><b>dok ps -a</b> — grouped by compose project, with ids, state, health, ports and ages.</figcaption>
-    </figure>
-
-    <div class="box half" id="commands" data-anim>
-      <h2>Ten commands</h2>
-      <p class="k">One static screen each. Pipes like any Unix tool.</p>
+    <div class="tile s3" data-anim>
+      <div class="thead"><span class="ic"><svg class="i"><use href="#i-pipe"/></svg></span>
+        <h3>The command set</h3></div>
+      <p class="k">Read-only, every one of them.</p>
       <ul class="rows">
-        <li><b>dok ps</b><span>containers, grouped by project</span></li>
-        <li><b>dok images</b><span>size and age gradients</span></li>
-        <li><b>dok df</b><span>disk usage, reclaimable bars</span></li>
-        <li><b>dok inspect</b><span>the JSON, folded and masked</span></li>
-        <li><b>dok logs</b><span>merged tail, level colouring</span></li>
-        <li><b>dok top</b><span>process tree inside containers</span></li>
-        <li><b>dok tree</b><span>projects, networks, volumes</span></li>
-        <li><b>dok stats</b><span>live CPU / memory dashboard</span></li>
-        <li><b>dok events</b><span>colour-coded daemon events</span></li>
-        <li><b>dok themes</b><span>list and preview themes</span></li>
+        <li><svg class="i"><use href="#i-ps"/></svg><b>dok ps</b><span>containers, grouped by project</span></li>
+        <li><svg class="i"><use href="#i-images"/></svg><b>dok images</b><span>size and age gradients</span></li>
+        <li><svg class="i"><use href="#i-df"/></svg><b>dok df</b><span>disk usage, reclaimable bars</span></li>
+        <li><svg class="i"><use href="#i-inspect"/></svg><b>dok inspect</b><span>the JSON, folded and masked</span></li>
+        <li><svg class="i"><use href="#i-logs"/></svg><b>dok logs</b><span>merged tail, level colouring</span></li>
+        <li><svg class="i"><use href="#i-top"/></svg><b>dok top</b><span>process tree inside a container</span></li>
+        <li><svg class="i"><use href="#i-tree"/></svg><b>dok tree</b><span>projects, networks, volumes</span></li>
+        <li><svg class="i"><use href="#i-stats"/></svg><b>dok stats</b><span>live CPU / memory dashboard</span></li>
+        <li><svg class="i"><use href="#i-events"/></svg><b>dok events</b><span>colour-coded daemon events</span></li>
+        <li><svg class="i"><use href="#i-themes"/></svg><b>dok themes</b><span>list and preview themes</span></li>
       </ul>
     </div>
 
-    <div class="box half" data-anim>
-      <h2>Why it exists</h2>
-      <p class="k">Same data, rendered for a human instead of a parser.</p>
+    <figure class="tile cast s3" data-anim>
+      <div class="frame"><img src="img/cast-logs.svg" width="830" height="314" loading="lazy"
+           alt="Animated dok logs: merged container logs with per-container colour and exploded JSON"></div>
+      <figcaption><svg class="i"><use href="#i-logs"/></svg>
+        <b>dok logs</b> one colour per container · stderr marked · JSON exploded</figcaption>
+    </figure>
+
+    <figure class="tile cast s2" data-anim>
+      <div class="frame"><img src="img/cast-df.svg" width="670" height="274" loading="lazy"
+           alt="Animated dok df: images, containers and volumes with reclaimable bars"></div>
+      <figcaption><svg class="i"><use href="#i-df"/></svg><b>dok df</b> what is reclaimable</figcaption>
+    </figure>
+
+    <figure class="tile cast s2" data-anim>
+      <div class="frame"><img src="img/cast-tree.svg" width="510" height="274" loading="lazy"
+           alt="Animated dok tree: compose projects and their services"></div>
+      <figcaption><svg class="i"><use href="#i-tree"/></svg><b>dok tree</b> how it wires up</figcaption>
+    </figure>
+
+    <figure class="tile cast s2" data-anim>
+      <div class="frame"><img src="img/cast-top.svg" width="687" height="194" loading="lazy"
+           alt="Animated dok top: the process tree inside a container"></div>
+      <figcaption><svg class="i"><use href="#i-top"/></svg><b>dok top</b> processes, as a tree</figcaption>
+    </figure>
+
+    <figure class="tile cast s4" data-anim>
+      <div class="frame"><img src="img/cast-events.svg" width="830" height="394" loading="lazy"
+           alt="Animated dok events: colour-coded container, image, volume and network events"></div>
+      <figcaption><svg class="i"><use href="#i-events"/></svg>
+        <b>dok events</b> lifecycle in order — exit codes, signals and health flips picked out</figcaption>
+    </figure>
+
+    <div class="tile s2" data-anim>
+      <div class="thead"><span class="ic"><svg class="i"><use href="#i-shield"/></svg></span>
+        <h3>Safe by design</h3></div>
+      <p class="k">It looks. It never touches.</p>
       <ul class="rows">
-        <li><b>read-only</b><span>no start, stop, exec or rm — ever</span></li>
-        <li><b>no shell-out</b><span>talks to the socket directly</span></li>
-        <li><b>one binary</b><span>no runtime, nothing to daemonise</span></li>
-        <li><b>ci-safe</b><span>colour and icons off when piped</span></li>
-        <li><b>themable</b><span>palette, glyphs and layout</span></li>
-        <li><b>demo mode</b><span><code>dok ps --demo</code>, no daemon needed</span></li>
+        <li><svg class="i"><use href="#i-shield"/></svg><b>read-only</b><span>no start/stop/rm</span></li>
+        <li><svg class="i"><use href="#i-socket"/></svg><b>no shell-out</b><span>socket, not the CLI</span></li>
+        <li><svg class="i"><use href="#i-binary"/></svg><b>one binary</b><span>no runtime</span></li>
+        <li><svg class="i"><use href="#i-play"/></svg><b>--demo</b><span>works with no daemon</span></li>
       </ul>
-      <div class="nums">
+      <div class="nums" style="margin-top:16px">
         <div class="num"><b data-count="10">0</b><span>commands</span></div>
         <div class="num"><b data-count="10">0</b><span>themes</span></div>
         <div class="num"><b data-count="0">0</b><span>runtime deps</span></div>
       </div>
     </div>
 
-    <figure class="box third shot" style="margin:0" data-anim>
-      <img src="img/df.svg" alt="dok df disk usage bars" loading="lazy">
-      <figcaption><b>dok df</b> — what to prune.</figcaption>
-    </figure>
+  </div>
 
-    <figure class="box third shot" style="margin:0" data-anim>
-      <img src="img/tree.svg" alt="dok tree of projects, networks and volumes" loading="lazy">
-      <figcaption><b>dok tree</b> — how it wires up.</figcaption>
-    </figure>
+  <section class="sec" id="install" data-anim>
+    <span class="eyebrow"><svg class="i"><use href="#i-download"/></svg>install</span>
+    <h2>Eight ways in.</h2>
+    <p>No runtime dependencies. It needs a reachable Docker daemon and honours
+       <code>DOCKER_HOST</code>, the default socket and Windows named pipes.</p>
+  </section>
 
-    <figure class="box third shot" style="margin:0" data-anim>
-      <img src="img/inspect.svg" alt="dok inspect folded into sections" loading="lazy">
-      <figcaption><b>dok inspect</b> — secrets masked.</figcaption>
-    </figure>
-
-    <div class="box wide" id="install" data-anim>
-      <h2>Install</h2>
-      <p class="k">One binary, no runtime dependencies. Needs a reachable Docker daemon — it honours <code>DOCKER_HOST</code>, the default socket and Windows named pipes.</p>
+  <div class="bento">
+    <div class="tile s4" data-anim>
       <div class="tabs" role="tablist">
         <button class="tab" role="tab" aria-selected="true" data-panel="brew">homebrew</button>
         <button class="tab" role="tab" aria-selected="false" data-panel="cargo">cargo</button>
@@ -395,12 +544,31 @@ footer .sp{margin-left:auto}
       <div class="panel" id="scoop" hidden><pre><span class="p">$</span> scoop bucket add dok https://github.com/alsaadii98/cool-docker-commands
 <span class="p">$</span> scoop install dok</pre></div>
       <div class="panel" id="src" hidden><pre><span class="p">$</span> git clone https://github.com/alsaadii98/cool-docker-commands
-<span class="p">$</span> cd cool-docker-commands && cargo build --release</pre></div>
+<span class="p">$</span> cd cool-docker-commands &amp;&amp; cargo build --release</pre></div>
+      <p class="k" style="margin:15px 0 0">Then try it without a daemon:
+        <code>dok ps --demo</code>.</p>
     </div>
 
-    <div class="box half" id="themes" data-anim>
-      <h2>Themes</h2>
-      <p class="k">Palette, glyph set and layout — not just colour. The <code>ascii</code> theme is genuinely ASCII.</p>
+    <figure class="tile cast s2" data-anim>
+      <div class="frame"><img src="img/cast-images.svg" width="704" height="354" loading="lazy"
+           alt="Animated dok images: repository, tag, size and age with colour gradients"></div>
+      <figcaption><svg class="i"><use href="#i-images"/></svg><b>dok images</b> size &amp; age gradients</figcaption>
+    </figure>
+  </div>
+
+  <section class="sec" id="themes" data-anim>
+    <span class="eyebrow"><svg class="i"><use href="#i-themes"/></svg>themes</span>
+    <h2>Themes that change more than colour.</h2>
+    <p>A theme carries a palette, a glyph set and a layout. Switch to <code>ascii</code>
+       and the box glyphs, bars and tree marks become genuine ASCII — not colourless
+       Unicode.</p>
+  </section>
+
+  <div class="bento">
+    <div class="tile s4" data-anim>
+      <div class="thead"><span class="ic"><svg class="i"><use href="#i-themes"/></svg></span>
+        <h3>Ten built in</h3></div>
+      <p class="k">Pick per run with <code>--theme</code>, or set one and forget it.</p>
       <div class="chips">
         <div class="chip"><div class="n">default</div><div class="s"><i style="background:#98c379"></i><i style="background:#56b6c2"></i><i style="background:#61afef"></i><i style="background:#c678dd"></i><i style="background:#e5c07b"></i><i style="background:#e06c75"></i></div></div>
         <div class="chip"><div class="n">dracula</div><div class="s"><i style="background:#50fa7b"></i><i style="background:#8be9fd"></i><i style="background:#bd93f9"></i><i style="background:#ff79c6"></i><i style="background:#f1fa8c"></i><i style="background:#ff5555"></i></div></div>
@@ -415,27 +583,36 @@ footer .sp{margin-left:auto}
       </div>
     </div>
 
-    <div class="box half" data-anim>
-      <h2>Configure</h2>
+    <figure class="tile cast s2" data-anim>
+      <div class="frame"><img src="img/cast-themes.svg" width="611" height="374" loading="lazy"
+           alt="Animated dok themes: the built-in theme list with sample swatches"></div>
+      <figcaption><svg class="i"><use href="#i-themes"/></svg><b>dok themes</b> list &amp; preview</figcaption>
+    </figure>
+
+    <div class="tile s4" data-anim>
+      <div class="thead"><span class="ic"><svg class="i"><use href="#i-sliders"/></svg></span>
+        <h3>Or build your own</h3></div>
       <p class="k"><code>dok themes --init</code> writes this to <code>~/.config/dok/config.toml</code>.</p>
 <pre>theme = "mine"
 icons = "nerd"        <span class="c"># auto | nerd | unicode | none</span>
 
 [themes.mine]
 base   = "gruvbox"    <span class="c"># any built-in</span>
-glyphs = "heavy"      <span class="c"># unicode|ascii|heavy|slim</span>
-layout = "grid"       <span class="c"># default|ruled|grid|quiet</span>
-header = "dim"        <span class="c"># underline|bold|dim|caps</span>
+glyphs = "heavy"      <span class="c"># unicode | ascii | heavy | slim</span>
+layout = "grid"       <span class="c"># default | ruled | grid | quiet</span>
+header = "dim"        <span class="c"># underline | bold | dim | caps</span>
 green  = "#00ff00"    <span class="c"># override any role</span></pre>
       <p class="k" style="margin:14px 0 0">Or just <code>dok ps --theme nord</code>.</p>
     </div>
 
-    <figure class="box wide shot" style="margin:0" data-anim>
-      <img src="img/logs.svg" alt="dok logs merged and colour-coded" loading="lazy">
-      <figcaption><b>dok logs</b> — one stable colour per container, stderr marked on the separator, JSON exploded into <code>level msg key=value</code>.</figcaption>
+    <figure class="tile cast s2" data-anim>
+      <div class="frame"><img src="img/cast-inspect.svg" width="720" height="1094" loading="lazy"
+           alt="Animated dok inspect: the inspect JSON folded into sections with secrets masked"></div>
+      <figcaption><svg class="i"><use href="#i-inspect"/></svg><b>dok inspect</b> folded, secrets masked</figcaption>
     </figure>
-
   </div>
+
+</div>
 </main>
 
 <footer>
@@ -469,11 +646,11 @@ document.querySelectorAll('[data-anim]').forEach(el => {
 
 // Cursor spotlight inside cards.
 if (!reduced) {
-  document.querySelectorAll('.box').forEach(box => {
-    box.addEventListener('pointermove', e => {
-      const r = box.getBoundingClientRect();
-      box.style.setProperty('--mx', `${e.clientX - r.left}px`);
-      box.style.setProperty('--my', `${e.clientY - r.top}px`);
+  document.querySelectorAll('.tile').forEach(tile => {
+    tile.addEventListener('pointermove', e => {
+      const r = tile.getBoundingClientRect();
+      tile.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      tile.style.setProperty('--my', `${e.clientY - r.top}px`);
     });
   });
 }
@@ -503,6 +680,39 @@ document.querySelectorAll('.tab').forEach(tab => {
     document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t === tab)));
     document.querySelectorAll('.panel').forEach(p => { p.hidden = p.id !== tab.dataset.panel; });
   });
+});
+
+// A copy button on every install snippet. The button copies the commands
+// themselves: no `$` prompt, no trailing comment.
+const commandsIn = pre => [...pre.childNodes]
+  .filter(n => !(n.nodeType === 1 && n.classList.contains('c')))   // drop comments
+  .map(n => n.textContent).join('')
+  .split('\n').map(l => l.replace(/^\s*\$\s?/, '').trim())
+  .filter(Boolean).join('\n');
+
+document.querySelectorAll('.panel pre').forEach(pre => {
+  const holder = document.createElement('div');
+  holder.className = 'sh';
+  pre.parentNode.insertBefore(holder, pre);
+  holder.appendChild(pre);
+
+  const btn = document.createElement('button');
+  btn.className = 'cbtn';
+  btn.type = 'button';
+  btn.innerHTML = '<svg class="i"><use href="#i-copy"/></svg>copy';
+  btn.setAttribute('aria-label', 'Copy install command');
+  btn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(commandsIn(pre));
+      btn.innerHTML = '<svg class="i"><use href="#i-check"/></svg>copied';
+      btn.classList.add('done');
+      setTimeout(() => {
+        btn.innerHTML = '<svg class="i"><use href="#i-copy"/></svg>copy';
+        btn.classList.remove('done');
+      }, 1500);
+    } catch { /* clipboard blocked; the text is still selectable */ }
+  });
+  holder.appendChild(btn);
 });
 
 // Click-to-copy.

@@ -37,14 +37,26 @@ pub async fn run(
     }
     let mut stream = docker.events(Some(builder.build()));
 
-    println!(
-        "{}",
-        dim(&format!(
-            "watching docker events{}{}",
-            since.map(|s| format!(" since {s}")).unwrap_or_default(),
-            until.map(|u| format!(" until {u}")).unwrap_or_default()
-        ))
-    );
+    println!("{}", dim("watching docker events"));
+
+    // Demo mode replays a canned minute of the example stack and exits, so the
+    // docs can show the stream without a daemon (and without waiting for one).
+    if crate::demo::enabled() {
+        for ev in crate::demo::events() {
+            let action = ev.action.clone().unwrap_or_default();
+            if !with_exec && action.starts_with("exec_") {
+                continue;
+            }
+            let line = render(&ev);
+            if let Some(f) = &filter
+                && !strip_ansi(&line).to_lowercase().contains(&f.to_lowercase())
+            {
+                continue;
+            }
+            println!("{line}");
+        }
+        return Ok(());
+    }
 
     while let Some(item) = stream.next().await {
         let ev = match item {

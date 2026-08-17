@@ -1,1 +1,4 @@
 /target
+
+# python bytecode from the screenshot scripts
+__pycache__/

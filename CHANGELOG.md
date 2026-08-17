@@ -6,6 +6,21 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- `dok events --demo` replays a canned minute of daemon events, so the stream
+  can be seen (and screenshotted) without a daemon.
+- Animated SVG casts: `scripts/ansi2cast.py` renders captured output into an
+  SVG that types the command, reveals the output and loops, with no JavaScript.
+  The website hero cycles `ps`, `images`, `logs` and `events` in one file.
+
+### Changed
+
+- The static screenshots now use the same chrome and palette as the website's
+  cards, so images and page are one surface instead of two.
+- The site is a proper responsive layout: 6/4/1-column bento, terminal frames
+  that scroll instead of shrinking, and a copy button on every install command.
+
 ## [0.1.1] - 2026-08-17
 
 ### Fixed

@@ -11,7 +11,7 @@ One binary: **`dok`**.
 [![crates.io](https://img.shields.io/crates/v/dok-cli.svg)](https://crates.io/crates/dok-cli)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-<img src="docs/img/ps.svg" alt="dok ps -a" width="760">
+<img src="docs/img/cast-hero.svg" alt="dok ps -a, dok images, dok logs and dok events" width="820">
 
 </div>
 

@@ -18,13 +18,20 @@ OTHER_ESC = re.compile(r"\x1b\[[0-9;?]*[A-Za-z]")
 # Type-safe defaults tuned for a 14px monospace stack.
 CHAR_W = 8.4
 LINE_H = 20.0
-PAD_X = 18.0
-PAD_Y = 16.0
-TITLEBAR = 34.0
+PAD_X = 20.0
+PAD_Y = 18.0
+TITLEBAR = 38.0
 
-BG = "#11141b"
-FG = "#bec4d0"
-DOTS = ["#ff5f57", "#febc2e", "#28c840"]
+# Chrome palette, shared with ansi2cast.py and with the website's cards
+# (docs/index.html :root) so a frame dropped into a tile is the same surface.
+BG = "#0a0a0a"
+BAR = "#0f0f0f"
+LINE = "#1f1f1f"
+FG = "#a1a1a1"
+HEAD = "#ededed"
+DOT = "#2a2a2a"
+MUTED = "#5a5a5a"
+RADIUS = 12.0
 
 # The 16 ANSI colours, for output that does not use truecolor.
 BASIC = {
@@ -126,16 +133,19 @@ def render(lines, title, font):
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width:.0f}" height="{height:.0f}" '
         f'viewBox="0 0 {width:.0f} {height:.0f}" font-family="{html.escape(font)}" '
         f'font-size="14">',
-        f'<rect width="{width:.0f}" height="{height:.0f}" rx="10" fill="{BG}"/>',
-        f'<rect width="{width:.0f}" height="{TITLEBAR:.0f}" rx="10" fill="#181c25"/>',
-        f'<rect y="{TITLEBAR - 10:.0f}" width="{width:.0f}" height="10" fill="#181c25"/>',
+        f'<rect x=".5" y=".5" width="{width - 1:.0f}" height="{height - 1:.0f}" '
+        f'rx="{RADIUS - 0.5:.1f}" fill="{BG}" stroke="{LINE}"/>',
+        f'<path d="M0 {RADIUS:.0f}a{RADIUS:.0f} {RADIUS:.0f} 0 0 1 {RADIUS:.0f}-{RADIUS:.0f}'
+        f'h{width - 2 * RADIUS:.0f}a{RADIUS:.0f} {RADIUS:.0f} 0 0 1 {RADIUS:.0f} {RADIUS:.0f}'
+        f'v{TITLEBAR - RADIUS:.0f}H0z" fill="{BAR}"/>',
+        f'<path d="M0 {TITLEBAR:.0f}h{width:.0f}" stroke="{LINE}"/>',
     ]
-    for i, colour in enumerate(DOTS):
-        out.append(f'<circle cx="{20 + i * 18}" cy="{TITLEBAR / 2:.0f}" r="6" fill="{colour}"/>')
+    for i in range(3):
+        out.append(f'<circle cx="{22 + i * 16}" cy="{TITLEBAR / 2:.0f}" r="4.5" fill="{DOT}"/>')
     if title:
         out.append(
-            f'<text x="{width / 2:.0f}" y="{TITLEBAR / 2 + 4:.0f}" fill="#6a7382" '
-            f'font-size="12" text-anchor="middle">{html.escape(title)}</text>'
+            f'<text x="{width / 2:.0f}" y="{TITLEBAR / 2 + 4:.0f}" fill="{MUTED}" '
+            f'font-size="11.5" text-anchor="middle">{html.escape(title)}</text>'
         )
 
     for row, runs in enumerate(lines):
