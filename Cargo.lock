@@ -509,6 +509,7 @@ dependencies = [
  "chrono",
  "clap",
  "futures-util",
+ "libc",
  "ratatui",
  "serde",
  "serde_json",

@@ -195,8 +195,25 @@ enum Cmd {
     },
 }
 
+/// Rust ignores SIGPIPE and turns the resulting EPIPE into a panic, so
+/// `dok ps | head` dies with a backtrace instead of stopping quietly. Every
+/// command here is meant to be piped, so restore the default disposition.
+#[cfg(unix)]
+fn restore_sigpipe() {
+    // SAFETY: setting a signal disposition to SIG_DFL before any threads that
+    // could care exist; this is the documented fix for the EPIPE panic.
+    unsafe {
+        libc::signal(libc::SIGPIPE, libc::SIG_DFL);
+    }
+}
+
+#[cfg(not(unix))]
+fn restore_sigpipe() {}
+
 #[tokio::main]
 async fn main() -> Result<()> {
+    restore_sigpipe();
+
     let cli = Cli::parse();
 
     demo::set(cli.demo || std::env::var_os("DOK_DEMO").is_some());

@@ -62,6 +62,10 @@ abuild -F -r
 found=$(find /root/packages -name "dok-$VERSION-r0.apk" | head -1)
 [ -n "$found" ] || { echo "no .apk produced" >&2; exit 1; }
 cp "$found" "$OUTDIR/dok-$ARCH.apk"
+# The checksum is written here, not by the caller: the output directory is
+# owned by root inside the container, so a CI runner cannot add files to it.
+sha256sum "$OUTDIR/dok-$ARCH.apk" | cut -d' ' -f1 > "$OUTDIR/dok-$ARCH.apk.sha256"
+chmod -R a+rX "$OUTDIR"
 
 # Prove the package installs and the binary runs before it reaches a release.
 apk add --allow-untrusted "$OUTDIR/dok-$ARCH.apk" >/dev/null

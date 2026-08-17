@@ -8,6 +8,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.1.2] - 2026-08-17
 
+### Fixed
+
+- `dok ps | head` panicked with `failed printing to stdout: Broken pipe`.
+  Rust ignores SIGPIPE by default; dok restores it, so piping into a reader
+  that stops early now exits quietly like any other Unix tool.
+
 ### Added
 
 - Alpine Linux packages. Every release now carries `dok-x86_64.apk` and

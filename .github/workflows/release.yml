@@ -153,8 +153,7 @@ jobs:
             -v "$PWD:/w" -w /w alpine:3.20 \
             sh scripts/build-apk.sh "$version" "${{ matrix.arch }}" \
               "dist/dok-$version-${{ matrix.target }}.tar.gz" out
-          shasum -a 256 "out/dok-${{ matrix.arch }}.apk" | cut -d' ' -f1 \
-            > "out/dok-${{ matrix.arch }}.apk.sha256"
+          ls -l out
 
       - uses: actions/upload-artifact@v7
         with:

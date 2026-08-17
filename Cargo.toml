@@ -31,6 +31,11 @@ terminal_size = "0.4.4"
 tokio = { version = "1.53.1", features = ["rt-multi-thread", "macros", "signal"] }
 toml = "1.1.4"
 
+# Only for restoring the default SIGPIPE handling, so piping into `head`
+# stops quietly instead of panicking.
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
 [profile.release]
 lto = true
 codegen-units = 1
