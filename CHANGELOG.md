@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-08-17
+
 ### Added
 
 - Alpine Linux packages. Every release now carries `dok-x86_64.apk` and

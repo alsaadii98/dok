@@ -1,6 +1,6 @@
 [package]
 name = "dok-cli"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 rust-version = "1.88"
 description = "Docker output, made readable — what eza is to ls"
