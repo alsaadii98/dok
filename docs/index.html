@@ -90,7 +90,7 @@
       "name": "How do I install dok?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "brew install alsaadii98/tap/dok, cargo install dok-cli, paru -S dok-bin on Arch, the .deb or .rpm from the releases page, nix run github:alsaadii98/cool-docker-commands, or scoop install dok on Windows."
+        "text": "brew install alsaadii98/tap/dok, cargo install dok-cli, paru -S dok-bin on Arch, apk add --allow-untrusted ./dok-x86_64.apk on Alpine, the .deb or .rpm from the releases page, nix run github:alsaadii98/cool-docker-commands, or scoop install dok on Windows."
       }
     }
   ]
@@ -515,7 +515,7 @@ footer .sp{margin-left:auto}
 
   <section class="sec" id="install" data-anim>
     <span class="eyebrow"><svg class="i"><use href="#i-download"/></svg>install</span>
-    <h2>Eight ways in.</h2>
+    <h2>Nine ways in.</h2>
     <p>No runtime dependencies. It needs a reachable Docker daemon and honours
        <code>DOCKER_HOST</code>, the default socket and Windows named pipes.</p>
   </section>
@@ -528,6 +528,7 @@ footer .sp{margin-left:auto}
         <button class="tab" role="tab" aria-selected="false" data-panel="arch">arch</button>
         <button class="tab" role="tab" aria-selected="false" data-panel="deb">debian</button>
         <button class="tab" role="tab" aria-selected="false" data-panel="rpm">fedora</button>
+        <button class="tab" role="tab" aria-selected="false" data-panel="alpine">alpine</button>
         <button class="tab" role="tab" aria-selected="false" data-panel="nix">nix</button>
         <button class="tab" role="tab" aria-selected="false" data-panel="scoop">windows</button>
         <button class="tab" role="tab" aria-selected="false" data-panel="src">source</button>
@@ -540,6 +541,8 @@ footer .sp{margin-left:auto}
 <span class="p">$</span> sudo dpkg -i dok_amd64.deb</pre></div>
       <div class="panel" id="rpm" hidden><pre><span class="p">$</span> curl -LO https://github.com/alsaadii98/cool-docker-commands/releases/latest/download/dok.x86_64.rpm
 <span class="p">$</span> sudo rpm -i dok.x86_64.rpm</pre></div>
+      <div class="panel" id="alpine" hidden><pre><span class="p">$</span> wget https://github.com/alsaadii98/cool-docker-commands/releases/latest/download/dok-x86_64.apk
+<span class="p">$</span> apk add --allow-untrusted ./dok-x86_64.apk   <span class="c"># aarch64 too</span></pre></div>
       <div class="panel" id="nix" hidden><pre><span class="p">$</span> nix run github:alsaadii98/cool-docker-commands</pre></div>
       <div class="panel" id="scoop" hidden><pre><span class="p">$</span> scoop bucket add dok https://github.com/alsaadii98/cool-docker-commands
 <span class="p">$</span> scoop install dok</pre></div>

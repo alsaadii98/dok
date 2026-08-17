@@ -1,0 +1,30 @@
+# Contributor: Ali H. Abdulhadi <a.h.alsaady1998@gmail.com>
+# Maintainer: Ali H. Abdulhadi <a.h.alsaady1998@gmail.com>
+#
+# Template for the .apk built by scripts/build-apk.sh on every release.
+# @VERSION@ and @ARCH@ are substituted there; the source is the prebuilt
+# static musl archive from the same release, so no toolchain is needed to
+# package it.
+pkgname=dok
+pkgver=@VERSION@
+pkgrel=0
+pkgdesc="Docker output, made readable - what eza is to ls"
+url="https://github.com/alsaadii98/cool-docker-commands"
+arch="@ARCH@"
+license="MIT"
+subpackages="$pkgname-doc"
+# The binary is statically linked against musl: nothing to depend on, nothing
+# to trace, and stripping is already done at build time.
+options="!check !strip !tracedeps"
+source="dok-$pkgver-@ARCH@.tar.gz"
+builddir="$srcdir"
+
+package() {
+	install -Dm755 "$srcdir"/dok-*/dok "$pkgdir"/usr/bin/dok
+	install -Dm644 "$srcdir"/dok-*/LICENSE \
+		"$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+	install -Dm644 "$srcdir"/dok-*/README.md \
+		"$pkgdir"/usr/share/doc/$pkgname/README.md
+	install -Dm644 "$srcdir"/dok-*/CHANGELOG.md \
+		"$pkgdir"/usr/share/doc/$pkgname/CHANGELOG.md
+}

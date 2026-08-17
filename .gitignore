@@ -2,3 +2,4 @@
 
 # python bytecode from the screenshot scripts
 __pycache__/
+.DS_Store

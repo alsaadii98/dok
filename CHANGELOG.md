@@ -8,6 +8,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Alpine Linux packages. Every release now carries `dok-x86_64.apk` and
+  `dok-aarch64.apk`, built with `abuild` inside Alpine from the same static
+  musl archive the tarballs ship, and install-tested before publishing.
 - `dok events --demo` replays a canned minute of daemon events, so the stream
   can be seen (and screenshotted) without a daemon.
 - Animated SVG casts: `scripts/ansi2cast.py` renders captured output into an

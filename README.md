@@ -82,6 +82,20 @@ sudo rpm -i dok.x86_64.rpm
 </details>
 
 <details>
+<summary><b>Alpine Linux</b></summary>
+
+```sh
+wget https://github.com/alsaadii98/cool-docker-commands/releases/latest/download/dok-x86_64.apk
+apk add --allow-untrusted ./dok-x86_64.apk
+```
+
+`aarch64` packages are published under the same name. The package is signed
+with a per-release key that is not in Alpine's keyring, which is what
+`--allow-untrusted` is for; the binary is static musl, so it pulls in no
+dependencies.
+</details>
+
+<details>
 <summary><b>Nix</b></summary>
 
 ```sh

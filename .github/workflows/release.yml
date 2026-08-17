@@ -112,9 +112,59 @@ jobs:
             dist/*.sha256
           if-no-files-found: error
 
+  alpine:
+    name: alpine .apk (${{ matrix.arch }})
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            target: x86_64-unknown-linux-musl
+            platform: linux/amd64
+          - arch: aarch64
+            target: aarch64-unknown-linux-musl
+            platform: linux/arm64
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist-${{ matrix.target }}
+          path: dist
+
+      # The .apk repackages the musl archive built above, so the binary in the
+      # package is byte-identical to the one in the tarball.
+      - name: Set up QEMU
+        if: matrix.arch == 'aarch64'
+        uses: docker/setup-qemu-action@v3
+
+      - name: Build the package
+        env:
+          ALPINE_ABUILD_KEY: ${{ secrets.ALPINE_ABUILD_KEY }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          [ -n "${{ github.event.inputs.tag }}" ] && version="${{ github.event.inputs.tag }}" && version="${version#v}"
+          docker run --rm --platform ${{ matrix.platform }} \
+            -e ALPINE_ABUILD_KEY \
+            -v "$PWD:/w" -w /w alpine:3.20 \
+            sh scripts/build-apk.sh "$version" "${{ matrix.arch }}" \
+              "dist/dok-$version-${{ matrix.target }}.tar.gz" out
+          shasum -a 256 "out/dok-${{ matrix.arch }}.apk" | cut -d' ' -f1 \
+            > "out/dok-${{ matrix.arch }}.apk.sha256"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist-apk-${{ matrix.arch }}
+          path: out/*
+          if-no-files-found: error
+
   release:
     name: publish github release
-    needs: build
+    needs: [build, alpine]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
