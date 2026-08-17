@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://alsaadii98.github.io/cool-docker-commands/sitemap.xml
+Sitemap: https://dok.alsaadii98.com/sitemap.xml
