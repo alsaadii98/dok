@@ -502,7 +502,7 @@ dependencies = [
 
 [[package]]
 name = "dok-cli"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "anyhow",
  "bollard",
@@ -513,6 +513,7 @@ dependencies = [
  "ratatui",
  "serde",
  "serde_json",
+ "sha2",
  "terminal_size",
  "tokio",
  "toml",

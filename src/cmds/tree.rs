@@ -62,10 +62,16 @@ struct Cols {
 fn cols<'a, I: IntoIterator<Item = &'a ContainerSummary>>(it: I) -> Cols {
     let mut c = Cols { name: 0, image: 0 };
     for ct in it {
-        c.name = c.name.max(fmt::visible_width(&dk::name_of(ct)));
+        c.name = c.name.max(fmt::visible_width(&name_of(ct)));
         c.image = c.image.max(fmt::visible_width(&image_of(ct)));
     }
     c
+}
+
+/// Display name: swarm task ids dropped, long names cut, so one outlier
+/// cannot push the image column off the screen.
+fn name_of(ct: &ContainerSummary) -> String {
+    fmt::truncate(&fmt::short_task_name(&dk::name_of(ct)), 36)
 }
 
 fn image_of(ct: &ContainerSummary) -> String {
@@ -76,7 +82,7 @@ fn image_of(ct: &ContainerSummary) -> String {
 fn node(ct: &ContainerSummary, w: &Cols) -> String {
     let state = dk::state_of(ct);
     let (scol, glyph) = theme::state_style(&state);
-    let name = dk::name_of(ct);
+    let name = name_of(ct);
     format!(
         "{} {} {}",
         c(glyph, scol),

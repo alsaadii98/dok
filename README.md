@@ -162,6 +162,7 @@ default `/var/run/docker.sock`, and Windows named pipes. Nothing else.
 | `dok stats` | Live CPU / memory / IO dashboard |
 | `dok events` | Daemon event stream, colour-coded by type and action |
 | `dok themes` | List and preview themes |
+| `dok update` | Check for a newer release and install it in place |
 
 <details>
 <summary><b>dok df</b> — where the disk went</summary>
@@ -293,7 +294,32 @@ Global flags, valid on every command:
 ```
 
 Set `DOK_NERD_FONT=1` to force Nerd Font glyphs, `DOK_NERD_FONT=0` to refuse
-them.
+them, and `DOK_NO_UPDATE_CHECK=1` to stop dok looking for new releases.
+
+## Staying current
+
+dok checks GitHub for a newer release at most once a day and, when there is
+one, prints a single dim line after the output it was already going to print:
+
+```
+dok 0.1.4 is out (you have 0.1.3) — run `dok update`
+```
+
+```sh
+dok update --check      # say what is available, install nothing
+dok update              # install it, after asking
+dok update -y           # install it without asking
+```
+
+If dok was installed by a package manager it says so and prints that manager's
+upgrade command instead of overwriting a file it does not own. A standalone
+binary is replaced in place: dok downloads the archive for its own target,
+verifies the release checksum, and only then moves the new binary over the old
+one. Add `sudo` if the binary lives somewhere you cannot write.
+
+The check needs `curl` or `wget`; without either it stays silent. Set
+`DOK_NO_UPDATE_CHECK=1` to switch it off, and note it never runs when output
+is piped or when `--demo` is on.
 
 ## How it compares
 

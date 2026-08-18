@@ -132,3 +132,47 @@ pub fn short_id(id: &str) -> String {
 pub fn term_width() -> usize {
     terminal_size::terminal_size().map(|(terminal_size::Width(w), _)| w as usize).unwrap_or(120)
 }
+
+/// Drop the random task id from a swarm container name:
+/// `api.1.hsnfrthap4x8v0xwy3nguwh85` -> `api.1`. The id is noise in a table —
+/// the slot number is what tells two replicas apart.
+pub fn short_task_name(name: &str) -> String {
+    let parts: Vec<&str> = name.split('.').collect();
+    if parts.len() >= 3
+        && let (Some(id), Some(slot)) = (parts.last(), parts.get(parts.len() - 2))
+        && id.len() >= 20
+        && id.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit())
+        && !slot.is_empty()
+        && slot.chars().all(|c| c.is_ascii_digit())
+    {
+        return parts[..parts.len() - 1].join(".");
+    }
+    name.to_string()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn swarm_task_ids_are_dropped() {
+        assert_eq!(
+            short_task_name("dokploy-postgres.1.c1btjeg93en04y5hw6ndqyn3c"),
+            "dokploy-postgres.1"
+        );
+        assert_eq!(short_task_name("stack_api.12.abcdefghijklmnopqrstuvwxy"), "stack_api.12");
+    }
+
+    #[test]
+    fn ordinary_names_are_left_alone() {
+        assert_eq!(short_task_name("dokploy-traefik"), "dokploy-traefik");
+        assert_eq!(short_task_name("shop-api-1"), "shop-api-1");
+        // A dotted name whose last part is short is not a task id.
+        assert_eq!(short_task_name("api.1.beta"), "api.1.beta");
+        // Nor is one whose slot is not a number.
+        assert_eq!(
+            short_task_name("api.x.hsnfrthap4x8v0xwy3nguwh85"),
+            "api.x.hsnfrthap4x8v0xwy3nguwh85"
+        );
+    }
+}

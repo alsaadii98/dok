@@ -40,10 +40,10 @@ pub async fn run(all: bool, flat: bool, filter: Option<String>, sort: PsSort) ->
     let mut t = Table::new(vec![
         Column::left(""),
         Column::left("ID"),
-        Column::left("NAME").flex(12),
-        Column::left("IMAGE").flex(14),
+        Column::left("NAME").flex(12).cap(30),
+        Column::left("IMAGE").flex(14).cap(32),
         Column::left("STATUS"),
-        Column::left("PORTS").flex(0),
+        Column::left("PORTS").flex(0).cap(22),
         Column::right("AGE"),
     ]);
 
@@ -132,7 +132,7 @@ fn render(ct: &ContainerSummary, stub: Stub) -> Vec<String> {
     let (scol, sglyph) = theme::state_style(&state);
 
     // Name column: optional tree stub, service name when in a project.
-    let name = dk::name_of(ct);
+    let name = fmt::short_task_name(&dk::name_of(ct));
     let service = dk::label(ct, dk::COMPOSE_SERVICE);
     let shown = service.unwrap_or(&name);
     let mut name_cell = String::new();

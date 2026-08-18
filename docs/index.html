@@ -44,7 +44,7 @@
   "codeRepository": "https://github.com/alsaadii98/cool-docker-commands",
   "programmingLanguage": "Rust",
   "license": "https://opensource.org/licenses/MIT",
-  "softwareVersion": "0.1.2",
+  "softwareVersion": "0.1.3",
   "keywords": "docker, cli, containers, docker ps, docker inspect, docker logs, rust, terminal, themes",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "author": {
@@ -91,6 +91,14 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "brew install alsaadii98/tap/dok, cargo install dok-cli, paru -S dok-bin on Arch, apk add --allow-untrusted ./dok-x86_64.apk on Alpine, the .deb or .rpm from the releases page, nix run github:alsaadii98/cool-docker-commands, or scoop install dok on Windows."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I update dok?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Run dok update. dok checks GitHub for a newer release at most once a day and prints a one-line notice after a command's output. A standalone binary is replaced in place after its release checksum is verified; if dok was installed by brew, apk, dpkg, rpm or cargo it prints that package manager's upgrade command instead. Set DOK_NO_UPDATE_CHECK=1 to disable the check."
       }
     }
   ]
@@ -377,6 +385,7 @@ footer .sp{margin-left:auto}
     <symbol id="i-tree" viewBox="0 0 24 24"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M6 16.5V6a1 1 0 0 1 1-1h8.5"/><path d="M6 12h9.5"/></symbol>
     <symbol id="i-stats" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="m12 13 4-4M12 3v1"/></symbol>
     <symbol id="i-events" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.6"/><path d="M8.6 8.6a4.8 4.8 0 0 0 0 6.8M15.4 15.4a4.8 4.8 0 0 0 0-6.8"/><path d="M5.6 5.6a9 9 0 0 0 0 12.8M18.4 18.4a9 9 0 0 0 0-12.8"/></symbol>
+    <symbol id="i-update" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></symbol>
     <symbol id="i-themes" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 9-9c0 2-1.6 3-3 3h-1.5a2 2 0 0 0-1.4 3.4A2 2 0 0 1 12 21z"/><circle cx="8" cy="10" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16" cy="10" r="1"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
     <symbol id="i-socket" viewBox="0 0 24 24"><path d="M9 2v6M15 2v6"/><path d="M6 8h12v3a6 6 0 0 1-12 0z"/><path d="M12 17v5"/></symbol>
@@ -399,6 +408,7 @@ footer .sp{margin-left:auto}
       <a href="#commands">commands</a>
       <a href="#install">install</a>
       <a href="#themes">themes</a>
+      <a href="#update">updates</a>
       <a class="gh" href="https://github.com/alsaadii98/cool-docker-commands">
         <svg class="i"><use href="#i-gh"/></svg>GitHub
       </a>
@@ -411,7 +421,7 @@ footer .sp{margin-left:auto}
 
   <section class="hero">
     <span class="pill" data-anim style="transition-delay:.03s">
-      <span class="v">v0.1.2</span> Rust · reads the docker socket · MIT
+      <span class="v">v0.1.3</span> Rust · reads the docker socket · MIT
     </span>
     <h1 data-anim style="transition-delay:.08s">Docker&nbsp;output,<br>made <em>readable</em>.</h1>
     <p class="sub" data-anim style="transition-delay:.14s">
@@ -459,6 +469,7 @@ footer .sp{margin-left:auto}
         <li><svg class="i"><use href="#i-stats"/></svg><b>dok stats</b><span>live CPU / memory dashboard</span></li>
         <li><svg class="i"><use href="#i-events"/></svg><b>dok events</b><span>colour-coded daemon events</span></li>
         <li><svg class="i"><use href="#i-themes"/></svg><b>dok themes</b><span>list and preview themes</span></li>
+        <li><svg class="i"><use href="#i-update"/></svg><b>dok update</b><span>check for a release, install it</span></li>
       </ul>
     </div>
 
@@ -613,6 +624,36 @@ green  = "#00ff00"    <span class="c"># override any role</span></pre>
            alt="Animated dok inspect: the inspect JSON folded into sections with secrets masked"></div>
       <figcaption><svg class="i"><use href="#i-inspect"/></svg><b>dok inspect</b> folded, secrets masked</figcaption>
     </figure>
+  </div>
+
+  <section class="sec" id="update" data-anim>
+    <span class="eyebrow"><svg class="i"><use href="#i-update"/></svg>updates</span>
+    <h2>It tells you when it is old.</h2>
+    <p>dok asks GitHub for the latest release at most once a day and prints one dim
+       line under the output you asked for. Never when piped, never in the way.</p>
+  </section>
+
+  <div class="bento">
+    <div class="tile s3" data-anim>
+      <div class="thead"><span class="ic"><svg class="i"><use href="#i-update"/></svg></span>
+        <h3>One line, once a day</h3></div>
+      <p class="k">Printed after the output, not instead of it.</p>
+<pre>$ dok ps
+<span class="c">…your containers…</span>
+<span class="c">dok 0.1.4 is out (you have 0.1.3) — run `dok update`</span></pre>
+      <p class="k" style="margin:14px 0 0"><code>DOK_NO_UPDATE_CHECK=1</code> turns it off for good.</p>
+    </div>
+
+    <div class="tile s3" data-anim>
+      <div class="thead"><span class="ic"><svg class="i"><use href="#i-download"/></svg></span>
+        <h3>Then update in place</h3></div>
+      <p class="k">Checksum-verified, or the right package manager command.</p>
+<pre>$ dok update --check   <span class="c"># report only</span>
+$ dok update           <span class="c"># ask, then replace</span>
+$ dok update -y        <span class="c"># no questions</span></pre>
+      <p class="k" style="margin:14px 0 0">Installed by brew, apk, dpkg, rpm or cargo? dok
+         prints that manager's upgrade command instead of touching a file it does not own.</p>
+    </div>
   </div>
 
 </div>

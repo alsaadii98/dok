@@ -19,18 +19,28 @@ pub struct Column {
     pub flex: bool,
     /// Never shrink below this many columns.
     pub min: usize,
+    /// Never grow past this share of the terminal, as a percentage. One long
+    /// outlier (a swarm task name, a digest) should not push every other
+    /// column across the screen.
+    pub cap_pct: Option<usize>,
 }
 
 impl Column {
     pub fn left(title: impl Into<String>) -> Self {
-        Column { title: title.into(), align: Align::Left, flex: false, min: 0 }
+        Column { title: title.into(), align: Align::Left, flex: false, min: 0, cap_pct: None }
     }
     pub fn right(title: impl Into<String>) -> Self {
-        Column { title: title.into(), align: Align::Right, flex: false, min: 0 }
+        Column { title: title.into(), align: Align::Right, flex: false, min: 0, cap_pct: None }
     }
     pub fn flex(mut self, min: usize) -> Self {
         self.flex = true;
         self.min = min;
+        self
+    }
+
+    /// Cap this column at `pct` percent of the terminal width.
+    pub fn cap(mut self, pct: usize) -> Self {
+        self.cap_pct = Some(pct);
         self
     }
 }
@@ -78,9 +88,19 @@ impl Table {
             }
         }
 
+        // Apply the per-column caps before fitting: a column is allowed to be
+        // as wide as its content only up to its share of the screen.
+        let term = fmt::term_width();
+        for (i, col) in self.cols.iter().enumerate() {
+            if let Some(pct) = col.cap_pct {
+                let cap = (term * pct / 100).max(col.min).max(fmt::visible_width(&col.title));
+                widths[i] = widths[i].min(cap);
+            }
+        }
+
         let sep_w = theme::l().column_sep.map(fmt::visible_width).unwrap_or(0);
         let gutters = (self.gutter + sep_w) * n.saturating_sub(1);
-        let avail = fmt::term_width().saturating_sub(gutters);
+        let avail = term.saturating_sub(gutters);
         let mut total: usize = widths.iter().sum();
 
         // Shrink flexible columns, widest first, until the table fits.
@@ -117,10 +137,10 @@ impl Table {
             .iter()
             .enumerate()
             .map(|(i, c)| {
-                let t = fmt::truncate(&c.title, widths[i]);
+                let t = theme::header(&fmt::truncate(&c.title, widths[i]));
                 match c.align {
-                    Align::Left => theme::header(&fmt::pad(&t, widths[i])),
-                    Align::Right => theme::header(&fmt::rpad(&t, widths[i])),
+                    Align::Left => fmt::pad(&t, widths[i]),
+                    Align::Right => fmt::rpad(&t, widths[i]),
                 }
             })
             .collect();

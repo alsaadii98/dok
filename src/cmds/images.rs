@@ -64,8 +64,8 @@ pub async fn run(all: bool, dangling_only: bool, sort: ImgSort) -> Result<()> {
 
     let mut t = Table::new(vec![
         Column::left(""),
-        Column::left("REPOSITORY").flex(14),
-        Column::left("TAG").flex(6),
+        Column::left("REPOSITORY").flex(14).cap(34),
+        Column::left("TAG").flex(6).cap(18),
         Column::left("ID"),
         Column::right("SIZE"),
         Column::right("AGE"),

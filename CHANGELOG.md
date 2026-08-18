@@ -6,6 +6,28 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-08-18
+
+### Added
+
+- `dok update` — checks GitHub for a newer release and installs it. A
+  standalone binary is replaced in place after its checksum is verified; a
+  packaged one prints the right `brew` / `apk` / `dpkg` / `rpm` / `cargo`
+  command instead. `--check` reports without installing.
+- A once-a-day update check that prints one dim line after a command's output
+  when a newer version exists. Off for piped output, `--demo`, and whenever
+  `DOK_NO_UPDATE_CHECK` is set.
+
+### Changed
+
+- Tables no longer let one long value push every other column across the
+  screen: `NAME`, `IMAGE`, `PORTS`, `REPOSITORY` and `TAG` are capped at a
+  share of the terminal and truncated past it.
+- Swarm container names lose their random task id — `api.1.hsnfrtha…` renders
+  as `api.1`, which is the part that tells two replicas apart.
+- Header underlines stop at the end of the word instead of running the full
+  width of the column.
+
 ## [0.1.2] - 2026-08-17
 
 ### Fixed
@@ -76,6 +98,8 @@ First public release.
 - `--demo` on every command: renders a built-in example stack with no daemon,
   and is what generates the screenshots in the docs.
 
-[Unreleased]: https://github.com/alsaadii98/cool-docker-commands/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/alsaadii98/cool-docker-commands/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/alsaadii98/cool-docker-commands/compare/v0.1.2...v0.1.3
+[0.1.2]: https://github.com/alsaadii98/cool-docker-commands/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/alsaadii98/cool-docker-commands/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/alsaadii98/cool-docker-commands/releases/tag/v0.1.0

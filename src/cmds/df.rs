@@ -136,7 +136,7 @@ pub async fn run(verbose: bool, top: usize) -> Result<()> {
             items.sort_by_key(|i| -i.size);
             let shown = items.len().min(top);
             let mut it = Table::new(vec![
-                Column::left("NAME").flex(20),
+                Column::left("NAME").flex(20).cap(40),
                 Column::right("SIZE"),
                 Column::left("STATUS"),
             ]);

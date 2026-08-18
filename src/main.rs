@@ -7,6 +7,7 @@ mod dk;
 mod fmt;
 mod table;
 mod theme;
+mod update;
 
 use anyhow::Result;
 use clap::{ArgAction, Parser, Subcommand, ValueEnum};
@@ -184,6 +185,16 @@ enum Cmd {
         init: bool,
     },
 
+    /// Check for a newer dok and install it
+    Update {
+        /// Only report what is available; do not install anything
+        #[arg(long, action = ArgAction::SetTrue)]
+        check: bool,
+        /// Install without asking
+        #[arg(short = 'y', long, action = ArgAction::SetTrue)]
+        yes: bool,
+    },
+
     /// Tree view of compose projects, networks and volumes
     Tree {
         /// Show only this section
@@ -258,7 +269,8 @@ async fn main() -> Result<()> {
         }
     });
 
-    match cli.cmd {
+    let is_update = matches!(cli.cmd, Cmd::Update { .. });
+    let result = match cli.cmd {
         Cmd::Ps { all, flat, filter, sort } => cmds::ps::run(all, flat, filter, sort).await,
         Cmd::Images { all, dangling, sort } => cmds::images::run(all, dangling, sort).await,
         Cmd::Logs { containers, follow, tail, timestamps, grep } => {
@@ -273,6 +285,7 @@ async fn main() -> Result<()> {
         Cmd::Events { since, until, r#type, grep, exec } => {
             cmds::events::run(since, until, r#type, grep, exec).await
         }
+        Cmd::Update { check, yes } => cmds::update::run(check, yes).await,
         Cmd::Themes { preview, init } => {
             if init {
                 cmds::themes::write_starter_config()
@@ -281,7 +294,25 @@ async fn main() -> Result<()> {
             }
         }
         Cmd::Tree { only, all } => cmds::tree::run(only, all).await,
+    };
+
+    // The nag comes after the output, never instead of it, and only when a
+    // person is watching: piped output stays machine-clean.
+    if !is_update
+        && !demo::enabled()
+        && result.is_ok()
+        && std::io::IsTerminal::is_terminal(&std::io::stdout())
+        && let Some(latest) = update::pending()
+    {
+        println!(
+            "{}",
+            theme::dim(&format!(
+                "dok {latest} is out (you have {}) — run `dok update`",
+                update::current()
+            ))
+        );
     }
+    result
 }
 
 /// Guess whether the terminal is running a patched font. Opt-in env var wins.
