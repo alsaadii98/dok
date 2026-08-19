@@ -55,11 +55,16 @@ The crate is `dok-cli`; the binary it installs is `dok`.
 </details>
 
 <details>
-<summary><b>Arch Linux</b> (AUR)</summary>
+<summary><b>Arch Linux</b></summary>
+
+Not on the AUR yet. The PKGBUILDs live in this repo and build the same
+packages today:
 
 ```sh
-paru -S dok-bin      # prebuilt binary
-paru -S dok          # build from source
+git clone https://github.com/alsaadii98/cool-docker-commands
+cd cool-docker-commands/packaging/aur
+makepkg -si -p PKGBUILD-bin   # prebuilt binary, no rust needed
+makepkg -si                   # build from source
 ```
 </details>
 

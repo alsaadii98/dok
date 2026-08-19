@@ -90,7 +90,7 @@
       "name": "How do I install dok?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "brew install alsaadii98/tap/dok, cargo install dok-cli, paru -S dok-bin on Arch, apk add --allow-untrusted ./dok-x86_64.apk on Alpine, the .deb or .rpm from the releases page, nix run github:alsaadii98/cool-docker-commands, or scoop install dok on Windows."
+        "text": "brew install alsaadii98/tap/dok, cargo install dok-cli, makepkg from the PKGBUILDs in the repo on Arch, apk add --allow-untrusted ./dok-x86_64.apk on Alpine, the .deb or .rpm from the releases page, nix run github:alsaadii98/cool-docker-commands, or scoop install dok on Windows."
       }
     },
     {
@@ -556,8 +556,10 @@ footer .sp{margin-left:auto}
       </div>
       <div class="panel" id="brew"><pre><span class="p">$</span> brew install alsaadii98/tap/dok</pre></div>
       <div class="panel" id="cargo" hidden><pre><span class="p">$</span> cargo install dok-cli   <span class="c"># crate dok-cli, binary dok</span></pre></div>
-      <div class="panel" id="arch" hidden><pre><span class="p">$</span> paru -S dok-bin   <span class="c"># prebuilt</span>
-<span class="p">$</span> paru -S dok       <span class="c"># from source</span></pre></div>
+      <div class="panel" id="arch" hidden><pre><span class="c"># not on the AUR yet - build from the PKGBUILDs in the repo</span>
+<span class="p">$</span> git clone https://github.com/alsaadii98/cool-docker-commands
+<span class="p">$</span> cd cool-docker-commands/packaging/aur
+<span class="p">$</span> makepkg -si -p PKGBUILD-bin   <span class="c"># prebuilt</span></pre></div>
       <div class="panel" id="deb" hidden><pre><span class="p">$</span> curl -LO https://github.com/alsaadii98/cool-docker-commands/releases/latest/download/dok_amd64.deb
 <span class="p">$</span> sudo dpkg -i dok_amd64.deb</pre></div>
       <div class="panel" id="rpm" hidden><pre><span class="p">$</span> curl -LO https://github.com/alsaadii98/cool-docker-commands/releases/latest/download/dok.x86_64.rpm

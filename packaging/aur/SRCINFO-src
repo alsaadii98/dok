@@ -1,0 +1,16 @@
+pkgbase = dok
+	pkgdesc = Docker output, made readable - what eza is to ls
+	pkgver = 0.1.3
+	pkgrel = 1
+	url = https://github.com/alsaadii98/cool-docker-commands
+	arch = x86_64
+	arch = aarch64
+	license = MIT
+	makedepends = cargo
+	depends = gcc-libs
+	provides = dok
+	conflicts = dok-bin
+	source = dok-0.1.3.tar.gz::https://github.com/alsaadii98/cool-docker-commands/archive/refs/tags/v0.1.3.tar.gz
+	sha256sums = df48b9c757234b371c46ab0b18770af3a848d3833700f5b8c7a9ff5679249f2f
+
+pkgname = dok
