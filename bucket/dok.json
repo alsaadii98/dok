@@ -1,0 +1,28 @@
+{
+    "version": "0.1.3",
+    "description": "Docker output, made readable - what eza is to ls",
+    "homepage": "https://github.com/alsaadii98/cool-docker-commands",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/alsaadii98/cool-docker-commands/releases/download/v0.1.3/dok-0.1.3-x86_64-pc-windows-msvc.zip",
+            "hash": "755fd3d1612024f0d47774696843c586a427ec80d89fe513c8a20a6089920d79",
+            "extract_dir": "dok-0.1.3-x86_64-pc-windows-msvc"
+        }
+    },
+    "bin": "dok.exe",
+    "checkver": {
+        "github": "https://github.com/alsaadii98/cool-docker-commands"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/alsaadii98/cool-docker-commands/releases/download/v$version/dok-$version-x86_64-pc-windows-msvc.zip",
+                "extract_dir": "dok-$version-x86_64-pc-windows-msvc",
+                "hash": {
+                    "url": "$url.sha256"
+                }
+            }
+        }
+    }
+}

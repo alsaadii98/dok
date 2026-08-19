@@ -90,7 +90,7 @@
       "name": "How do I install dok?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "brew install alsaadii98/tap/dok, cargo install dok-cli, makepkg from the PKGBUILDs in the repo on Arch, apk add --allow-untrusted ./dok-x86_64.apk on Alpine, the .deb or .rpm from the releases page, nix run github:alsaadii98/cool-docker-commands, or scoop install dok on Windows."
+        "text": "brew install alsaadii98/tap/dok, cargo install dok-cli, makepkg from the PKGBUILDs in the repo on Arch, apk add --allow-untrusted ./dok-x86_64.apk on Alpine, the .deb or .rpm from the releases page, nix run github:alsaadii98/cool-docker-commands, or scoop bucket add dok https://github.com/alsaadii98/cool-docker-commands followed by scoop install dok/dok on Windows."
       }
     },
     {
@@ -568,7 +568,7 @@ footer .sp{margin-left:auto}
 <span class="p">$</span> apk add --allow-untrusted ./dok-x86_64.apk   <span class="c"># aarch64 too</span></pre></div>
       <div class="panel" id="nix" hidden><pre><span class="p">$</span> nix run github:alsaadii98/cool-docker-commands</pre></div>
       <div class="panel" id="scoop" hidden><pre><span class="p">$</span> scoop bucket add dok https://github.com/alsaadii98/cool-docker-commands
-<span class="p">$</span> scoop install dok</pre></div>
+<span class="p">$</span> scoop install dok/dok</pre></div>
       <div class="panel" id="src" hidden><pre><span class="p">$</span> git clone https://github.com/alsaadii98/cool-docker-commands
 <span class="p">$</span> cd cool-docker-commands &amp;&amp; cargo build --release</pre></div>
       <p class="k" style="margin:15px 0 0">Then try it without a daemon:

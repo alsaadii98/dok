@@ -41,7 +41,8 @@ src/
 scripts/
   ansi2svg.py      renders real command output to the SVGs used in the docs
 docs/              website (GitHub Pages) and generated screenshots
-packaging/         homebrew, AUR, alpine, scoop, nix
+packaging/         homebrew, AUR, alpine
+bucket/            scoop manifest (this repo doubles as a scoop bucket)
 ```
 
 Two rules keep the output consistent:

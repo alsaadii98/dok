@@ -112,10 +112,12 @@ nix profile install github:alsaadii98/cool-docker-commands
 <details>
 <summary><b>Windows</b> (Scoop)</summary>
 
-```sh
+```powershell
 scoop bucket add dok https://github.com/alsaadii98/cool-docker-commands
-scoop install dok
+scoop install dok/dok
 ```
+
+This repository doubles as a scoop bucket; the manifest is `bucket/dok.json`.
 </details>
 
 <details>
