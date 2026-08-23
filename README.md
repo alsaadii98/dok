@@ -310,7 +310,7 @@ dok checks GitHub for a newer release at most once a day and, when there is
 one, prints a single dim line after the output it was already going to print:
 
 ```
-dok 0.1.4 is out (you have 0.1.3) — run `dok update`
+dok 0.1.5 is out (you have 0.1.4) — run `dok update`
 ```
 
 ```sh
