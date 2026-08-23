@@ -6,6 +6,24 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- `dok uninstall` — removes dok the same way `dok update` replaces it. A
+  standalone binary deletes itself (on Windows it is renamed aside and swept up
+  a moment later, since Windows will not unlink a running image); a packaged
+  one is left to its manager and that manager's removal command is printed.
+  `--purge` also removes `~/.config/dok` and `~/.cache/dok`, `--dry-run` lists
+  what would go, `-y` skips the prompt.
+
+### Changed
+
+- Install detection now recognises scoop, winget and pacman as well, and asks
+  `dpkg` / `rpm` / `pacman` for the real package name instead of assuming
+  `dok`.
+- A config file that fails to parse no longer blocks `dok uninstall`: it warns
+  and carries on with the defaults, so a bad config cannot trap anyone in an
+  install they cannot leave. Every other command still refuses to guess.
+
 ## [0.1.3] - 2026-08-18
 
 ### Added

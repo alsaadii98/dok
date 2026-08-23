@@ -7,6 +7,7 @@ mod dk;
 mod fmt;
 mod table;
 mod theme;
+mod uninstall;
 mod update;
 
 use anyhow::Result;
@@ -195,6 +196,19 @@ enum Cmd {
         yes: bool,
     },
 
+    /// Remove dok, or print the command that does
+    Uninstall {
+        /// Also remove ~/.config/dok and ~/.cache/dok
+        #[arg(long, action = ArgAction::SetTrue)]
+        purge: bool,
+        /// List what would be removed and stop
+        #[arg(long, action = ArgAction::SetTrue)]
+        dry_run: bool,
+        /// Remove without asking
+        #[arg(short = 'y', long, action = ArgAction::SetTrue)]
+        yes: bool,
+    },
+
     /// Tree view of compose projects, networks and volumes
     Tree {
         /// Show only this section
@@ -229,7 +243,16 @@ async fn main() -> Result<()> {
 
     demo::set(cli.demo || std::env::var_os("DOK_DEMO").is_some());
 
-    let cfg = config::load()?;
+    // A broken config file must not trap the user in an install they cannot
+    // leave, so uninstall falls back to the defaults instead of refusing.
+    let cfg = match config::load() {
+        Ok(cfg) => cfg,
+        Err(e) if matches!(cli.cmd, Cmd::Uninstall { .. }) => {
+            eprintln!("warning: {e:#}");
+            config::Config::default()
+        }
+        Err(e) => return Err(e),
+    };
 
     // Precedence: --theme, then DOK_THEME, then the config file, then default.
     let theme_name = cli
@@ -269,7 +292,9 @@ async fn main() -> Result<()> {
         }
     });
 
-    let is_update = matches!(cli.cmd, Cmd::Update { .. });
+    // Neither of the self-management commands should end with a nag about a
+    // version the user may be in the middle of leaving.
+    let is_update = matches!(cli.cmd, Cmd::Update { .. } | Cmd::Uninstall { .. });
     let result = match cli.cmd {
         Cmd::Ps { all, flat, filter, sort } => cmds::ps::run(all, flat, filter, sort).await,
         Cmd::Images { all, dangling, sort } => cmds::images::run(all, dangling, sort).await,
@@ -286,6 +311,7 @@ async fn main() -> Result<()> {
             cmds::events::run(since, until, r#type, grep, exec).await
         }
         Cmd::Update { check, yes } => cmds::update::run(check, yes).await,
+        Cmd::Uninstall { purge, dry_run, yes } => cmds::uninstall::run(purge, yes, dry_run).await,
         Cmd::Themes { preview, init } => {
             if init {
                 cmds::themes::write_starter_config()
