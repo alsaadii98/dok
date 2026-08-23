@@ -13,7 +13,7 @@ use anyhow::{Context, Result, anyhow, bail};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-pub const REPO: &str = "alsaadii98/cool-docker-commands";
+pub const REPO: &str = "alsaadii98/dok";
 
 /// The version this binary was built as.
 pub fn current() -> &'static str {

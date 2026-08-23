@@ -4,30 +4,30 @@ pkgver=0.1.4
 pkgrel=1
 pkgdesc="Docker output, made readable - what eza is to ls"
 arch=('x86_64' 'aarch64')
-url="https://github.com/alsaadii98/cool-docker-commands"
+url="https://github.com/alsaadii98/dok"
 license=('MIT')
 depends=('gcc-libs')
 makedepends=('cargo')
 provides=('dok')
 conflicts=('dok-bin')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('b7d7d0e56a9fed0217e280f34e1d11c067295409e6c900c3f549ae27b327e267')
+sha256sums=('ed07c061cff53b48322138e6e40fcf9355a1fef08b1d9cc8715fd041dac3d2d1')
 
 prepare() {
-  cd "cool-docker-commands-$pkgver"
+  cd "dok-$pkgver"
   export RUSTUP_TOOLCHAIN=stable
   cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
-  cd "cool-docker-commands-$pkgver"
+  cd "dok-$pkgver"
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
   cargo build --frozen --release
 }
 
 package() {
-  cd "cool-docker-commands-$pkgver"
+  cd "dok-$pkgver"
   install -Dm0755 "target/release/dok" "$pkgdir/usr/bin/dok"
   install -Dm0644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm0644 "README.md" "$pkgdir/usr/share/doc/$pkgname/README.md"

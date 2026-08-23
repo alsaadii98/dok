@@ -9,8 +9,8 @@ it in an hour.
 You need Rust 1.88+ (edition 2024) and a running Docker daemon.
 
 ```sh
-git clone https://github.com/alsaadii98/cool-docker-commands
-cd cool-docker-commands
+git clone https://github.com/alsaadii98/dok
+cd dok
 cargo build
 ./target/debug/dok ps -a
 ```
