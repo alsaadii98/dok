@@ -170,6 +170,7 @@ default `/var/run/docker.sock`, and Windows named pipes. Nothing else.
 | `dok events` | Daemon event stream, colour-coded by type and action |
 | `dok themes` | List and preview themes |
 | `dok update` | Check for a newer release and install it in place |
+| `dok uninstall` | Remove dok, or print the exact command that does |
 
 <details>
 <summary><b>dok df</b> — where the disk went</summary>
@@ -327,6 +328,27 @@ one. Add `sudo` if the binary lives somewhere you cannot write.
 The check needs `curl` or `wget`; without either it stays silent. Set
 `DOK_NO_UPDATE_CHECK=1` to switch it off, and note it never runs when output
 is piped or when `--demo` is on.
+
+## Uninstalling
+
+```sh
+dok uninstall             # remove the binary, keep the config
+dok uninstall --purge     # also remove ~/.config/dok and ~/.cache/dok
+dok uninstall --dry-run   # list what would go, remove nothing
+dok uninstall -y          # do not ask
+```
+
+`dok uninstall` works the same way `dok update` does: it finds out how dok got
+onto the machine and acts accordingly. A standalone binary deletes itself. A
+packaged one is left alone and the manager's own removal command is printed —
+`brew uninstall dok`, `scoop uninstall dok`, `cargo uninstall dok-cli`,
+`nix profile remove dok`, `sudo pacman -Rns dok`, `sudo apk del dok`,
+`sudo dpkg -r dok`, `sudo rpm -e dok` — because a package database that no
+longer matches the disk is worse than a binary that is still there. `--purge`
+still cleans up dok's own directories in that case.
+
+dok only ever deletes what it wrote: the binary, its scoop shims, and the two
+directories above. Add `sudo` if the binary lives somewhere you cannot write.
 
 ## How it compares
 

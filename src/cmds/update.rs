@@ -29,7 +29,7 @@ pub async fn run(check_only: bool, yes: bool) -> Result<()> {
     }
 
     match update::detect() {
-        Install::Managed { by, cmd } => {
+        Install::Managed { by, cmd, .. } => {
             println!("\n{}", dim(&format!("dok was installed by {by}; update it with:")));
             println!("  {}", bold(&cmd));
         }

@@ -97,6 +97,14 @@ pub fn latest_version(secs: u32) -> Result<String> {
 
 const DAY: i64 = 24 * 60 * 60;
 
+/// The directory dok keeps its cached update check in.
+pub fn cache_dir() -> Option<PathBuf> {
+    let base = std::env::var_os("XDG_CACHE_HOME")
+        .map(PathBuf::from)
+        .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".cache")))?;
+    Some(base.join("dok"))
+}
+
 fn cache_path() -> Option<PathBuf> {
     let base = std::env::var_os("XDG_CACHE_HOME")
         .map(PathBuf::from)
@@ -152,14 +160,18 @@ pub fn pending() -> Option<String> {
 
 // ── where this binary came from ─────────────────────────────────────────────
 
-/// How dok was installed, which decides whether it can replace itself.
+/// How dok was installed, which decides whether it can replace or remove
+/// itself.
 pub enum Install {
-    /// A plain binary dok can overwrite in place.
+    /// A plain binary dok can overwrite or delete in place.
     Standalone(PathBuf),
-    /// Owned by something else; the string is the command that updates it.
+    /// Owned by something else; the strings are that manager's commands.
     Managed {
         by: &'static str,
+        /// The command that upgrades dok.
         cmd: String,
+        /// The command that removes dok.
+        remove: String,
     },
     Unknown,
 }
@@ -168,15 +180,47 @@ pub fn detect() -> Install {
     let Ok(exe) = std::env::current_exe() else { return Install::Unknown };
     let exe = exe.canonicalize().unwrap_or(exe);
     let path = exe.to_string_lossy().to_string();
+    // Windows paths are matched with the separator normalised, so one set of
+    // patterns covers both.
+    let slashed = path.replace('\\', "/");
 
-    if path.contains("/Cellar/") || path.contains("/homebrew/") || path.contains("/linuxbrew/") {
-        return Install::Managed { by: "homebrew", cmd: "brew upgrade dok".into() };
+    if slashed.contains("/Cellar/")
+        || slashed.contains("/homebrew/")
+        || slashed.contains("/linuxbrew/")
+    {
+        return Install::Managed {
+            by: "homebrew",
+            cmd: "brew upgrade dok".into(),
+            remove: "brew uninstall dok".into(),
+        };
     }
-    if path.starts_with("/nix/store/") {
-        return Install::Managed { by: "nix", cmd: "nix profile upgrade dok".into() };
+    if slashed.starts_with("/nix/store/") {
+        return Install::Managed {
+            by: "nix",
+            cmd: "nix profile upgrade dok".into(),
+            remove: "nix profile remove dok".into(),
+        };
     }
-    if path.contains("/.cargo/bin/") {
-        return Install::Managed { by: "cargo", cmd: "cargo install dok-cli --force".into() };
+    if slashed.contains("/.cargo/bin/") {
+        return Install::Managed {
+            by: "cargo",
+            cmd: "cargo install dok-cli --force".into(),
+            remove: "cargo uninstall dok-cli".into(),
+        };
+    }
+    if slashed.contains("/scoop/apps/") || slashed.contains("/scoop/shims/") {
+        return Install::Managed {
+            by: "scoop",
+            cmd: "scoop update dok".into(),
+            remove: "scoop uninstall dok".into(),
+        };
+    }
+    if slashed.contains("/WinGet/Packages/") {
+        return Install::Managed {
+            by: "winget",
+            cmd: "winget upgrade dok".into(),
+            remove: "winget uninstall dok".into(),
+        };
     }
     if let Some(m) = system_package(&path) {
         return m;
@@ -186,7 +230,7 @@ pub fn detect() -> Install {
 
 /// Ask the system package managers whether they own this path.
 fn system_package(path: &str) -> Option<Install> {
-    let owned = |cmd: &str, args: &[&str]| -> bool {
+    let ok = |cmd: &str, args: &[&str]| -> bool {
         Command::new(cmd)
             .args(args)
             .stdout(std::process::Stdio::null())
@@ -194,22 +238,53 @@ fn system_package(path: &str) -> Option<Install> {
             .status()
             .is_ok_and(|s| s.success())
     };
-    if owned("apk", &["info", "-e", "dok"]) {
+    // The package name is worth asking for rather than assuming: the AUR ships
+    // both `dok` and `dok-bin`, and removing the wrong one does nothing.
+    let owner = |cmd: &str, args: &[&str]| -> Option<String> {
+        let out = Command::new(cmd).args(args).output().ok()?;
+        if !out.status.success() {
+            return None;
+        }
+        let text = String::from_utf8_lossy(&out.stdout);
+        let first = text.lines().next()?.trim();
+        // `dpkg -S` answers "dok: /usr/bin/dok"; `pacman -Qo` answers
+        // "/usr/bin/dok is owned by dok 0.1.3".
+        let name = if let Some((pkg, _)) = first.split_once(':') {
+            pkg.trim().to_string()
+        } else if let Some((_, rest)) = first.split_once(" is owned by ") {
+            rest.split_whitespace().next()?.to_string()
+        } else {
+            first.split_whitespace().next()?.to_string()
+        };
+        (!name.is_empty()).then_some(name)
+    };
+
+    if ok("apk", &["info", "-e", "dok"]) {
         return Some(Install::Managed {
             by: "apk",
             cmd: "apk add --allow-untrusted dok-<arch>.apk  (download it from the release)".into(),
+            remove: "sudo apk del dok".into(),
         });
     }
-    if owned("dpkg", &["-S", path]) {
+    if let Some(pkg) = owner("pacman", &["-Qoq", path]) {
+        return Some(Install::Managed {
+            by: "pacman",
+            cmd: format!("pacman -Syu {pkg}"),
+            remove: format!("sudo pacman -Rns {pkg}"),
+        });
+    }
+    if let Some(pkg) = owner("dpkg", &["-S", path]) {
         return Some(Install::Managed {
             by: "dpkg",
             cmd: "sudo dpkg -i dok_amd64.deb  (download it from the release)".into(),
+            remove: format!("sudo dpkg -r {pkg}"),
         });
     }
-    if owned("rpm", &["-qf", path]) {
+    if let Some(pkg) = owner("rpm", &["-qf", path]) {
         return Some(Install::Managed {
             by: "rpm",
             cmd: "sudo rpm -U dok.x86_64.rpm  (download it from the release)".into(),
+            remove: format!("sudo rpm -e {pkg}"),
         });
     }
     None

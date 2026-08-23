@@ -8,4 +8,5 @@ pub mod stats;
 pub mod themes;
 pub mod top;
 pub mod tree;
+pub mod uninstall;
 pub mod update;

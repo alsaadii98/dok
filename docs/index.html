@@ -480,6 +480,7 @@ footer .sp{margin-left:auto}
         <li><svg class="i"><use href="#i-events"/></svg><b>dok events</b><span>colour-coded daemon events</span></li>
         <li><svg class="i"><use href="#i-themes"/></svg><b>dok themes</b><span>list and preview themes</span></li>
         <li><svg class="i"><use href="#i-update"/></svg><b>dok update</b><span>check for a release, install it</span></li>
+        <li><svg class="i"><use href="#i-download"/></svg><b>dok uninstall</b><span>remove it as cleanly as it arrived</span></li>
       </ul>
     </div>
 
@@ -663,8 +664,11 @@ green  = "#00ff00"    <span class="c"># override any role</span></pre>
 <pre>$ dok update --check   <span class="c"># report only</span>
 $ dok update           <span class="c"># ask, then replace</span>
 $ dok update -y        <span class="c"># no questions</span></pre>
-      <p class="k" style="margin:14px 0 0">Installed by brew, apk, dpkg, rpm or cargo? dok
-         prints that manager's upgrade command instead of touching a file it does not own.</p>
+      <p class="k" style="margin:14px 0 0">Installed by brew, scoop, apk, dpkg, rpm, pacman, nix
+         or cargo? dok prints that manager's upgrade command instead of touching a file it does not own.</p>
+      <p class="k" style="margin:14px 0 0"><code>dok uninstall</code> is the same idea in reverse: a
+         standalone binary deletes itself, a packaged one gets its manager's removal command printed.
+         <code>--purge</code> takes the config and cache with it.</p>
     </div>
   </div>
 
