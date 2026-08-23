@@ -27,7 +27,7 @@ Needs an AUR account with an SSH public key registered at
 git clone ssh://aur@aur.archlinux.org/dok-bin.git /tmp/aur-dok-bin
 cp packaging/aur/PKGBUILD-bin /tmp/aur-dok-bin/PKGBUILD
 cp packaging/aur/SRCINFO-bin  /tmp/aur-dok-bin/.SRCINFO
-cd /tmp/aur-dok-bin && git add PKGBUILD .SRCINFO && git commit -m "dok-bin 0.1.3" && git push
+cd /tmp/aur-dok-bin && git add PKGBUILD .SRCINFO && git commit -m "dok-bin 0.1.4" && git push
 ```
 
 Same shape for `dok`, using `PKGBUILD` and `SRCINFO-src`. A brand-new package
@@ -39,7 +39,7 @@ Bump `pkgver`, reset `pkgrel=1`, and replace the checksums. The binary sums
 are published as release assets:
 
 ```sh
-v=0.1.3
+v=0.1.4
 base=https://github.com/alsaadii98/cool-docker-commands/releases/download/v$v
 curl -sL $base/dok-$v-x86_64-unknown-linux-musl.tar.gz.sha256
 curl -sL $base/dok-$v-aarch64-unknown-linux-musl.tar.gz.sha256
