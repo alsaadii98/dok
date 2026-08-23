@@ -5,29 +5,29 @@
 # Every tagged release regenerates this file with fresh checksums.
 class Dok < Formula
   desc "Docker output, made readable - what eza is to ls"
-  homepage "https://github.com/alsaadii98/cool-docker-commands"
+  homepage "https://github.com/alsaadii98/dok"
   version "0.1.0"
   license "MIT"
-  head "https://github.com/alsaadii98/cool-docker-commands.git", branch: "main"
+  head "https://github.com/alsaadii98/dok.git", branch: "main"
 
   on_macos do
     on_arm do
-      url "https://github.com/alsaadii98/cool-docker-commands/releases/download/v0.1.0/dok-0.1.0-aarch64-apple-darwin.tar.gz"
+      url "https://github.com/alsaadii98/dok/releases/download/v0.1.0/dok-0.1.0-aarch64-apple-darwin.tar.gz"
       sha256 "57f5f7255871b48b2d268771667e0eee3f97606afdaaa3ee9db38b4d0ec710d1"
     end
     on_intel do
-      url "https://github.com/alsaadii98/cool-docker-commands/releases/download/v0.1.0/dok-0.1.0-x86_64-apple-darwin.tar.gz"
+      url "https://github.com/alsaadii98/dok/releases/download/v0.1.0/dok-0.1.0-x86_64-apple-darwin.tar.gz"
       sha256 "4dc38c9899071cc9c6705b5987092d82aa2eb2cdb5ecc98f3ad722df210b9fb2"
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/alsaadii98/cool-docker-commands/releases/download/v0.1.0/dok-0.1.0-aarch64-unknown-linux-musl.tar.gz"
+      url "https://github.com/alsaadii98/dok/releases/download/v0.1.0/dok-0.1.0-aarch64-unknown-linux-musl.tar.gz"
       sha256 "8c0d131596f2e63e11b537d08cabedcdb7df1001c0655ca04512eced3a3a3107"
     end
     on_intel do
-      url "https://github.com/alsaadii98/cool-docker-commands/releases/download/v0.1.0/dok-0.1.0-x86_64-unknown-linux-musl.tar.gz"
+      url "https://github.com/alsaadii98/dok/releases/download/v0.1.0/dok-0.1.0-x86_64-unknown-linux-musl.tar.gz"
       sha256 "0a1df09b5ed63331a835ba3c7d7047d46ede0db90681a8896480ccb5a4aafb56"
     end
   end

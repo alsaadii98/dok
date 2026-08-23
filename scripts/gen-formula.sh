@@ -10,7 +10,7 @@ set -euo pipefail
 
 TAG=${1:?usage: gen-formula.sh <tag>   e.g. gen-formula.sh v0.1.0}
 VERSION=${TAG#v}
-REPO=${REPO:-alsaadii98/cool-docker-commands}
+REPO=${REPO:-alsaadii98/dok}
 BASE="https://github.com/$REPO/releases/download/$TAG"
 
 sha_for() {

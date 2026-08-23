@@ -1,13 +1,13 @@
 <div align="center">
 
-# cool-docker-commands
+# dok
 
 **Docker output, made readable — what [eza](https://eza.rocks/) is to `ls`.**
 
 One binary: **`dok`**.
 
-[![CI](https://github.com/alsaadii98/cool-docker-commands/actions/workflows/ci.yml/badge.svg)](https://github.com/alsaadii98/cool-docker-commands/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/alsaadii98/cool-docker-commands?color=success)](https://github.com/alsaadii98/cool-docker-commands/releases)
+[![CI](https://github.com/alsaadii98/dok/actions/workflows/ci.yml/badge.svg)](https://github.com/alsaadii98/dok/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/alsaadii98/dok?color=success)](https://github.com/alsaadii98/dok/releases)
 [![crates.io](https://img.shields.io/crates/v/dok-cli.svg)](https://crates.io/crates/dok-cli)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -61,8 +61,8 @@ Not on the AUR yet. The PKGBUILDs live in this repo and build the same
 packages today:
 
 ```sh
-git clone https://github.com/alsaadii98/cool-docker-commands
-cd cool-docker-commands/packaging/aur
+git clone https://github.com/alsaadii98/dok
+cd dok/packaging/aur
 makepkg -si -p PKGBUILD-bin   # prebuilt binary, no rust needed
 makepkg -si                   # build from source
 ```
@@ -72,7 +72,7 @@ makepkg -si                   # build from source
 <summary><b>Debian / Ubuntu</b></summary>
 
 ```sh
-curl -LO https://github.com/alsaadii98/cool-docker-commands/releases/latest/download/dok_amd64.deb
+curl -LO https://github.com/alsaadii98/dok/releases/latest/download/dok_amd64.deb
 sudo dpkg -i dok_amd64.deb
 ```
 </details>
@@ -81,7 +81,7 @@ sudo dpkg -i dok_amd64.deb
 <summary><b>Fedora / RHEL</b></summary>
 
 ```sh
-curl -LO https://github.com/alsaadii98/cool-docker-commands/releases/latest/download/dok.x86_64.rpm
+curl -LO https://github.com/alsaadii98/dok/releases/latest/download/dok.x86_64.rpm
 sudo rpm -i dok.x86_64.rpm
 ```
 </details>
@@ -90,7 +90,7 @@ sudo rpm -i dok.x86_64.rpm
 <summary><b>Alpine Linux</b></summary>
 
 ```sh
-wget https://github.com/alsaadii98/cool-docker-commands/releases/latest/download/dok-x86_64.apk
+wget https://github.com/alsaadii98/dok/releases/latest/download/dok-x86_64.apk
 apk add --allow-untrusted ./dok-x86_64.apk
 ```
 
@@ -104,8 +104,8 @@ dependencies.
 <summary><b>Nix</b></summary>
 
 ```sh
-nix run github:alsaadii98/cool-docker-commands
-nix profile install github:alsaadii98/cool-docker-commands
+nix run github:alsaadii98/dok
+nix profile install github:alsaadii98/dok
 ```
 </details>
 
@@ -113,7 +113,7 @@ nix profile install github:alsaadii98/cool-docker-commands
 <summary><b>Windows</b> (Scoop)</summary>
 
 ```powershell
-scoop bucket add dok https://github.com/alsaadii98/cool-docker-commands
+scoop bucket add dok https://github.com/alsaadii98/dok
 scoop install dok/dok
 ```
 
@@ -124,7 +124,7 @@ This repository doubles as a scoop bucket; the manifest is `bucket/dok.json`.
 <summary><b>Prebuilt binary</b></summary>
 
 Grab the archive for your platform from the
-[releases page](https://github.com/alsaadii98/cool-docker-commands/releases):
+[releases page](https://github.com/alsaadii98/dok/releases):
 
 ```sh
 tar xzf dok-*.tar.gz
@@ -136,8 +136,8 @@ sudo mv dok /usr/local/bin/
 <summary><b>From source</b></summary>
 
 ```sh
-git clone https://github.com/alsaadii98/cool-docker-commands
-cd cool-docker-commands
+git clone https://github.com/alsaadii98/dok
+cd dok
 cargo build --release
 sudo cp target/release/dok /usr/local/bin/
 ```

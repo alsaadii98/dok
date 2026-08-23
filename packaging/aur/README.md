@@ -40,10 +40,10 @@ are published as release assets:
 
 ```sh
 v=0.1.4
-base=https://github.com/alsaadii98/cool-docker-commands/releases/download/v$v
+base=https://github.com/alsaadii98/dok/releases/download/v$v
 curl -sL $base/dok-$v-x86_64-unknown-linux-musl.tar.gz.sha256
 curl -sL $base/dok-$v-aarch64-unknown-linux-musl.tar.gz.sha256
-curl -sL https://github.com/alsaadii98/cool-docker-commands/archive/refs/tags/v$v.tar.gz | sha256sum
+curl -sL https://github.com/alsaadii98/dok/archive/refs/tags/v$v.tar.gz | sha256sum
 ```
 
 Then regenerate the `.SRCINFO` files and push. Both PKGBUILDs are verified by

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>dok — pretty docker ps, images, inspect &amp; logs | cool-docker-commands</title>
+<title>dok — pretty docker ps, images, inspect &amp; logs | dok</title>
 <meta name="description" content="dok is a fast Rust CLI that makes docker ps, docker images, docker inspect, docker logs and docker system df human-readable: colour, icons, compose-project grouping, human sizes and ages, and 10 themes.">
 <meta name="keywords" content="docker, docker cli, docker ps, pretty docker ps, docker images, docker inspect, docker logs, docker stats, docker system df, docker compose, container management, rust cli, terminal tool, tui, eza, lazydocker alternative, ctop alternative, dive alternative, devops tools, sysadmin, colorized output, themes">
 <meta name="author" content="Ali H. Abdulhadi (@alsaadii98)">
@@ -14,7 +14,7 @@
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="cool-docker-commands">
+<meta property="og:site_name" content="dok">
 <meta property="og:title" content="dok — docker output, made readable">
 <meta property="og:description" content="A Rust CLI that renders docker ps, images, inspect, logs and disk usage for humans. Compose grouping, human sizes and ages, and themes that change glyphs and layout.">
 <meta property="og:url" content="https://dok.alsaadii98.com/">
@@ -33,15 +33,15 @@
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
-  "name": "dok (cool-docker-commands)",
-  "alternateName": "cool-docker-commands",
+  "name": "dok (dok)",
+  "alternateName": "dok",
   "applicationCategory": "DeveloperApplication",
   "applicationSubCategory": "Command Line Utility",
   "operatingSystem": "macOS, Linux, Windows",
   "description": "A Rust CLI that renders docker ps, images, inspect, logs, disk usage, events and stats for humans: colour, icons, compose-project grouping, human sizes and ages, and themes.",
   "url": "https://dok.alsaadii98.com/",
-  "downloadUrl": "https://github.com/alsaadii98/cool-docker-commands/releases",
-  "codeRepository": "https://github.com/alsaadii98/cool-docker-commands",
+  "downloadUrl": "https://github.com/alsaadii98/dok/releases",
+  "codeRepository": "https://github.com/alsaadii98/dok",
   "programmingLanguage": "Rust",
   "license": "https://opensource.org/licenses/MIT",
   "softwareVersion": "0.1.4",
@@ -90,7 +90,7 @@
       "name": "How do I install dok?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "brew install alsaadii98/tap/dok, cargo install dok-cli, makepkg from the PKGBUILDs in the repo on Arch, apk add --allow-untrusted ./dok-x86_64.apk on Alpine, the .deb or .rpm from the releases page, nix run github:alsaadii98/cool-docker-commands, or scoop bucket add dok https://github.com/alsaadii98/cool-docker-commands followed by scoop install dok/dok on Windows."
+        "text": "brew install alsaadii98/tap/dok, cargo install dok-cli, makepkg from the PKGBUILDs in the repo on Arch, apk add --allow-untrusted ./dok-x86_64.apk on Alpine, the .deb or .rpm from the releases page, nix run github:alsaadii98/dok, or scoop bucket add dok https://github.com/alsaadii98/dok followed by scoop install dok/dok on Windows."
       }
     },
     {
@@ -413,13 +413,13 @@ footer .sp{margin-left:auto}
 
 <header>
   <div class="wrap">
-    <a class="brand" href="#top"><span class="led"></span>cool-docker-commands <small>/ dok</small></a>
+    <a class="brand" href="#top"><span class="led"></span>dok <small>/ dok</small></a>
     <nav>
       <a href="#commands">commands</a>
       <a href="#install">install</a>
       <a href="#themes">themes</a>
       <a href="#update">updates</a>
-      <a class="gh" href="https://github.com/alsaadii98/cool-docker-commands">
+      <a class="gh" href="https://github.com/alsaadii98/dok">
         <svg class="i"><use href="#i-gh"/></svg>GitHub
       </a>
     </nav>
@@ -435,7 +435,7 @@ footer .sp{margin-left:auto}
     </span>
     <h1 data-anim style="transition-delay:.08s">Docker&nbsp;output,<br>made <em>readable</em>.</h1>
     <p class="sub" data-anim style="transition-delay:.14s">
-      <code>cool-docker-commands</code> ships one binary — <code>dok</code>. It reads the
+      <code>dok</code> ships one binary — <code>dok</code>. It reads the
       Docker socket and prints it for humans: colour that means something, compose
       grouping, human sizes and ages, and real themes.
       What <a class="u" href="https://eza.rocks/">eza</a> is to <code>ls</code>.
@@ -446,7 +446,7 @@ footer .sp{margin-left:auto}
         <span class="tag">copy</span>
       </button>
       <a class="ghost" href="#install">Install <svg class="i" style="stroke-width:2"><use href="#i-arrow"/></svg></a>
-      <a class="ghost alt" href="https://github.com/alsaadii98/cool-docker-commands">Source</a>
+      <a class="ghost alt" href="https://github.com/alsaadii98/dok">Source</a>
     </div>
     <div class="stage" data-anim style="transition-delay:.26s">
       <div class="frame"><img src="img/cast-hero.svg" width="838" height="414"
@@ -558,20 +558,20 @@ footer .sp{margin-left:auto}
       <div class="panel" id="brew"><pre><span class="p">$</span> brew install alsaadii98/tap/dok</pre></div>
       <div class="panel" id="cargo" hidden><pre><span class="p">$</span> cargo install dok-cli   <span class="c"># crate dok-cli, binary dok</span></pre></div>
       <div class="panel" id="arch" hidden><pre><span class="c"># not on the AUR yet - build from the PKGBUILDs in the repo</span>
-<span class="p">$</span> git clone https://github.com/alsaadii98/cool-docker-commands
-<span class="p">$</span> cd cool-docker-commands/packaging/aur
+<span class="p">$</span> git clone https://github.com/alsaadii98/dok
+<span class="p">$</span> cd dok/packaging/aur
 <span class="p">$</span> makepkg -si -p PKGBUILD-bin   <span class="c"># prebuilt</span></pre></div>
-      <div class="panel" id="deb" hidden><pre><span class="p">$</span> curl -LO https://github.com/alsaadii98/cool-docker-commands/releases/latest/download/dok_amd64.deb
+      <div class="panel" id="deb" hidden><pre><span class="p">$</span> curl -LO https://github.com/alsaadii98/dok/releases/latest/download/dok_amd64.deb
 <span class="p">$</span> sudo dpkg -i dok_amd64.deb</pre></div>
-      <div class="panel" id="rpm" hidden><pre><span class="p">$</span> curl -LO https://github.com/alsaadii98/cool-docker-commands/releases/latest/download/dok.x86_64.rpm
+      <div class="panel" id="rpm" hidden><pre><span class="p">$</span> curl -LO https://github.com/alsaadii98/dok/releases/latest/download/dok.x86_64.rpm
 <span class="p">$</span> sudo rpm -i dok.x86_64.rpm</pre></div>
-      <div class="panel" id="alpine" hidden><pre><span class="p">$</span> wget https://github.com/alsaadii98/cool-docker-commands/releases/latest/download/dok-x86_64.apk
+      <div class="panel" id="alpine" hidden><pre><span class="p">$</span> wget https://github.com/alsaadii98/dok/releases/latest/download/dok-x86_64.apk
 <span class="p">$</span> apk add --allow-untrusted ./dok-x86_64.apk   <span class="c"># aarch64 too</span></pre></div>
-      <div class="panel" id="nix" hidden><pre><span class="p">$</span> nix run github:alsaadii98/cool-docker-commands</pre></div>
-      <div class="panel" id="scoop" hidden><pre><span class="p">$</span> scoop bucket add dok https://github.com/alsaadii98/cool-docker-commands
+      <div class="panel" id="nix" hidden><pre><span class="p">$</span> nix run github:alsaadii98/dok</pre></div>
+      <div class="panel" id="scoop" hidden><pre><span class="p">$</span> scoop bucket add dok https://github.com/alsaadii98/dok
 <span class="p">$</span> scoop install dok/dok</pre></div>
-      <div class="panel" id="src" hidden><pre><span class="p">$</span> git clone https://github.com/alsaadii98/cool-docker-commands
-<span class="p">$</span> cd cool-docker-commands &amp;&amp; cargo build --release</pre></div>
+      <div class="panel" id="src" hidden><pre><span class="p">$</span> git clone https://github.com/alsaadii98/dok
+<span class="p">$</span> cd dok &amp;&amp; cargo build --release</pre></div>
       <p class="k" style="margin:15px 0 0">Then try it without a daemon:
         <code>dok ps --demo</code>.</p>
     </div>
@@ -678,9 +678,9 @@ $ dok update -y        <span class="c"># no questions</span></pre>
 <footer>
   <div class="wrap">
     <span>MIT - Built by <a href="https://github.com/alsaadii98" style="color:var(--head)">@alsaadii98</a></span>
-    <a href="https://github.com/alsaadii98/cool-docker-commands">GitHub</a>
+    <a href="https://github.com/alsaadii98/dok">GitHub</a>
     <a href="https://crates.io/crates/dok-cli">crates.io</a>
-    <a href="https://github.com/alsaadii98/cool-docker-commands/blob/main/ROADMAP.md">Roadmap</a>
+    <a href="https://github.com/alsaadii98/dok/blob/main/ROADMAP.md">Roadmap</a>
     <span class="sp">built with <a href="https://github.com/fussybeaver/bollard" style="color:var(--head)">bollard</a> + <a href="https://ratatui.rs" style="color:var(--head)">ratatui</a></span>
   </div>
 </footer>
