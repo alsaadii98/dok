@@ -80,6 +80,13 @@ enum Cmd {
         sort: cmds::ps::PsSort,
     },
 
+    /// Every published port in one table, sorted by port
+    Ports {
+        /// Include stopped containers
+        #[arg(short, long, action = ArgAction::SetTrue)]
+        all: bool,
+    },
+
     /// List images with size and age gradients
     #[command(visible_alias = "img")]
     Images {
@@ -297,6 +304,7 @@ async fn main() -> Result<()> {
     let is_update = matches!(cli.cmd, Cmd::Update { .. } | Cmd::Uninstall { .. });
     let result = match cli.cmd {
         Cmd::Ps { all, flat, filter, sort } => cmds::ps::run(all, flat, filter, sort).await,
+        Cmd::Ports { all } => cmds::ports::run(all).await,
         Cmd::Images { all, dangling, sort } => cmds::images::run(all, dangling, sort).await,
         Cmd::Logs { containers, follow, tail, timestamps, grep } => {
             cmds::logs::run(containers, follow, tail, timestamps, grep).await
