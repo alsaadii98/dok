@@ -162,6 +162,7 @@ default `/var/run/docker.sock`, and Windows named pipes. Nothing else.
 | Command | What it does |
 |---|---|
 | `dok ps` (`ls`) | Containers grouped by compose project — id, state dot, health mark, `:8080→80` ports, relative age |
+| `dok ports` | Every published port in one table, sorted by port — answers "who owns 5432?" |
 | `dok images` (`img`) | Images with size and age gradients, dangling marked reclaimable |
 | `dok df` (`du`) | Disk usage per category with used/reclaimable bars, plus the biggest offenders |
 | `dok inspect` | The 400-line inspect JSON folded into readable sections, secrets masked |
@@ -173,6 +174,26 @@ default `/var/run/docker.sock`, and Windows named pipes. Nothing else.
 | `dok themes` | List and preview themes |
 | `dok update` | Check for a newer release and install it in place |
 | `dok uninstall` | Remove dok, or print the exact command that does |
+
+<details>
+<summary><b>dok ports</b> — who owns 5432?</summary>
+
+```sh
+dok ports             # every published port, sorted by port
+dok ports -a          # include stopped containers
+dok ports | grep 5432
+```
+
+`docker ps` spreads ports down a column, wrapped and interleaved with
+everything else. `dok ports` is one row per published binding, sorted by host
+port, so the lookup is a glance.
+
+Exposed-but-unpublished ports are left out — nothing on the host can reach
+them. A wildcard binding that docker reports twice, once for IPv4 and once for
+IPv6, collapses into the single row you meant by it. The `BIND` column appears
+only when some binding is narrower than "every interface". When two containers
+claim the same address, port and protocol, both rows are marked.
+</details>
 
 <details>
 <summary><b>dok df</b> — where the disk went</summary>
