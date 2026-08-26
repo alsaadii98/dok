@@ -1,0 +1,35 @@
+# dok
+
+> A Rust CLI that makes Docker's output readable: `docker ps`, `images`,
+> `inspect`, `logs`, `df` and more, rendered for humans with colour that means
+> something, compose-project grouping, and human sizes and ages. What eza is to
+> `ls`. One static, pipeable screen per command. Read-only — it never starts,
+> stops, execs into or removes a container.
+
+Install: `brew install alsaadii98/tap/dok` · `cargo install dok-cli` (crate is
+`dok-cli`, binary is `dok`). Requires a reachable Docker daemon; honours
+`DOCKER_HOST`. Every command takes `--demo` to run offline against a built-in
+example stack. Current version: 0.1.5. MIT.
+
+## Commands
+
+- `dok ps` (`ls`): containers grouped by compose project — id, state dot, health mark, `:8080→80` ports, relative age.
+- `dok ports`: every published port in one flat table sorted by host port. Answers "which container is using port 5432?". Skips exposed-but-unpublished ports, collapses the IPv4/IPv6 pair Docker reports for a wildcard binding, marks conflicting claims.
+- `dok images` (`img`): images with size and age gradients, dangling marked reclaimable.
+- `dok df` (`du`): disk usage per category with used/reclaimable bars, plus the biggest offenders with `-v`.
+- `dok inspect`: the 400-line inspect JSON folded into readable sections, credential-looking env values masked by default.
+- `dok logs`: interleaved multi-container tail with level colouring and JSON pretty-printing.
+- `dok top`: processes inside containers, nested by parent PID.
+- `dok tree`: compose projects, networks with IPs, volumes with mount points.
+- `dok stats`: live CPU / memory / IO dashboard (the only full-screen command).
+- `dok events`: daemon event stream, colour-coded by type and action.
+- `dok themes`: list and preview the 10 built-in themes.
+- `dok update` / `dok uninstall`: self-manage, or print the right package-manager command.
+
+## Docs
+
+- [Homepage](https://dok.alsaadii98.com/): overview, screenshots, install matrix, FAQ.
+- [README](https://github.com/alsaadii98/dok/blob/main/README.md): full command reference and configuration.
+- [Roadmap](https://github.com/alsaadii98/dok/blob/main/ROADMAP.md): what is planned and what is up for grabs.
+- [Changelog](https://github.com/alsaadii98/dok/blob/main/CHANGELOG.md): release history.
+- [Contributing](https://github.com/alsaadii98/dok/blob/main/CONTRIBUTING.md): code layout and how to add a command or theme.
