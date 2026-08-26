@@ -22,15 +22,24 @@ codebase.
 
 - [ ] **`dok ports`** — one flat table of every published port across all
       containers, sorted by port. Answers "who owns 5432?" in one line.
-      **[good first issue]**
+      ([#8](https://github.com/alsaadii98/dok/issues/8))
 - [ ] **`dok history <image>`** — layer list with size bars and truncated
       Dockerfile instructions. A CLI-shaped `dive` for spotting fat layers.
 - [ ] **`dok prune --dry-run`** — what *would* be reclaimed, grouped by kind,
       before you commit to it.
-- [ ] **`--json` on every command** — same data, machine-readable, so `dok` can
-      sit in scripts as well as in front of a human. **[good first issue]**
 - [ ] **`dok health`** — only containers with healthchecks: status, failing
       streak, last probe output.
+- [ ] **Shell completions** for bash/zsh/fish/nushell, generated in CI.
+      **[good first issue]** ([#9](https://github.com/alsaadii98/dok/issues/9))
+
+## After that (0.3)
+
+- [ ] **`--json` on every command** — same data, machine-readable, so `dok` can
+      sit in scripts as well as in front of a human.
+      ([#11](https://github.com/alsaadii98/dok/issues/11))
+- [ ] **Remote contexts** — read `~/.docker/contexts` so `dok --context prod ps`
+      works like the docker CLI. Reading containers on a remote host is where
+      the wall-of-text problem is worst.
 
 ## Later
 
@@ -39,11 +48,8 @@ codebase.
 - [ ] `dok compose` — project-level view: services, expected vs actual replicas,
       orphan containers
 - [ ] `dok watch` — `ps` redrawn from the event stream instead of polling
-- [ ] Shell completions for bash/zsh/fish/nushell, generated in CI
-      **[good first issue]**
 - [ ] A man page generated from the clap definition **[good first issue]**
-- [ ] Remote contexts: read `~/.docker/contexts` so `dok --context prod ps`
-      works like the docker CLI
+      ([#10](https://github.com/alsaadii98/dok/issues/10))
 - [ ] Podman compatibility (the socket API is close enough to try)
 
 ## Themes wanted
@@ -51,7 +57,8 @@ codebase.
 More built-ins are welcome — see the theme section of
 [CONTRIBUTING.md](CONTRIBUTING.md). Missing and frequently requested:
 Everforest, Rosé Pine, Kanagawa, Ayu Light, Monokai, high-contrast/accessible.
-**[good first issue]**
+**[good first issue]** — claim one in
+[#12](https://github.com/alsaadii98/dok/issues/12).
 
 ## Explicit non-goals
 
