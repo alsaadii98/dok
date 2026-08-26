@@ -4,6 +4,23 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `dok ports` — every published port in one flat table, sorted by host port, so
+  "who owns 5432?" is a glance instead of a scan across wrapped lines. Skips
+  exposed-but-unpublished ports, collapses the IPv4/IPv6 pair docker reports for
+  a wildcard binding into one row, shows a `BIND` column only when some binding
+  is narrower than every interface, and marks the case where two containers
+  claim the same address, port and protocol.
+
+### Changed
+
+- The demo stack binds postgres to `127.0.0.1` rather than every interface,
+  which is how a database is usually published and gives `dok ports --demo`
+  something to show in its `BIND` column.
+
 ## [0.1.4] - 2026-08-23
 
 ### Added

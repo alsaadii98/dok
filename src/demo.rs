@@ -37,8 +37,13 @@ fn labels(project: &str, service: &str) -> HashMap<String, String> {
 }
 
 fn port(public: u16, private: u16) -> PortSummary {
+    port_on("0.0.0.0", public, private)
+}
+
+/// A binding restricted to one host address, the way a database usually is.
+fn port_on(ip: &str, public: u16, private: u16) -> PortSummary {
     PortSummary {
-        ip: Some("0.0.0.0".into()),
+        ip: Some(ip.into()),
         private_port: private,
         public_port: Some(public),
         typ: Some(PortSummaryTypeEnum::TCP),
@@ -146,7 +151,7 @@ pub fn containers() -> Vec<ContainerSummary> {
             S::RUNNING,
             "Up 3 hours (healthy)",
             6 * DAY,
-            vec![port(5432, 5432)],
+            vec![port_on("127.0.0.1", 5432, 5432)],
             Some(("demo-shop", "postgres")),
             Some(H::HEALTHY),
             Some("172.19.0.2"),
