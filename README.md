@@ -57,8 +57,8 @@ The crate is `dok-cli`; the binary it installs is `dok`.
 <details>
 <summary><b>Arch Linux</b></summary>
 
-Not on the AUR yet. The PKGBUILDs live in this repo and build the same
-packages today:
+Build with `makepkg` from the PKGBUILDs in this repo — `dok-bin` installs the
+prebuilt static binary, `dok` builds from source:
 
 ```sh
 git clone https://github.com/alsaadii98/dok
@@ -66,6 +66,8 @@ cd dok/packaging/aur
 makepkg -si -p PKGBUILD-bin   # prebuilt binary, no rust needed
 makepkg -si                   # build from source
 ```
+
+Both are the same packages that will be published to the AUR.
 </details>
 
 <details>
