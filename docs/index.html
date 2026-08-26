@@ -47,7 +47,7 @@
   "codeRepository": "https://github.com/alsaadii98/dok",
   "programmingLanguage": "Rust",
   "license": "https://opensource.org/licenses/MIT",
-  "softwareVersion": "0.1.4",
+  "softwareVersion": "0.1.5",
   "keywords": "docker, cli, containers, docker ps, docker inspect, docker logs, rust, terminal, themes",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "author": {
@@ -70,6 +70,22 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Run dok ps. It reads the Docker socket directly and prints containers grouped by compose project with coloured state dots, health marks, short ids, published ports and relative ages, sized to your terminal width."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find which container is using a port?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Run dok ports. It prints every published port across every container in one flat table sorted by host port, so finding the owner of 5432 is a glance or a grep. It skips exposed-but-unpublished ports, collapses the IPv4 and IPv6 rows Docker reports for a wildcard binding into one row, and marks any address, port and protocol claimed by two containers."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a good docker ps alternative?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "dok ps is a drop-in read-only alternative to docker ps. Unlike docker ps --format it groups containers by compose project and shows the service name rather than the mangled container name, renders sizes and ages in human units, and shrinks columns to fit the terminal instead of wrapping."
       }
     },
     {
@@ -390,6 +406,7 @@ footer .sp{margin-left:auto}
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <symbol id="i-ps" viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="m3 7.5 9 4.5 9-4.5M12 12v9"/></symbol>
+    <symbol id="i-ports" viewBox="0 0 24 24"><path d="M3 12h9"/><path d="m9 9 3 3-3 3"/><rect x="15" y="4" width="6" height="16" rx="1"/></symbol>
     <symbol id="i-images" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></symbol>
     <symbol id="i-df" viewBox="0 0 24 24"><path d="M3 13h18"/><path d="m5 13 2.2-7.3A1 1 0 0 1 8.2 5h7.6a1 1 0 0 1 1 .7L19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/><path d="M8 16h.01M11.5 16h.01"/></symbol>
     <symbol id="i-inspect" viewBox="0 0 24 24"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M8 12h8M8 9h5M8 15h6"/></symbol>
@@ -434,7 +451,7 @@ footer .sp{margin-left:auto}
 
   <section class="hero">
     <span class="pill" data-anim style="transition-delay:.03s">
-      <span class="v">v0.1.4</span> Rust · reads the docker socket · MIT
+      <span class="v">v0.1.5</span> Rust · reads the docker socket · MIT
     </span>
     <h1 data-anim style="transition-delay:.08s">Docker&nbsp;output,<br>made <em>readable</em>.</h1>
     <p class="sub" data-anim style="transition-delay:.14s">
@@ -456,10 +473,13 @@ footer .sp{margin-left:auto}
            alt="Animated terminal: dok ps -a, dok images, dok logs and dok events being typed and rendered"></div>
     </div>
   </section>
+  <!-- The reveal observer is at the foot of the document; without this the hero
+       sits at opacity:0 until the whole page has parsed. -->
+  <script>document.querySelectorAll('.hero [data-anim]').forEach(function(e){e.classList.add('in')})</script>
 
   <section class="sec" id="commands" data-anim>
     <span class="eyebrow"><svg class="i"><use href="#i-pipe"/></svg>commands</span>
-    <h2>Ten screens, one binary.</h2>
+    <h2>Eleven screens, one binary.</h2>
     <p>Each command prints one static screen and exits. No TUI to learn, no state to
        keep — it pipes into <code>grep</code> like anything else, and drops colour and
        icons automatically when it is not a terminal.</p>
@@ -473,6 +493,7 @@ footer .sp{margin-left:auto}
       <p class="k">Read-only, every one of them.</p>
       <ul class="rows">
         <li><svg class="i"><use href="#i-ps"/></svg><b>dok ps</b><span>containers, grouped by project</span></li>
+        <li><svg class="i"><use href="#i-ports"/></svg><b>dok ports</b><span>every published port, sorted by port</span></li>
         <li><svg class="i"><use href="#i-images"/></svg><b>dok images</b><span>size and age gradients</span></li>
         <li><svg class="i"><use href="#i-df"/></svg><b>dok df</b><span>disk usage, reclaimable bars</span></li>
         <li><svg class="i"><use href="#i-inspect"/></svg><b>dok inspect</b><span>the JSON, folded and masked</span></li>

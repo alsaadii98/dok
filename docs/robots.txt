@@ -1,4 +1,16 @@
 User-agent: *
 Allow: /
 
+# Documentation for a CLI tool — crawling it is the point.
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: anthropic-ai
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
 Sitemap: https://dok.alsaadii98.com/sitemap.xml
