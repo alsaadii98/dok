@@ -163,6 +163,7 @@ default `/var/run/docker.sock`, and Windows named pipes. Nothing else.
 |---|---|
 | `dok ps` (`ls`) | Containers grouped by compose project — id, state dot, health mark, `:8080→80` ports, relative age |
 | `dok ports` | Every published port in one table, sorted by port — answers "who owns 5432?" |
+| `dok history <image>` | Image layers with size bars and readable Dockerfile instructions |
 | `dok images` (`img`) | Images with size and age gradients, dangling marked reclaimable |
 | `dok df` (`du`) | Disk usage per category with used/reclaimable bars, plus the biggest offenders |
 | `dok inspect` | The 400-line inspect JSON folded into readable sections, secrets masked |
@@ -193,6 +194,30 @@ them. A wildcard binding that docker reports twice, once for IPv4 and once for
 IPv6, collapses into the single row you meant by it. The `BIND` column appears
 only when some binding is narrower than "every interface". When two containers
 claim the same address, port and protocol, both rows are marked.
+</details>
+
+<details>
+<summary><b>dok history</b> — which layer made it big</summary>
+
+```sh
+dok history api           # build order, top-down like the Dockerfile
+dok history api -r        # newest first, the way docker prints it
+dok history api --no-trunc
+```
+
+`docker history` prints the right data in the wrong order and hides the
+instruction behind `/bin/sh -c #(nop)`. This reads top-down the way the
+Dockerfile was written, recovers the instruction from the classic builder and
+BuildKit alike, and marks every layer over 10% of the image.
+
+```
+   #   SIZE                AGE  INSTRUCTION
+◆  1  145MB  ███████·····  1mo  ADD file:9a2c in /
+   2     0B  ············  1mo  ENV NODE_VERSION=22.9.0
+   3  8.9MB  █···········  1mo  RUN apk add --no-cache tini
+   4     0B  ············   2d  WORKDIR /app
+◆  5   96MB  ████········   2d  RUN npm ci --omit=dev
+```
 </details>
 
 <details>

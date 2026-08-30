@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `dok history <image>` — the layers of an image with a size bar each, read
+  top-down in build order the way the Dockerfile was written rather than
+  newest-first the way `docker history` prints it. Recovers the instruction
+  from both the classic builder's `/bin/sh -c #(nop)` wrapper and BuildKit's
+  direct form, collapses a multi-line `RUN` onto one row, and marks every layer
+  over 10% of the image. `-r` restores docker's order, `--no-trunc` keeps long
+  instructions whole.
+
 ## [0.1.5] - 2026-08-26
 
 ### Added

@@ -80,6 +80,18 @@ enum Cmd {
         sort: cmds::ps::PsSort,
     },
 
+    /// Layers of an image with size bars and readable instructions
+    History {
+        /// Image name, repo:tag or id prefix
+        image: String,
+        /// Newest layer first, the way `docker history` prints it
+        #[arg(short, long, action = ArgAction::SetTrue)]
+        reverse: bool,
+        /// Do not shorten long instructions
+        #[arg(long, action = ArgAction::SetTrue)]
+        no_trunc: bool,
+    },
+
     /// Every published port in one table, sorted by port
     Ports {
         /// Include stopped containers
@@ -305,6 +317,9 @@ async fn main() -> Result<()> {
     let result = match cli.cmd {
         Cmd::Ps { all, flat, filter, sort } => cmds::ps::run(all, flat, filter, sort).await,
         Cmd::Ports { all } => cmds::ports::run(all).await,
+        Cmd::History { image, reverse, no_trunc } => {
+            cmds::history::run(image, reverse, no_trunc).await
+        }
         Cmd::Images { all, dangling, sort } => cmds::images::run(all, dangling, sort).await,
         Cmd::Logs { containers, follow, tail, timestamps, grep } => {
             cmds::logs::run(containers, follow, tail, timestamps, grep).await

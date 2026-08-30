@@ -1,5 +1,6 @@
 pub mod df;
 pub mod events;
+pub mod history;
 pub mod images;
 pub mod inspect;
 pub mod logs;

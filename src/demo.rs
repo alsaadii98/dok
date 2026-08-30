@@ -235,6 +235,41 @@ fn image(
     }
 }
 
+/// A plausible layer stack, so `dok history --demo` shows the shape of a real
+/// image: a fat base, a fat dependency install, and a tail of metadata.
+pub fn history(image: &str) -> anyhow::Result<Vec<bollard::models::ImageHistoryResponseItem>> {
+    fn layer(
+        id: &str,
+        secs: i64,
+        size: i64,
+        by: &str,
+    ) -> bollard::models::ImageHistoryResponseItem {
+        bollard::models::ImageHistoryResponseItem {
+            id: id.to_string(),
+            created: now() - secs,
+            created_by: by.to_string(),
+            tags: vec![],
+            size,
+            comment: String::new(),
+        }
+    }
+    // The daemon answers newest-first; the fixture matches so the command's
+    // own reversing is exercised rather than bypassed.
+    let l = vec![
+        layer("<missing>", 2 * DAY, 0, r#"/bin/sh -c #(nop)  CMD ["node" "server.js"]"#),
+        layer("<missing>", 2 * DAY, 0, "/bin/sh -c #(nop)  EXPOSE 3000"),
+        layer("<missing>", 2 * DAY, 0, "/bin/sh -c #(nop)  USER node"),
+        layer("sha256:c1d2e3f4a5b6", 2 * DAY, 12_400_000, "COPY . /app"),
+        layer("sha256:b2c3d4e5f6a1", 2 * DAY, 96_300_000, "/bin/sh -c npm ci --omit=dev"),
+        layer("<missing>", 2 * DAY, 0, "/bin/sh -c #(nop)  WORKDIR /app"),
+        layer("sha256:a1b2c3d4e5f6", 30 * DAY, 8_900_000, "/bin/sh -c apk add --no-cache tini"),
+        layer("<missing>", 30 * DAY, 0, "/bin/sh -c #(nop)  ENV NODE_VERSION=22.9.0"),
+        layer("sha256:9f8e7d6c5b4a", 30 * DAY, 145_200_000, "/bin/sh -c #(nop) ADD file:9a2c in /"),
+    ];
+    let _ = image;
+    Ok(l)
+}
+
 pub fn images() -> Vec<ImageSummary> {
     vec![
         image(

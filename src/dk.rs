@@ -2,7 +2,7 @@
 
 use anyhow::{Context, Result};
 use bollard::Docker;
-use bollard::models::{ContainerSummary, ImageSummary, Network, Volume};
+use bollard::models::{ContainerSummary, ImageHistoryResponseItem, ImageSummary, Network, Volume};
 use bollard::query_parameters::{
     ListContainersOptionsBuilder, ListImagesOptionsBuilder, ListNetworksOptions, ListVolumesOptions,
 };
@@ -62,6 +62,48 @@ pub async fn df(docker: &Docker) -> Result<bollard::models::SystemDataUsageRespo
         return Ok(crate::demo::df());
     }
     Ok(docker.df(None::<bollard::query_parameters::DataUsageOptions>).await?)
+}
+
+pub async fn image_history(docker: &Docker, image: &str) -> Result<Vec<ImageHistoryResponseItem>> {
+    if crate::demo::enabled() {
+        return crate::demo::history(image);
+    }
+    docker
+        .image_history(image)
+        .await
+        .with_context(|| format!("cannot read the history of `{image}`"))
+}
+
+/// Resolve a user-typed image reference to something the daemon will accept.
+///
+/// An exact `repo:tag` wins, then a bare repo on any tag, then an id prefix,
+/// then a substring — so `postgres` finds `postgres:16-alpine` without also
+/// matching every image that merely mentions it.
+pub async fn resolve_image(docker: &Docker, needle: &str) -> Result<String> {
+    let list = images(docker, false).await?;
+    let tags: Vec<&String> = list
+        .iter()
+        .flat_map(|i| i.repo_tags.iter())
+        .filter(|t| t.as_str() != "<none>:<none>")
+        .collect();
+
+    if let Some(t) = tags.iter().find(|t| t.as_str() == needle) {
+        return Ok((*t).clone());
+    }
+    if let Some(t) = tags.iter().find(|t| t.split(':').next() == Some(needle)) {
+        return Ok((*t).clone());
+    }
+    if let Some(i) = list.iter().find(|i| {
+        i.id.strip_prefix("sha256:").unwrap_or(&i.id).starts_with(needle) && !needle.is_empty()
+    }) {
+        return Ok(i.id.clone());
+    }
+    if let Some(t) = tags.iter().find(|t| t.contains(needle)) {
+        return Ok((*t).clone());
+    }
+    // Nothing local matched. The daemon may still know the reference, so hand
+    // it over rather than refusing on our own guess.
+    Ok(needle.to_string())
 }
 
 /// Resolve a user-typed name/id prefix to a concrete container name.

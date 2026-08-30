@@ -23,7 +23,7 @@ codebase.
 - [ ] **`dok ports`** — one flat table of every published port across all
       containers, sorted by port. Answers "who owns 5432?" in one line.
       ([#8](https://github.com/alsaadii98/dok/issues/8))
-- [ ] **`dok history <image>`** — layer list with size bars and truncated
+- [x] **`dok history <image>`** — layer list with size bars and readable
       Dockerfile instructions. A CLI-shaped `dive` for spotting fat layers.
 - [ ] **`dok prune --dry-run`** — what *would* be reclaimed, grouped by kind,
       before you commit to it.
