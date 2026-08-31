@@ -80,6 +80,16 @@ enum Cmd {
         sort: cmds::ps::PsSort,
     },
 
+    /// Containers with a healthcheck: status, failing streak, last probe
+    Health {
+        /// Include stopped containers
+        #[arg(short, long, action = ArgAction::SetTrue)]
+        all: bool,
+        /// Only checks that are failing
+        #[arg(short = 'u', long = "unhealthy", action = ArgAction::SetTrue)]
+        failing_only: bool,
+    },
+
     /// Layers of an image with size bars and readable instructions
     History {
         /// Image name, repo:tag or id prefix
@@ -317,6 +327,7 @@ async fn main() -> Result<()> {
     let result = match cli.cmd {
         Cmd::Ps { all, flat, filter, sort } => cmds::ps::run(all, flat, filter, sort).await,
         Cmd::Ports { all } => cmds::ports::run(all).await,
+        Cmd::Health { all, failing_only } => cmds::health::run(all, failing_only).await,
         Cmd::History { image, reverse, no_trunc } => {
             cmds::history::run(image, reverse, no_trunc).await
         }

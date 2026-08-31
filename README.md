@@ -163,6 +163,7 @@ default `/var/run/docker.sock`, and Windows named pipes. Nothing else.
 |---|---|
 | `dok ps` (`ls`) | Containers grouped by compose project — id, state dot, health mark, `:8080→80` ports, relative age |
 | `dok ports` | Every published port in one table, sorted by port — answers "who owns 5432?" |
+| `dok health` | Only containers with a healthcheck — status, failing streak, last probe |
 | `dok history <image>` | Image layers with size bars and readable Dockerfile instructions |
 | `dok images` (`img`) | Images with size and age gradients, dangling marked reclaimable |
 | `dok df` (`du`) | Disk usage per category with used/reclaimable bars, plus the biggest offenders |
@@ -197,6 +198,26 @@ claim the same address, port and protocol, both rows are marked.
 </details>
 
 <details>
+<summary><b>dok health</b> — what is actually failing</summary>
+
+```sh
+dok health            # every container that declares a healthcheck
+dok health -u         # only the ones failing
+dok health -a         # include stopped containers
+```
+
+`docker ps` shows `(healthy)` inside a status string and nothing else. The
+three things worth knowing when a check fails — how long it has been failing,
+what the probe printed, and how often it runs — are several hundred lines apart
+in `docker inspect`. Unhealthy sorts first.
+
+```
+   CONTAINER  PROJECT        HEALTH     FAILING  EVERY  LAST PROBE
+✖  grafana    observability  unhealthy        7    30s  exit 1 curl: (7) Failed to connect…
+✔  api        demo-shop      healthy          0    30s  {"status":"ok","db":"up"}
+✔  postgres   demo-shop      healthy          0    30s  accepting connections
+
+2 healthy · 1 unhealthy · 2 without a healthcheck
 <summary><b>dok history</b> — which layer made it big</summary>
 
 ```sh

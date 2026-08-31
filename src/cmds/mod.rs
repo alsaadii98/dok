@@ -1,5 +1,6 @@
 pub mod df;
 pub mod events;
+pub mod health;
 pub mod history;
 pub mod images;
 pub mod inspect;
