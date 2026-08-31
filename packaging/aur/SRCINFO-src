@@ -1,6 +1,6 @@
 pkgbase = dok
 	pkgdesc = Docker output, made readable - what eza is to ls
-	pkgver = 0.1.4
+	pkgver = 0.1.5
 	pkgrel = 1
 	url = https://github.com/alsaadii98/dok
 	arch = x86_64
@@ -10,7 +10,7 @@ pkgbase = dok
 	depends = gcc-libs
 	provides = dok
 	conflicts = dok-bin
-	source = dok-0.1.4.tar.gz::https://github.com/alsaadii98/dok/archive/refs/tags/v0.1.4.tar.gz
-	sha256sums = ed07c061cff53b48322138e6e40fcf9355a1fef08b1d9cc8715fd041dac3d2d1
+	source = dok-0.1.5.tar.gz::https://github.com/alsaadii98/dok/archive/refs/tags/v0.1.5.tar.gz
+	sha256sums = 24dfd32d08864f46ed7cdb58073e465260a4c263497bc210d8df021f1e0df9df
 
 pkgname = dok
