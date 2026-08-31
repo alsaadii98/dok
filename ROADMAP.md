@@ -27,7 +27,7 @@ codebase.
       Dockerfile instructions. A CLI-shaped `dive` for spotting fat layers.
 - [ ] **`dok prune --dry-run`** — what *would* be reclaimed, grouped by kind,
       before you commit to it.
-- [ ] **`dok health`** — only containers with healthchecks: status, failing
+- [x] **`dok health`** — only containers with healthchecks: status, failing
       streak, last probe output.
 - [ ] **Shell completions** for bash/zsh/fish/nushell, generated in CI.
       **[good first issue]** ([#9](https://github.com/alsaadii98/dok/issues/9))

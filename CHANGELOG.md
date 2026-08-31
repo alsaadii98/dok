@@ -15,6 +15,20 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   direct form, collapses a multi-line `RUN` onto one row, and marks every layer
   over 10% of the image. `-r` restores docker's order, `--no-trunc` keeps long
   instructions whole.
+- `dok health` — the containers that declare a healthcheck, and only those,
+  with the failing streak, the first line of the last probe's output and the
+  probe's exit code. Unhealthy sorts first. `-u` narrows to what is failing,
+  `-a` includes stopped containers. The count of containers without a
+  healthcheck is reported too, since an empty table and a table missing half
+  the stack otherwise look the same.
+
+### Fixed
+
+- `dok inspect <name> --demo` answered as the api container whatever name was
+  given, so `dok inspect redis --demo` showed api's id, image and healthcheck.
+  The fixture now varies by service, and only api, postgres and grafana declare
+  a healthcheck — grafana's is failing, which is what gives `dok health --demo`
+  something to show.
 
 ## [0.1.5] - 2026-08-26
 

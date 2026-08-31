@@ -412,8 +412,64 @@ pub fn df() -> SystemDataUsageResponse {
     }
 }
 
-/// A fabricated `docker inspect` for the demo api container.
-pub fn inspect(_name: &str) -> ContainerInspectResponse {
+/// The healthcheck the demo stack reports for a given service.
+///
+/// Only api, postgres and grafana declare one; redis, web and worker have
+/// none, which is what makes `dok health` worth running on this stack.
+fn demo_health(service: &str) -> Option<Health> {
+    let ok = |body: &str| {
+        Some(Health {
+            status: Some(HealthStatusEnum::HEALTHY),
+            failing_streak: Some(0),
+            log: Some(vec![HealthcheckResult {
+                exit_code: Some(0),
+                output: Some(format!("{body}\n")),
+                ..Default::default()
+            }]),
+        })
+    };
+    match service {
+        "api" => ok(r#"{"status":"ok","db":"up","queue":"up"}"#),
+        "postgres" => ok("accepting connections"),
+        "grafana" => Some(Health {
+            status: Some(HealthStatusEnum::UNHEALTHY),
+            failing_streak: Some(7),
+            log: Some(vec![HealthcheckResult {
+                exit_code: Some(1),
+                output: Some("curl: (7) Failed to connect to localhost port 3000\n".into()),
+                ..Default::default()
+            }]),
+        }),
+        _ => None,
+    }
+}
+
+/// A fabricated `docker inspect`. The health block and identity vary by
+/// service so every demo container does not answer as the api one.
+pub fn inspect(name: &str) -> ContainerInspectResponse {
+    let service = containers()
+        .iter()
+        .find(|c| crate::dk::name_of(c) == name)
+        .and_then(|c| crate::dk::label(c, crate::dk::COMPOSE_SERVICE).map(str::to_string))
+        .unwrap_or_else(|| name.to_string());
+    let mut r = inspect_api();
+    r.name = Some(format!("/{name}"));
+    if let Some(st) = r.state.as_mut() {
+        st.health = demo_health(&service);
+    }
+    if service != "api"
+        && let Some(ct) = containers().iter().find(|c| crate::dk::name_of(c) == name)
+        && let Some(img) = ct.image.clone()
+    {
+        r.image = Some(img.clone());
+        if let Some(cfg) = r.config.as_mut() {
+            cfg.image = Some(img);
+        }
+    }
+    r
+}
+
+fn inspect_api() -> ContainerInspectResponse {
     ContainerInspectResponse {
         id: Some("a1b2c3d4e5f60f2b7c4d8e9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c".into()),
         name: Some("/demo-shop-api-1".into()),
