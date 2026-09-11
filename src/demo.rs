@@ -467,19 +467,27 @@ fn demo_health(service: &str) -> Option<Health> {
 
 /// A fabricated `docker inspect`. The health block and identity vary by
 /// service so every demo container does not answer as the api one.
-pub fn inspect(name: &str) -> ContainerInspectResponse {
-    let service = containers()
-        .iter()
-        .find(|c| crate::dk::name_of(c) == name)
+pub fn inspect(needle: &str) -> ContainerInspectResponse {
+    // Resolve the way `dk::resolve` does for a real daemon: by container
+    // name, by service name, or by id prefix. The response then carries the
+    // container's real name, not whatever was typed.
+    let all = containers();
+    let ct = all.iter().find(|c| {
+        crate::dk::name_of(c) == needle
+            || crate::dk::label(c, crate::dk::COMPOSE_SERVICE) == Some(needle)
+            || c.id.as_deref().is_some_and(|id| id.starts_with(needle))
+    });
+    let name = ct.map(crate::dk::name_of).unwrap_or_else(|| needle.to_string());
+    let service = ct
         .and_then(|c| crate::dk::label(c, crate::dk::COMPOSE_SERVICE).map(str::to_string))
-        .unwrap_or_else(|| name.to_string());
+        .unwrap_or_else(|| needle.to_string());
     let mut r = inspect_api();
     r.name = Some(format!("/{name}"));
     if let Some(st) = r.state.as_mut() {
         st.health = demo_health(&service);
     }
     if service != "api"
-        && let Some(ct) = containers().iter().find(|c| crate::dk::name_of(c) == name)
+        && let Some(ct) = ct
         && let Some(img) = ct.image.clone()
     {
         r.image = Some(img.clone());
