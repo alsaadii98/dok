@@ -4,6 +4,27 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `dok prune` — what `docker system prune` would remove, grouped by kind and
+  sized, before you run it. Never deletes anything; it prints the docker
+  command that does. Draws the same line docker draws: dangling images by
+  default, every unused image with `-a`, volumes only with `--volumes`.
+  Networks are judged by cross-referencing every container's own settings,
+  since the list endpoint does not report membership, and the three built-in
+  networks docker refuses to remove are never listed.
+
+### Fixed
+
+- The demo stack attached every container to `demo-shop_default`, including
+  grafana, whose IP is in the observability subnet. `dok tree --demo` showed
+  `observability_default` with no containers. Networks now follow the compose
+  project. The stack also gains a leftover `old-release_default` network and a
+  tagged-but-unused `api:1.4.1` image, so `dok prune --demo` has something to
+  show on each side of the `-a` boundary.
+
 ## [0.1.6] - 2026-08-27
 
 ### Added

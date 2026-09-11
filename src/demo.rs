@@ -100,7 +100,14 @@ fn container(
         labels: project.map(|(p, s)| labels(p, s)),
         state: Some(state),
         status: Some(status.into()),
-        network_settings: ip.map(|ip| endpoint("demo-shop_default", ip)),
+        // Compose attaches a service to `<project>_default`; a container with
+        // no project sits on the default bridge. Naming the network from the
+        // project keeps the fixture consistent with the subnets it declares.
+        network_settings: ip.map(|ip| {
+            let net =
+                project.map(|(p, _)| format!("{p}_default")).unwrap_or_else(|| "bridge".into());
+            endpoint(&net, ip)
+        }),
         mounts: Some(mounts),
         health: health.map(|h| ContainerSummaryHealth {
             status: Some(h),
@@ -294,6 +301,17 @@ pub fn images() -> Vec<ImageSummary> {
         image("e7723ff73d96", &["redis:7-alpine"], 59_000_000, 0, 21 * DAY, 1),
         image("7d1c4b8a2f30", &["alpine:3.20"], 8_100_000, 0, 60 * DAY, 1),
         image("4c9e2f81a76b", &[], 244_000_000, 0, 9 * DAY, 0),
+        // The previous release, still tagged, nothing running it. `docker
+        // system prune` leaves this alone; `-a` takes it. The difference is
+        // what `dok prune` exists to show.
+        image(
+            "8e1f3a9c2d47",
+            &["ghcr.io/demo-shop/api:1.4.1"],
+            268_000_000,
+            142_000_000,
+            16 * DAY,
+            0,
+        ),
     ]
 }
 
@@ -314,6 +332,9 @@ pub fn networks() -> Vec<Network> {
         net("bridge", "bridge", Some("172.17.0.0/16")),
         net("demo-shop_default", "bridge", Some("172.19.0.0/16")),
         net("observability_default", "bridge", Some("172.20.0.0/16")),
+        // Left behind by a `compose down` without --remove-orphans, like the
+        // old-release volume. Nothing is attached, so prune will list it.
+        net("old-release_default", "bridge", Some("172.21.0.0/16")),
         net("host", "host", None),
         net("none", "null", None),
     ]

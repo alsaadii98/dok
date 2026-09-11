@@ -20,13 +20,13 @@ codebase.
 
 ## Next up (0.2)
 
-- [ ] **`dok ports`** — one flat table of every published port across all
+- [x] **`dok ports`** — one flat table of every published port across all
       containers, sorted by port. Answers "who owns 5432?" in one line.
       ([#8](https://github.com/alsaadii98/dok/issues/8))
 - [x] **`dok history <image>`** — layer list with size bars and readable
       Dockerfile instructions. A CLI-shaped `dive` for spotting fat layers.
-- [ ] **`dok prune --dry-run`** — what *would* be reclaimed, grouped by kind,
-      before you commit to it.
+- [x] **`dok prune`** — what *would* be reclaimed, grouped by kind, before
+      you commit to it. Never removes anything; there is no non-dry-run.
 - [x] **`dok health`** — only containers with healthchecks: status, failing
       streak, last probe output.
 - [ ] **Shell completions** for bash/zsh/fish/nushell, generated in CI.

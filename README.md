@@ -167,6 +167,7 @@ default `/var/run/docker.sock`, and Windows named pipes. Nothing else.
 | `dok history <image>` | Image layers with size bars and readable Dockerfile instructions |
 | `dok images` (`img`) | Images with size and age gradients, dangling marked reclaimable |
 | `dok df` (`du`) | Disk usage per category with used/reclaimable bars, plus the biggest offenders |
+| `dok prune` | What `docker system prune` would remove, grouped and sized — never removes anything |
 | `dok inspect` | The 400-line inspect JSON folded into readable sections, secrets masked |
 | `dok logs` | Interleaved multi-container tail with level colouring and JSON pretty-printing |
 | `dok top` | Processes inside containers, nested by parent PID |
@@ -238,6 +239,39 @@ BuildKit alike, and marks every layer over 10% of the image.
    3  8.9MB  █···········  1mo  RUN apk add --no-cache tini
    4     0B  ············   2d  WORKDIR /app
 ◆  5   96MB  ████········   2d  RUN npm ci --omit=dev
+```
+</details>
+
+<details>
+<summary><b>dok prune</b> — what would go, before it goes</summary>
+
+```sh
+dok prune             # what `docker system prune` would take
+dok prune -a          # count every unused image, not only dangling ones
+dok prune --volumes   # include unused volumes
+```
+
+dok reads, docker writes — this never deletes anything. It shows the exact set
+`docker system prune` would remove, grouped by kind and sized, then prints the
+docker command that does it. The one thing a preview has to get right is the
+boundary: without `-a`, docker takes *dangling* images and leaves a tagged
+image that nothing runs alone. The same flag here draws the same line.
+
+```
+◆ containers  2 stopped · 114kB
+├─  scratch-box                                  66kB  created
+└─  demo-shop-worker-1                           48kB  exited
+◆ images  1 dangling · 244MB
+└─  <none> 4c9e2f81a76b                         244MB  0 containers
+◆ networks  1 unused
+└─  old-release_default                             —  bridge
+◆ build cache  2 unused · 460MB
+├─  mount / from exec /bin/sh -c npm ci --o…    318MB  used 2×
+└─  pulled from docker.io/library/node:20-a…    142MB  used 3×
+
+704MB reclaimable · 6 items · nothing was removed
+
+  $ docker system prune
 ```
 </details>
 
