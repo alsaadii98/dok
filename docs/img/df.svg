@@ -18,7 +18,7 @@
 <text y="289.0" xml:space="preserve"><tspan x="20.0" fill="#bec4d0">ghcr.io/demo-shop/worker:1.4.2</tspan><tspan x="288.8" fill="#e06c75">1.1GB</tspan><tspan x="347.6" fill="#98c379">1 container</tspan></text>
 <text y="309.0" xml:space="preserve"><tspan x="20.0" fill="#bec4d0">postgres:16-alpine</tspan><tspan x="288.8" fill="#e5c07b">411MB</tspan><tspan x="347.6" fill="#98c379">1 container</tspan></text>
 <text y="329.0" xml:space="preserve"><tspan x="20.0" fill="#bec4d0">ghcr.io/demo-shop/api:1.4.2</tspan><tspan x="288.8" fill="#e5c07b">271MB</tspan><tspan x="347.6" fill="#98c379">1 container</tspan></text>
-<text y="349.0" xml:space="preserve"><tspan x="20.0" fill="#6a7382">… 5 more</tspan></text>
+<text y="349.0" xml:space="preserve"><tspan x="20.0" fill="#6a7382">… 6 more</tspan></text>
 <text y="389.0" xml:space="preserve"><tspan x="20.0" fill="#61afef">○</tspan><tspan x="36.8" fill="#61afef" font-weight="bold">containers</tspan></text>
 <text y="409.0" xml:space="preserve"><tspan x="20.0" fill="#6a7382" font-weight="bold" text-decoration="underline">NAME</tspan><tspan x="188.0" fill="#6a7382" font-weight="bold" text-decoration="underline">SIZE</tspan><tspan x="238.4" fill="#6a7382" font-weight="bold" text-decoration="underline">STATUS</tspan></text>
 <text y="429.0" xml:space="preserve"><tspan x="20.0" fill="#6a7382">scratch-box</tspan><tspan x="188.0" fill="#98c379">66kB</tspan><tspan x="238.4" fill="#d19a66">reclaimable</tspan></text>

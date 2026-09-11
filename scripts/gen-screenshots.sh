@@ -37,6 +37,10 @@ capture themes   themes
 capture inspect  inspect api
 capture top      top api
 capture events   events --since 20m
+capture ports    ports
+capture history  history api
+capture health   health
+capture prune    prune
 
 # Static frames for the README.
 still() {
@@ -49,6 +53,10 @@ still tree    "dok tree"
 still logs    "dok logs -n 8"
 still themes  "dok themes"
 still inspect "dok inspect api"
+still ports   "dok ports"
+still history "dok history api"
+still health  "dok health"
+still prune   "dok prune"
 
 # Animated casts for the website.
 cast() {
@@ -78,5 +86,9 @@ cast inspect "dok inspect" "dok inspect api=$RAW/inspect.ansi"
 cast top     "dok top"     "dok top api=$RAW/top.ansi"
 cast events  "dok events"  "dok events --since 20m=$RAW/events.ansi"
 cast themes  "dok themes"  "dok themes=$RAW/themes.ansi"
+cast ports   "dok ports"   "dok ports=$RAW/ports.ansi"
+cast history "dok history" "dok history api=$RAW/history.ansi"
+cast health  "dok health"  "dok health=$RAW/health.ansi"
+cast prune   "dok prune"   "dok prune=$RAW/prune.ansi"
 
 echo "screenshots written to docs/img/"

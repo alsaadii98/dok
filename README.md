@@ -182,6 +182,8 @@ default `/var/run/docker.sock`, and Windows named pipes. Nothing else.
 <details>
 <summary><b>dok ports</b> — who owns 5432?</summary>
 
+<img src="docs/img/ports.svg" alt="dok ports" width="820">
+
 ```sh
 dok ports             # every published port, sorted by port
 dok ports -a          # include stopped containers
@@ -202,18 +204,12 @@ claim the same address, port and protocol, both rows are marked.
 <details>
 <summary><b>dok health</b> — what is actually failing</summary>
 
+<img src="docs/img/health.svg" alt="dok health" width="820">
+
 ```sh
 dok health            # every container that declares a healthcheck
 dok health -u         # only the ones failing
 dok health -a         # include stopped containers
-```
-
-`docker ps` shows `(healthy)` inside a status string and nothing else. The
-three things worth knowing when a check fails — how long it has been failing,
-what the probe printed, and how often it runs — are several hundred lines apart
-in `docker inspect`. Unhealthy sorts first.
-
-```
    CONTAINER  PROJECT        HEALTH     FAILING  EVERY  LAST PROBE
 ✖  grafana    observability  unhealthy        7    30s  exit 1 curl: (7) Failed to connect…
 ✔  api        demo-shop      healthy          0    30s  {"status":"ok","db":"up"}
@@ -222,18 +218,12 @@ in `docker inspect`. Unhealthy sorts first.
 2 healthy · 1 unhealthy · 2 without a healthcheck
 <summary><b>dok history</b> — which layer made it big</summary>
 
+<img src="docs/img/history.svg" alt="dok history api" width="820">
+
 ```sh
 dok history api           # build order, top-down like the Dockerfile
 dok history api -r        # newest first, the way docker prints it
 dok history api --no-trunc
-```
-
-`docker history` prints the right data in the wrong order and hides the
-instruction behind `/bin/sh -c #(nop)`. This reads top-down the way the
-Dockerfile was written, recovers the instruction from the classic builder and
-BuildKit alike, and marks every layer over 10% of the image.
-
-```
    #   SIZE                AGE  INSTRUCTION
 ◆  1  145MB  ███████·····  1mo  ADD file:9a2c in /
    2     0B  ············  1mo  ENV NODE_VERSION=22.9.0
@@ -246,19 +236,12 @@ BuildKit alike, and marks every layer over 10% of the image.
 <details>
 <summary><b>dok prune</b> — what would go, before it goes</summary>
 
+<img src="docs/img/prune.svg" alt="dok prune" width="820">
+
 ```sh
 dok prune             # what `docker system prune` would take
 dok prune -a          # count every unused image, not only dangling ones
 dok prune --volumes   # include unused volumes
-```
-
-dok reads, docker writes — this never deletes anything. It shows the exact set
-`docker system prune` would remove, grouped by kind and sized, then prints the
-docker command that does it. The one thing a preview has to get right is the
-boundary: without `-a`, docker takes *dangling* images and leaves a tagged
-image that nothing runs alone. The same flag here draws the same line.
-
-```
 ◆ containers  2 stopped · 114kB
 ├─  scratch-box                                  66kB  created
 └─  demo-shop-worker-1                           48kB  exited

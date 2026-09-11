@@ -106,6 +106,22 @@
     },
     {
       "@type": "Question",
+      "name": "What will docker system prune delete?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Run dok prune. It shows exactly what docker system prune would remove — stopped containers, dangling images, unused networks and build cache — grouped by kind and sized, without removing anything. It draws the same line docker does: dangling images by default, every unused image with -a, volumes only with --volumes. It then prints the docker command that does the removing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does dok have shell completions?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. dok completions <shell> prints a script for bash, zsh, fish, nushell, powershell or elvish, generated from the same definition the CLI is built from. Homebrew installs them automatically; the .deb and .rpm include bash, zsh and fish; every release attaches a tarball with all six."
+      }
+    },
+    {
+      "@type": "Question",
       "name": "Is there a readable alternative to docker inspect?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -504,7 +520,7 @@ footer .sp{margin-left:auto}
 
   <section class="sec" id="commands" data-anim>
     <span class="eyebrow"><svg class="i"><use href="#i-pipe"/></svg>commands</span>
-    <h2>Fourteen screens, one binary.</h2>
+    <h2>Fifteen screens, one binary.</h2>
     <p>Each command prints one static screen and exits. No TUI to learn, no state to
        keep — it pipes into <code>grep</code> like anything else, and drops colour and
        icons automatically when it is not a terminal.</p>
@@ -531,6 +547,7 @@ footer .sp{margin-left:auto}
         <li><svg class="i"><use href="#i-stats"/></svg><b>dok stats</b><span>live CPU / memory dashboard</span></li>
         <li><svg class="i"><use href="#i-events"/></svg><b>dok events</b><span>colour-coded daemon events</span></li>
         <li><svg class="i"><use href="#i-themes"/></svg><b>dok themes</b><span>list and preview themes</span></li>
+        <li><svg class="i"><use href="#i-pipe"/></svg><b>dok completions</b><span>bash, zsh, fish, nushell, powershell, elvish</span></li>
         <li><svg class="i"><use href="#i-update"/></svg><b>dok update</b><span>check for a release, install it</span></li>
         <li><svg class="i"><use href="#i-download"/></svg><b>dok uninstall</b><span>remove it as cleanly as it arrived</span></li>
       </ul>
@@ -566,6 +583,31 @@ footer .sp{margin-left:auto}
            alt="Animated dok events: colour-coded container, image, volume and network events"></div>
       <figcaption><svg class="i"><use href="#i-events"/></svg>
         <b>dok events</b> lifecycle in order — exit codes, signals and health flips picked out</figcaption>
+    </figure>
+
+    <figure class="tile cast s2" data-anim>
+      <div class="frame"><img src="img/cast-ports.svg" width="536" height="294" loading="lazy"
+           alt="Animated dok ports: every published port in one table sorted by host port, with the bind address shown when it is narrower than every interface"></div>
+      <figcaption><svg class="i"><use href="#i-ports"/></svg><b>dok ports</b> who owns 5432</figcaption>
+    </figure>
+
+    <figure class="tile cast s2" data-anim>
+      <div class="frame"><img src="img/cast-history.svg" width="645" height="354" loading="lazy"
+           alt="Animated dok history: image layers in build order with a size bar each and the Dockerfile instruction recovered"></div>
+      <figcaption><svg class="i"><use href="#i-history"/></svg><b>dok history</b> which layer made it big</figcaption>
+    </figure>
+
+    <figure class="tile cast s2" data-anim>
+      <div class="frame"><img src="img/cast-prune.svg" width="603" height="394" loading="lazy"
+           alt="Animated dok prune: what docker system prune would remove, grouped by kind and sized, with the docker command that does it"></div>
+      <figcaption><svg class="i"><use href="#i-df"/></svg><b>dok prune</b> what would go — never removes</figcaption>
+    </figure>
+
+    <figure class="tile cast s4" data-anim>
+      <div class="frame"><img src="img/cast-health.svg" width="914" height="234" loading="lazy"
+           alt="Animated dok health: only the containers with a healthcheck, unhealthy first, with failing streak, interval and the last probe's output"></div>
+      <figcaption><svg class="i"><use href="#i-health"/></svg>
+        <b>dok health</b> failing streak, interval, and what the probe actually printed</figcaption>
     </figure>
 
     <div class="tile s2" data-anim>

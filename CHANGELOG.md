@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- `dok inspect api --demo` reported the container's name as `api` — whatever
+  was typed — instead of `demo-shop-api-1`. A regression from 0.1.6, when the
+  demo fixture started varying by service. The fixture now resolves the way
+  a real daemon does: by container name, service name or id prefix.
+
 ## [0.2.0] - 2026-09-11
 
 ### Added
