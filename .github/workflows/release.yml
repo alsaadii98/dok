@@ -90,6 +90,25 @@ jobs:
             shasum -a 256 "$name.tar.gz" | cut -d' ' -f1 > "$name.tar.gz.sha256"
           fi
 
+      # Completions come from the clap definition, so they are the same for
+      # every target; generate them once here, on the one job that can run
+      # the binary natively, and the .deb / .rpm pick them up as assets.
+      - name: Generate shell completions
+        if: matrix.packages
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          [ -n "${{ github.event.inputs.tag }}" ] && version="${{ github.event.inputs.tag }}" && version="${version#v}"
+          bin="target/${{ matrix.target }}/release/$BIN"
+          mkdir -p target/completions
+          "$bin" completions bash       > target/completions/dok.bash
+          "$bin" completions zsh        > target/completions/_dok
+          "$bin" completions fish       > target/completions/dok.fish
+          "$bin" completions nushell    > target/completions/dok.nu
+          "$bin" completions powershell > target/completions/_dok.ps1
+          "$bin" completions elvish     > target/completions/dok.elv
+          tar -C target -czf "dist/$BIN-$version-completions.tar.gz" completions
+          shasum -a 256 "dist/$BIN-$version-completions.tar.gz" | cut -d' ' -f1 > "dist/$BIN-$version-completions.tar.gz.sha256"
+
       - name: Build .deb and .rpm
         if: matrix.packages
         run: |

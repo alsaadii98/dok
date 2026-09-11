@@ -81,6 +81,7 @@ class Dok < Formula
       root = Dir["dok-*"].find { |d| File.directory?(d) } || "."
       bin.install "#{root}/dok"
       doc.install "#{root}/README.md", "#{root}/CHANGELOG.md" if File.exist?("#{root}/README.md")
+      generate_completions_from_executable(bin/"dok", "completions")
     end
   end
 

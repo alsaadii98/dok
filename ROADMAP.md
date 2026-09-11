@@ -29,8 +29,8 @@ codebase.
       you commit to it. Never removes anything; there is no non-dry-run.
 - [x] **`dok health`** — only containers with healthchecks: status, failing
       streak, last probe output.
-- [ ] **Shell completions** for bash/zsh/fish/nushell, generated in CI.
-      **[good first issue]** ([#9](https://github.com/alsaadii98/dok/issues/9))
+- [x] **Shell completions** for bash/zsh/fish/nushell, generated in CI.
+      ([#9](https://github.com/alsaadii98/dok/issues/9))
 
 ## After that (0.3)
 
