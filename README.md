@@ -175,6 +175,7 @@ default `/var/run/docker.sock`, and Windows named pipes. Nothing else.
 | `dok stats` | Live CPU / memory / IO dashboard |
 | `dok events` | Daemon event stream, colour-coded by type and action |
 | `dok themes` | List and preview themes |
+| `dok completions` | Print a completion script for bash, zsh, fish, nushell, powershell or elvish |
 | `dok update` | Check for a newer release and install it in place |
 | `dok uninstall` | Remove dok, or print the exact command that does |
 
@@ -374,6 +375,21 @@ DOK_THEME=nord dok ps
 
 Built in: `default`, `dracula`, `nord`, `gruvbox`, `catppuccin`, `tokyonight`,
 `solarized-light`, `mono`, `matrix`, `ascii`.
+
+## Shell completions
+
+Homebrew, the `.deb` and the `.rpm` install them for bash, zsh and fish.
+Everything else, or any other shell:
+
+```sh
+dok completions bash > /etc/bash_completion.d/dok
+dok completions zsh  > "${fpath[1]}/_dok"
+dok completions fish > ~/.config/fish/completions/dok.fish
+dok completions nushell | save ~/.config/nushell/dok.nu   # then `source dok.nu`
+dok completions powershell >> $PROFILE
+```
+
+Every release also carries a `dok-<version>-completions.tar.gz` with all six.
 
 ## Configuration
 

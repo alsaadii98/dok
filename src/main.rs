@@ -11,7 +11,7 @@ mod uninstall;
 mod update;
 
 use anyhow::Result;
-use clap::{ArgAction, Parser, Subcommand, ValueEnum};
+use clap::{ArgAction, CommandFactory, Parser, Subcommand, ValueEnum};
 
 #[derive(Parser)]
 #[command(
@@ -59,6 +59,16 @@ enum IconChoice {
     Unicode,
     /// No icons at all
     None,
+}
+
+#[derive(Copy, Clone, ValueEnum)]
+enum ShellChoice {
+    Bash,
+    Zsh,
+    Fish,
+    Nushell,
+    Powershell,
+    Elvish,
 }
 
 #[derive(Subcommand)]
@@ -248,6 +258,13 @@ enum Cmd {
         yes: bool,
     },
 
+    /// Print a shell completion script to stdout
+    Completions {
+        /// Which shell to generate for
+        #[arg(value_enum)]
+        shell: ShellChoice,
+    },
+
     /// Tree view of compose projects, networks and volumes
     Tree {
         /// Show only this section
@@ -333,7 +350,8 @@ async fn main() -> Result<()> {
 
     // Neither of the self-management commands should end with a nag about a
     // version the user may be in the middle of leaving.
-    let is_update = matches!(cli.cmd, Cmd::Update { .. } | Cmd::Uninstall { .. });
+    let is_update =
+        matches!(cli.cmd, Cmd::Update { .. } | Cmd::Uninstall { .. } | Cmd::Completions { .. });
     let result = match cli.cmd {
         Cmd::Ps { all, flat, filter, sort } => cmds::ps::run(all, flat, filter, sort).await,
         Cmd::Ports { all } => cmds::ports::run(all).await,
@@ -365,6 +383,10 @@ async fn main() -> Result<()> {
             }
         }
         Cmd::Tree { only, all } => cmds::tree::run(only, all).await,
+        Cmd::Completions { shell } => {
+            print_completions(shell);
+            Ok(())
+        }
     };
 
     // The nag comes after the output, never instead of it, and only when a
@@ -384,6 +406,21 @@ async fn main() -> Result<()> {
         );
     }
     result
+}
+
+/// Write the completion script for one shell to stdout.
+fn print_completions(shell: ShellChoice) {
+    use clap_complete::{Shell, generate};
+    let mut cmd = Cli::command();
+    let mut out = std::io::stdout();
+    match shell {
+        ShellChoice::Bash => generate(Shell::Bash, &mut cmd, "dok", &mut out),
+        ShellChoice::Zsh => generate(Shell::Zsh, &mut cmd, "dok", &mut out),
+        ShellChoice::Fish => generate(Shell::Fish, &mut cmd, "dok", &mut out),
+        ShellChoice::Powershell => generate(Shell::PowerShell, &mut cmd, "dok", &mut out),
+        ShellChoice::Elvish => generate(Shell::Elvish, &mut cmd, "dok", &mut out),
+        ShellChoice::Nushell => generate(clap_complete_nushell::Nushell, &mut cmd, "dok", &mut out),
+    }
 }
 
 /// Guess whether the terminal is running a patched font. Opt-in env var wins.

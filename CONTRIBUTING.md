@@ -107,6 +107,19 @@ grouping is visible.
   are two PRs.
 - If you change output, paste a before/after in the PR description.
 
+## Packaging locally
+
+`cargo deb` and `cargo generate-rpm` declare the shell completions as assets,
+and the release workflow generates those before packaging. To build a package
+on your own machine, generate them first:
+
+```sh
+cargo build --release
+mkdir -p target/completions
+for s in bash zsh fish; do target/release/dok completions $s > target/completions/dok.$s; done
+mv target/completions/dok.zsh target/completions/_dok
+```
+
 ## Releasing (maintainers)
 
 ```sh

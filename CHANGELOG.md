@@ -8,6 +8,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- `dok completions <shell>` — prints a completion script for bash, zsh, fish,
+  nushell, powershell or elvish, generated from the same clap definition the
+  CLI is built from, so it cannot drift. The update notice is suppressed for
+  this command, since the output is sourced by a shell. Homebrew installs
+  completions by running the binary at install time; the `.deb` and `.rpm`
+  carry bash, zsh and fish in the distro-standard locations; and every release
+  attaches a `dok-<version>-completions.tar.gz` with all six.
+
 - `dok prune` — what `docker system prune` would remove, grouped by kind and
   sized, before you run it. Never deletes anything; it prints the docker
   command that does. Draws the same line docker draws: dangling images by
