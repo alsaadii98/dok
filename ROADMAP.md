@@ -18,7 +18,7 @@ codebase.
 - [x] Themes — 10 built-ins, palette + glyph set + layout, config overrides
 - [x] `--demo` — canned example stack, no daemon required, drives the docs
 
-## Next up (0.2)
+## Shipped (0.2)
 
 - [x] **`dok ports`** — one flat table of every published port across all
       containers, sorted by port. Answers "who owns 5432?" in one line.
@@ -32,7 +32,7 @@ codebase.
 - [x] **Shell completions** for bash/zsh/fish/nushell, generated in CI.
       ([#9](https://github.com/alsaadii98/dok/issues/9))
 
-## After that (0.3)
+## Next up (0.3)
 
 - [ ] **`--json` on every command** — same data, machine-readable, so `dok` can
       sit in scripts as well as in front of a human.
