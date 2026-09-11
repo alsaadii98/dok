@@ -20,12 +20,17 @@ struct Section {
 }
 
 /// A single image / container / volume / cache entry, flattened from the
-/// untyped `items` the API returns.
-struct Item {
-    name: String,
-    size: i64,
-    reclaimable: bool,
-    note: String,
+/// untyped `items` the API returns. Shared with `dok prune`, which shows the
+/// reclaimable subset.
+pub(crate) struct Item {
+    pub name: String,
+    pub size: i64,
+    pub reclaimable: bool,
+    pub note: String,
+    /// An image with no tag at all. `docker system prune` removes these but
+    /// leaves merely-unused tagged images alone unless told `-a`, and the
+    /// difference is the whole point of previewing.
+    pub dangling: bool,
 }
 
 pub async fn run(verbose: bool, top: usize) -> Result<()> {
@@ -188,7 +193,7 @@ fn n(v: &Value, key: &str) -> i64 {
     v.get(key).and_then(Value::as_i64).unwrap_or(0)
 }
 
-fn image_items(items: &[Value]) -> Vec<Item> {
+pub(crate) fn image_items(items: &[Value]) -> Vec<Item> {
     items
         .iter()
         .map(|v| {
@@ -208,12 +213,13 @@ fn image_items(items: &[Value]) -> Vec<Item> {
                 size: n(v, "Size"),
                 reclaimable: containers <= 0,
                 note: format!("{containers} container{}", if containers == 1 { "" } else { "s" }),
+                dangling: tags.is_empty(),
             }
         })
         .collect()
 }
 
-fn container_items(items: &[Value]) -> Vec<Item> {
+pub(crate) fn container_items(items: &[Value]) -> Vec<Item> {
     items
         .iter()
         .map(|v| {
@@ -231,12 +237,13 @@ fn container_items(items: &[Value]) -> Vec<Item> {
                 size: n(v, "SizeRw"),
                 reclaimable: state != "running",
                 note: state,
+                dangling: false,
             }
         })
         .collect()
 }
 
-fn volume_items(items: &[Value]) -> Vec<Item> {
+pub(crate) fn volume_items(items: &[Value]) -> Vec<Item> {
     items
         .iter()
         .map(|v| {
@@ -247,12 +254,13 @@ fn volume_items(items: &[Value]) -> Vec<Item> {
                 size: usage.map(|u| n(u, "Size")).unwrap_or(0),
                 reclaimable: refs <= 0,
                 note: format!("{refs} ref{}", if refs == 1 { "" } else { "s" }),
+                dangling: false,
             }
         })
         .collect()
 }
 
-fn cache_items(items: &[Value]) -> Vec<Item> {
+pub(crate) fn cache_items(items: &[Value]) -> Vec<Item> {
     items
         .iter()
         .map(|v| {
@@ -263,6 +271,7 @@ fn cache_items(items: &[Value]) -> Vec<Item> {
                 size: n(v, "Size"),
                 reclaimable: !in_use,
                 note: format!("used {}×", n(v, "UsageCount")),
+                dangling: false,
             }
         })
         .collect()

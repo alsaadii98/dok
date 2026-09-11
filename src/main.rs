@@ -102,6 +102,16 @@ enum Cmd {
         no_trunc: bool,
     },
 
+    /// What `docker system prune` would remove. Never removes anything
+    Prune {
+        /// Count every unused image, not only dangling ones (docker's -a)
+        #[arg(short, long, action = ArgAction::SetTrue)]
+        all: bool,
+        /// Include unused volumes (docker's --volumes)
+        #[arg(long, action = ArgAction::SetTrue)]
+        volumes: bool,
+    },
+
     /// Every published port in one table, sorted by port
     Ports {
         /// Include stopped containers
@@ -327,6 +337,7 @@ async fn main() -> Result<()> {
     let result = match cli.cmd {
         Cmd::Ps { all, flat, filter, sort } => cmds::ps::run(all, flat, filter, sort).await,
         Cmd::Ports { all } => cmds::ports::run(all).await,
+        Cmd::Prune { all, volumes } => cmds::prune::run(all, volumes).await,
         Cmd::Health { all, failing_only } => cmds::health::run(all, failing_only).await,
         Cmd::History { image, reverse, no_trunc } => {
             cmds::history::run(image, reverse, no_trunc).await
