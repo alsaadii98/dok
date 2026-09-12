@@ -47,15 +47,36 @@ pub fn truncate(s: &str, max: usize) -> String {
     if visible_width(s) <= max {
         return s.to_string();
     }
+    // Escape sequences are copied through whole and cost no width, the same
+    // way `visible_width` skips them. Cutting one in half leaves a bare ESC
+    // in the output, which a terminal swallows quietly and an SVG does not.
     let mut out = String::new();
     let mut w = 0;
-    for ch in s.chars() {
+    let mut coloured = false;
+    let mut chars = s.chars();
+    while let Some(ch) = chars.next() {
+        if ch == '\x1b' {
+            coloured = true;
+            out.push(ch);
+            for c in chars.by_ref() {
+                out.push(c);
+                if c.is_ascii_alphabetic() {
+                    break;
+                }
+            }
+            continue;
+        }
         let cw = char_width(ch);
         if w + cw > max.saturating_sub(1) {
             break;
         }
         out.push(ch);
         w += cw;
+    }
+    // Whatever colour was open when the cut landed must not bleed into the
+    // ellipsis and the gutter after it.
+    if coloured {
+        out.push_str("\x1b[0m");
     }
     out.push('…');
     out
@@ -153,6 +174,45 @@ pub fn short_task_name(name: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    const DIM: &str = "\x1b[38;2;106;115;130m";
+    const RESET: &str = "\x1b[0m";
+
+    /// The bug that broke cast-health.svg: an escape sequence cut in half.
+    #[test]
+    fn truncate_never_splits_an_escape_sequence() {
+        let s = format!("exit 1 {DIM}curl: (7) Failed to connect{RESET}");
+        let t = truncate(&s, 12);
+        // Every ESC in the output must be followed by a complete sequence.
+        for part in t.split('\x1b').skip(1) {
+            assert!(part.starts_with('['), "bare ESC in {t:?}");
+            assert!(part.chars().any(|c| c.is_ascii_alphabetic()), "unterminated escape in {t:?}");
+        }
+        assert!(t.ends_with('…'));
+    }
+
+    /// Escape bytes are not columns: the cut lands by visible width.
+    #[test]
+    fn truncate_counts_visible_width_only() {
+        let plain = "abcdefghij";
+        let coloured = format!("{DIM}abcdefghij{RESET}");
+        assert_eq!(visible_width(&truncate(plain, 6)), 6);
+        assert_eq!(visible_width(&truncate(&coloured, 6)), 6);
+    }
+
+    /// The colour open at the cut must close before the ellipsis.
+    #[test]
+    fn truncate_resets_colour_before_the_ellipsis() {
+        let s = format!("{DIM}a long dim string here{RESET}");
+        let t = truncate(&s, 8);
+        assert!(t.ends_with(&format!("{RESET}…")), "{t:?}");
+    }
+
+    #[test]
+    fn truncate_leaves_short_strings_alone() {
+        let s = format!("{DIM}short{RESET}");
+        assert_eq!(truncate(&s, 10), s);
+    }
 
     #[test]
     fn swarm_task_ids_are_dropped() {

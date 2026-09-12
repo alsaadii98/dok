@@ -8,6 +8,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- Truncating a coloured cell could cut an ANSI escape sequence in half,
+  leaving a bare ESC byte in the output. A terminal swallows that quietly;
+  an SVG does not, which is how it surfaced — `cast-health.svg` was not
+  well-formed XML and the site showed a broken image. `fmt::truncate` now
+  copies escape sequences through whole and cost-free, the way
+  `visible_width` already counted them, and closes any open colour before
+  the ellipsis so it no longer bleeds into the gutter.
+
 - `dok inspect api --demo` reported the container's name as `api` — whatever
   was typed — instead of `demo-shop-api-1`. A regression from 0.1.6, when the
   demo fixture started varying by service. The fixture now resolves the way

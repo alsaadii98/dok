@@ -32,7 +32,7 @@
 <text y="609.0" xml:space="preserve"><tspan x="20.0" fill="#bec4d0">demo-shop_cache</tspan><tspan x="196.4" fill="#98c379">3.1MB</tspan><tspan x="255.2" fill="#98c379">1 ref</tspan></text>
 <text y="649.0" xml:space="preserve"><tspan x="20.0" fill="#d19a66">◍</tspan><tspan x="36.8" fill="#d19a66" font-weight="bold">build cache</tspan></text>
 <text y="669.0" xml:space="preserve"><tspan x="20.0" fill="#6a7382" font-weight="bold" text-decoration="underline">NAME</tspan><tspan x="448.4" fill="#6a7382" font-weight="bold" text-decoration="underline">SIZE</tspan><tspan x="498.8" fill="#6a7382" font-weight="bold" text-decoration="underline">STATUS</tspan></text>
-<text y="689.0" xml:space="preserve"><tspan x="20.0" fill="#bec4d0">mount / from exec /bin/sh -c…                     </tspan><tspan x="440.0" fill="#e5c07b">409MB</tspan><tspan x="498.8" fill="#98c379">used 7×</tspan></text>
+<text y="689.0" xml:space="preserve"><tspan x="20.0" fill="#bec4d0">mount / from exec /bin/sh -c cargo build --rele</tspan><tspan x="414.8" fill="#a1a1a1">…  </tspan><tspan x="440.0" fill="#e5c07b">409MB</tspan><tspan x="498.8" fill="#98c379">used 7×</tspan></text>
 <text y="709.0" xml:space="preserve"><tspan x="20.0" fill="#6a7382">mount / from exec /bin/sh -c npm ci --omit=dev</tspan><tspan x="440.0" fill="#e5c07b">318MB</tspan><tspan x="498.8" fill="#d19a66">reclaimable</tspan></text>
 <text y="729.0" xml:space="preserve"><tspan x="20.0" fill="#6a7382">pulled from docker.io/library/node:20-alpine</tspan><tspan x="440.0" fill="#e5c07b">142MB</tspan><tspan x="498.8" fill="#d19a66">reclaimable</tspan></text>
 </svg>
