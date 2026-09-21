@@ -372,3 +372,23 @@ impl Drop for Cleanup {
         let _ = std::fs::remove_dir_all(&self.0);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The checksum that gates every self-update. Pinned to the published
+    /// SHA-256 of a known input so a dependency bump cannot change it quietly.
+    #[test]
+    fn sha256_matches_the_reference_vector() {
+        let dir = std::env::temp_dir().join(format!("dok-sha-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let f = dir.join("abc");
+        std::fs::write(&f, b"abc").unwrap();
+        assert_eq!(
+            sha256_file(&f).unwrap(),
+            "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+        );
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+}
