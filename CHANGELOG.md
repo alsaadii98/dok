@@ -4,6 +4,23 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `--json` on every command that has something to show. It carries dok's data
+  rather than docker's raw API — compose project, service name, health verdict,
+  reclaimable flag — because those derived fields are the reason to use dok at
+  all. Sizes and ages come as both the number and the rendering
+  (`{"bytes": 1181116006, "human": "1.1GB"}`), so nothing has to be re-parsed.
+  `dok logs` and `dok events` are streams and emit NDJSON, one object per line,
+  flushed as it arrives. `--json` implies `--color never` and suppresses the
+  update notice, since anything appended after the document breaks every parser.
+  `dok stats` is a live dashboard and refuses with a non-zero exit instead.
+  `dok inspect --json` masks exactly what the table masks: no `env` without
+  `--env`, and credential-looking values replaced by their length without
+  `--show-secrets`.
+
 ## [0.2.1] - 2026-09-21
 
 ### Changed

@@ -7,6 +7,7 @@ use std::collections::BTreeMap;
 
 use crate::dk;
 use crate::fmt;
+use crate::json;
 use crate::table::{Column, Table};
 use crate::theme::{self, *};
 
@@ -28,6 +29,37 @@ pub async fn run(all: bool, flat: bool, filter: Option<String>, sort: PsSort) ->
             dk::name_of(c).to_lowercase().contains(&f)
                 || c.image.as_deref().unwrap_or("").to_lowercase().contains(&f)
         });
+    }
+
+    if json::enabled() {
+        sort_containers(&mut list, sort);
+        json::emit(&serde_json::json!({
+            "containers": list.iter().map(|ct| {
+                let state = dk::state_of(ct);
+                let name = fmt::short_task_name(&dk::name_of(ct));
+                serde_json::json!({
+                    "id": ct.id.as_deref().unwrap_or(""),
+                    "short_id": fmt::short_id(ct.id.as_deref().unwrap_or("")),
+                    "name": name,
+                    // The service name is what dok shows when there is one;
+                    // both are here because scripts key on either.
+                    "service": json::opt(dk::label(ct, dk::COMPOSE_SERVICE).unwrap_or("")),
+                    "project": json::opt(dk::label(ct, dk::COMPOSE_PROJECT).unwrap_or("")),
+                    "image": ct.image.clone().unwrap_or_default(),
+                    "state": state,
+                    "status": ct.status.clone().unwrap_or_default(),
+                    "health": match dk::health_of(ct) { Some(h) => h.into(), None => serde_json::Value::Null },
+                    "ports": ct.ports.as_deref().unwrap_or(&[]).iter().map(|p| serde_json::json!({
+                        "host_ip": json::opt(p.ip.as_deref().unwrap_or("")),
+                        "host_port": p.public_port,
+                        "container_port": p.private_port,
+                        "protocol": p.typ.map(|t| t.to_string()).unwrap_or_else(|| "tcp".into()),
+                    })).collect::<Vec<_>>(),
+                    "created": json::age(ct.created.unwrap_or(0)),
+                })
+            }).collect::<Vec<_>>(),
+        }));
+        return Ok(());
     }
 
     if list.is_empty() {

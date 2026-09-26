@@ -9,6 +9,7 @@ use std::collections::HashMap;
 
 use crate::dk;
 use crate::fmt;
+use crate::json;
 use crate::theme::{self, *};
 
 pub async fn run(
@@ -37,7 +38,9 @@ pub async fn run(
     }
     let mut stream = docker.events(Some(builder.build()));
 
-    println!("{}", dim("watching docker events"));
+    if !json::enabled() {
+        println!("{}", dim("watching docker events"));
+    }
 
     // Demo mode replays a canned minute of the example stack and exits, so the
     // docs can show the stream without a daemon (and without waiting for one).
@@ -53,7 +56,11 @@ pub async fn run(
             {
                 continue;
             }
-            println!("{line}");
+            if json::enabled() {
+                json::emit_line(&event_json(&ev));
+            } else {
+                println!("{line}");
+            }
         }
         return Ok(());
     }
@@ -78,9 +85,28 @@ pub async fn run(
         {
             continue;
         }
-        println!("{line}");
+        if json::enabled() {
+            json::emit_line(&event_json(&ev));
+        } else {
+            println!("{line}");
+        }
     }
     Ok(())
+}
+
+/// One daemon event as an object. The actor attributes docker attaches are
+/// passed through whole — they carry the image, the exit code and the signal,
+/// and which keys are present depends on the action.
+fn event_json(ev: &EventMessage) -> serde_json::Value {
+    let attrs = ev.actor.as_ref().and_then(|a| a.attributes.clone()).unwrap_or_default();
+    serde_json::json!({
+        "type": ev.typ.map(|t| t.to_string()),
+        "action": ev.action.clone().unwrap_or_default(),
+        "id": ev.actor.as_ref().and_then(|a| a.id.clone()),
+        "name": attrs.get("name"),
+        "time": ev.time,
+        "attributes": attrs,
+    })
 }
 
 fn render(ev: &EventMessage) -> String {

@@ -6,6 +6,7 @@ use std::collections::HashMap;
 
 use crate::dk;
 use crate::fmt;
+use crate::json;
 use crate::table::{Column, Table};
 use crate::theme::{self, *};
 
@@ -23,7 +24,11 @@ pub async fn run(wanted: Vec<String>, ps_args: Option<String>, flat: bool) -> Re
     };
 
     if targets.is_empty() {
-        println!("{}", dim("no running containers"));
+        if json::enabled() {
+            json::emit(&serde_json::json!({ "containers": [] }));
+        } else {
+            println!("{}", dim("no running containers"));
+        }
         return Ok(());
     }
 
@@ -31,8 +36,10 @@ pub async fn run(wanted: Vec<String>, ps_args: Option<String>, flat: bool) -> Re
     let args = ps_args.unwrap_or_else(|| "-eo pid,ppid,user,pcpu,pmem,etime,args".into());
     let opts = TopOptionsBuilder::default().ps_args(&args).build();
 
+    let mut doc = Vec::new();
+
     for (i, name) in targets.iter().enumerate() {
-        if i > 0 {
+        if i > 0 && !json::enabled() {
             println!();
         }
         let top = if crate::demo::enabled() {
@@ -43,18 +50,45 @@ pub async fn run(wanted: Vec<String>, ps_args: Option<String>, flat: bool) -> Re
         let top = match top {
             Ok(t) => t,
             Err(e) => {
-                println!("{} {}", cb(name, theme::hash_color(name)), c(&format!("· {e}"), p().red));
+                if json::enabled() {
+                    doc.push(serde_json::json!({ "container": name, "error": e.to_string() }));
+                } else {
+                    println!(
+                        "{} {}",
+                        cb(name, theme::hash_color(name)),
+                        c(&format!("· {e}"), p().red)
+                    );
+                }
                 continue;
             }
         };
         let titles = top.titles.unwrap_or_default();
         let procs = top.processes.unwrap_or_default();
+        if json::enabled() {
+            // Column names come from whatever `ps_args` asked for, so the keys
+            // are docker's titles lowercased rather than a fixed set.
+            doc.push(serde_json::json!({
+                "container": name,
+                "titles": titles,
+                "processes": procs.iter().map(|row| {
+                    titles
+                        .iter()
+                        .zip(row.iter())
+                        .map(|(t, v)| (t.to_lowercase(), serde_json::Value::from(v.as_str())))
+                        .collect::<serde_json::Map<_, _>>()
+                }).collect::<Vec<_>>(),
+            }));
+            continue;
+        }
         println!(
             "{} {}",
             cb(name, theme::hash_color(name)),
             dim(&format!("· {} process{}", procs.len(), if procs.len() == 1 { "" } else { "es" }))
         );
         render(&titles, &procs, flat);
+    }
+    if json::enabled() {
+        json::emit(&serde_json::json!({ "containers": doc }));
     }
     Ok(())
 }

@@ -6,6 +6,7 @@ use bollard::query_parameters::InspectContainerOptions;
 
 use crate::dk;
 use crate::fmt;
+use crate::json;
 use crate::theme::{self, *};
 
 /// Env keys whose values are hidden unless `--show-secrets` is passed.
@@ -14,8 +15,9 @@ const SECRETISH: [&str; 8] =
 
 pub async fn run(wanted: Vec<String>, show_secrets: bool, show_env: bool) -> Result<()> {
     let docker = dk::connect()?;
+    let mut docs = Vec::new();
     for (i, w) in wanted.iter().enumerate() {
-        if i > 0 {
+        if i > 0 && !json::enabled() {
             println!();
         }
         let ct = if crate::demo::enabled() {
@@ -24,9 +26,95 @@ pub async fn run(wanted: Vec<String>, show_secrets: bool, show_env: bool) -> Res
             let name = dk::resolve(&docker, w).await?;
             docker.inspect_container(&name, None::<InspectContainerOptions>).await?
         };
-        render(&ct, show_secrets, show_env);
+        if json::enabled() {
+            docs.push(inspect_json(&ct, show_secrets, show_env));
+        } else {
+            render(&ct, show_secrets, show_env);
+        }
+    }
+    if json::enabled() {
+        json::emit(&serde_json::json!({ "containers": docs }));
     }
     Ok(())
+}
+
+/// The folded view as an object.
+///
+/// Masking is the table's, not relaxed: env is absent without `--env`, and a
+/// credential-looking key is replaced by its length unless `--show-secrets`
+/// was passed. `--json` must not be a way to read what the table hides.
+fn inspect_json(
+    ct: &ContainerInspectResponse,
+    show_secrets: bool,
+    show_env: bool,
+) -> serde_json::Value {
+    let state = ct.state.as_ref();
+    let cfg = ct.config.as_ref();
+    let health = state.and_then(|s| s.health.as_ref());
+
+    let env = if show_env {
+        cfg.and_then(|c| c.env.as_ref())
+            .map(|env| {
+                env.iter()
+                    .map(|e| {
+                        let (k, v) = e.split_once('=').unwrap_or((e.as_str(), ""));
+                        let upper = k.to_ascii_uppercase();
+                        let hidden = !show_secrets && SECRETISH.iter().any(|s| upper.contains(s));
+                        let val = if hidden {
+                            serde_json::json!({ "masked": true, "length": v.len() })
+                        } else {
+                            serde_json::Value::from(v)
+                        };
+                        (k.to_string(), val)
+                    })
+                    .collect::<serde_json::Map<_, _>>()
+            })
+            .map(serde_json::Value::Object)
+            .unwrap_or(serde_json::Value::Null)
+    } else {
+        serde_json::Value::Null
+    };
+
+    serde_json::json!({
+        "id": ct.id,
+        "name": ct.name.clone().unwrap_or_default().trim_start_matches('/'),
+        "image": ct.image,
+        "platform": ct.platform,
+        "state": {
+            "status": state.and_then(|s| s.status).map(|s| s.to_string()),
+            "running": state.and_then(|s| s.running),
+            "pid": state.and_then(|s| s.pid),
+            "exit_code": state.and_then(|s| s.exit_code),
+            "started_at": state.and_then(|s| s.started_at.clone()),
+            "restart_count": ct.restart_count,
+            "oom_killed": state.and_then(|s| s.oom_killed),
+        },
+        "health": health.map(|h| serde_json::json!({
+            "status": h.status.map(|s| s.to_string()),
+            "failing_streak": h.failing_streak,
+            "last_probe": h.log.as_ref().and_then(|l| l.last()).map(|r| serde_json::json!({
+                "exit_code": r.exit_code,
+                "output": r.output,
+            })),
+        })),
+        "config": {
+            "entrypoint": cfg.and_then(|c| c.entrypoint.clone()),
+            "command": cfg.and_then(|c| c.cmd.clone()),
+            "working_dir": cfg.and_then(|c| c.working_dir.clone()).filter(|w| !w.is_empty()),
+            "user": cfg.and_then(|c| c.user.clone()).filter(|u| !u.is_empty()),
+            "stop_signal": cfg.and_then(|c| c.stop_signal.clone()),
+        },
+        // Absent without --env, masked without --show-secrets.
+        "env": env,
+        "mounts": ct.mounts.as_deref().unwrap_or(&[]).iter().map(|m| serde_json::json!({
+            "type": m.typ.as_ref().map(|t| t.to_string()),
+            "name": m.name,
+            "source": m.source,
+            "destination": m.destination,
+            "read_write": m.rw,
+        })).collect::<Vec<_>>(),
+        "labels": cfg.and_then(|c| c.labels.clone()),
+    })
 }
 
 // ── layout helpers ──────────────────────────────────────────────────────────

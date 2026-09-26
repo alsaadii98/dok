@@ -5,6 +5,7 @@ mod config;
 mod demo;
 mod dk;
 mod fmt;
+mod json;
 mod table;
 mod theme;
 mod uninstall;
@@ -37,6 +38,10 @@ struct Cli {
     /// Render a canned example stack instead of talking to a daemon
     #[arg(long, global = true, hide = true)]
     demo: bool,
+
+    /// Emit JSON instead of a table. Implies --color never
+    #[arg(long, global = true)]
+    json: bool,
 
     #[command(subcommand)]
     cmd: Cmd,
@@ -298,6 +303,7 @@ async fn main() -> Result<()> {
     let cli = Cli::parse();
 
     demo::set(cli.demo || std::env::var_os("DOK_DEMO").is_some());
+    json::set(cli.json);
 
     // A broken config file must not trap the user in an install they cannot
     // leave, so uninstall falls back to the defaults instead of refusing.
@@ -322,6 +328,9 @@ async fn main() -> Result<()> {
     let is_tty = std::io::IsTerminal::is_terminal(&std::io::stdout());
     let no_color_env = std::env::var_os("NO_COLOR").is_some();
     theme::set_color(match cli.color {
+        // --json wins over --color always: an escape sequence inside a JSON
+        // string is not something any consumer asked for.
+        _ if cli.json => false,
         ColorChoice::Always => true,
         ColorChoice::Never => false,
         ColorChoice::Auto => is_tty && !no_color_env,
@@ -350,8 +359,10 @@ async fn main() -> Result<()> {
 
     // Neither of the self-management commands should end with a nag about a
     // version the user may be in the middle of leaving.
-    let is_update =
-        matches!(cli.cmd, Cmd::Update { .. } | Cmd::Uninstall { .. } | Cmd::Completions { .. });
+    // Anything appended after the document breaks every parser downstream,
+    // so --json silences the nag the same way the script-producing commands do.
+    let is_update = cli.json
+        || matches!(cli.cmd, Cmd::Update { .. } | Cmd::Uninstall { .. } | Cmd::Completions { .. });
     let result = match cli.cmd {
         Cmd::Ps { all, flat, filter, sort } => cmds::ps::run(all, flat, filter, sort).await,
         Cmd::Ports { all } => cmds::ports::run(all).await,

@@ -8,6 +8,7 @@ use std::collections::HashMap;
 
 use crate::dk;
 use crate::fmt;
+use crate::json;
 use crate::theme::{self, *};
 
 pub async fn run(
@@ -46,7 +47,9 @@ pub async fn run(
     };
 
     if targets.is_empty() {
-        println!("{}", dim("no running containers to tail"));
+        if !json::enabled() {
+            println!("{}", dim("no running containers to tail"));
+        }
         return Ok(());
     }
 
@@ -93,14 +96,22 @@ pub async fn run(
             {
                 continue;
             }
-            println!("{}", render_line(&name, width, line, timestamps, is_err));
+            if json::enabled() {
+                json::emit_line(&line_json(&name, line, is_err));
+            } else {
+                println!("{}", render_line(&name, width, line, timestamps, is_err));
+            }
         }
     }
 
     // Flush whatever never got its newline.
     for (name, buf) in buffers {
         if !buf.trim().is_empty() {
-            println!("{}", render_line(&name, width, buf.trim_end(), timestamps, false));
+            if json::enabled() {
+                json::emit_line(&line_json(&name, buf.trim_end(), false));
+            } else {
+                println!("{}", render_line(&name, width, buf.trim_end(), timestamps, false));
+            }
         }
     }
     Ok(())
@@ -121,9 +132,35 @@ fn demo_logs(timestamps: bool, grep: Option<String>) -> Result<()> {
             .format("%Y-%m-%dT%H:%M:%S%.3fZ")
             .to_string();
         let line = format!("{stamp} {body}");
-        println!("{}", render_line(name, width, &line, timestamps, *is_err));
+        if json::enabled() {
+            json::emit_line(&line_json(name, &line, *is_err));
+        } else {
+            println!("{}", render_line(name, width, &line, timestamps, *is_err));
+        }
     }
     Ok(())
+}
+
+/// The full RFC 3339 stamp docker prefixed, if it did. `split_timestamp`
+/// shortens to a clock time for the table; a consumer needs the instant.
+fn full_timestamp(line: &str) -> (Option<&str>, &str) {
+    let Some((head, rest)) = line.split_once(' ') else { return (None, line) };
+    if head.len() >= 20 && head.as_bytes().get(4) == Some(&b'-') && head.contains('T') {
+        return (Some(head), rest);
+    }
+    (None, line)
+}
+
+/// One log line as an object. The timestamp is split off when docker sent
+/// one, so a consumer does not have to re-parse what dok already parsed.
+fn line_json(name: &str, line: &str, is_err: bool) -> serde_json::Value {
+    let (ts, msg) = full_timestamp(line);
+    serde_json::json!({
+        "container": name,
+        "stream": if is_err { "stderr" } else { "stdout" },
+        "timestamp": match ts { Some(t) => t.into(), None => serde_json::Value::Null },
+        "message": msg,
+    })
 }
 
 fn render_line(name: &str, width: usize, line: &str, show_ts: bool, is_err: bool) -> String {

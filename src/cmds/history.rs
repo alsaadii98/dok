@@ -9,6 +9,7 @@ use bollard::models::ImageHistoryResponseItem;
 
 use crate::dk;
 use crate::fmt;
+use crate::json;
 use crate::table::{Column, Table};
 use crate::theme::{self, *};
 
@@ -32,6 +33,31 @@ pub async fn run(image: String, reverse: bool, no_trunc: bool) -> Result<()> {
     }
 
     let total: i64 = layers.iter().map(|l| l.size.max(0)).sum();
+
+    if json::enabled() {
+        json::emit(&serde_json::json!({
+            "image": name,
+            "layers": layers.iter().enumerate().map(|(i, l)| {
+                let n = if reverse { layers.len() - i } else { i + 1 };
+                let size = l.size.max(0);
+                let share = if total > 0 { size as f64 / total as f64 } else { 0.0 };
+                serde_json::json!({
+                    "index": n,
+                    // "<missing>" for a layer this host does not hold; that is
+                    // docker's word, kept rather than invented over.
+                    "id": l.id,
+                    "size": json::size(size),
+                    "share": (share * 10_000.0).round() / 10_000.0,
+                    "fat": share >= FAT_SHARE,
+                    "instruction": clean_instruction(&l.created_by),
+                    "created": json::age(l.created),
+                })
+            }).collect::<Vec<_>>(),
+            "total": json::size(total),
+            "count": layers.len(),
+        }));
+        return Ok(());
+    }
 
     let mut t = Table::new(vec![
         Column::left(""),

@@ -398,10 +398,44 @@ Theme precedence: `--theme` → `DOK_THEME` → config file → `default`.
 Global flags, valid on every command:
 
 ```
+--json                          # emit JSON instead of a table; implies --color never
 --color auto|always|never       # auto respects NO_COLOR and non-tty output
 --icons auto|nerd|unicode|none  # auto picks nerd glyphs on capable terminals
 --theme <name>
 ```
+
+## JSON output
+
+`--json` works on every command that has something to show, and carries dok's
+data — compose project, service name, health verdict, reclaimable flag — not
+docker's raw API.
+
+```sh
+dok ports --json | jq '.ports[] | select(.host_port == 5432) | .container'
+dok health --json | jq -r '.checks[] | select(.status != "healthy") | .container'
+dok prune --json | jq '.total.human'
+dok images --json | jq '[.images[] | select(.dangling)] | length'
+```
+
+Sizes and ages come as both the number and the rendering, so nothing has to be
+re-parsed:
+
+```json
+{ "size": { "bytes": 1181116006, "human": "1.1GB" } }
+```
+
+`dok logs` and `dok events` are streams, so they emit **NDJSON** — one object
+per line, flushed as it arrives, which is what `jq -c` and `while read` expect:
+
+```sh
+dok logs -f --json | jq -c 'select(.stream == "stderr")'
+```
+
+Two deliberate exceptions. `dok stats` is a live dashboard and refuses with a
+non-zero exit rather than taking over a terminal that is being piped. And
+`dok inspect --json` masks exactly what the table masks: no `env` without
+`--env`, credential-looking values replaced by their length without
+`--show-secrets`.
 
 Set `DOK_NERD_FONT=1` to force Nerd Font glyphs, `DOK_NERD_FONT=0` to refuse
 them, and `DOK_NO_UPDATE_CHECK=1` to stop dok looking for new releases.

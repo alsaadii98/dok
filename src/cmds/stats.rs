@@ -16,6 +16,7 @@ use std::time::Duration;
 
 use crate::dk;
 use crate::fmt;
+use crate::json;
 use crate::theme;
 
 const HISTORY: usize = 120;
@@ -67,6 +68,12 @@ impl Sort {
 }
 
 pub async fn run(wanted: Vec<String>, interval_ms: u64) -> Result<()> {
+    if json::enabled() {
+        anyhow::bail!(
+            "dok stats is a live dashboard and has no JSON form — \
+             use `dok ps --json` for a snapshot, or `docker stats --no-stream --format json`"
+        );
+    }
     let docker = dk::connect()?;
     // Fail before taking over the screen if the daemon is unreachable.
     docker.ping().await?;

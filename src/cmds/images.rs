@@ -6,6 +6,7 @@ use clap::ValueEnum;
 
 use crate::dk;
 use crate::fmt;
+use crate::json;
 use crate::table::{Column, Table};
 use crate::theme::{self, *};
 
@@ -49,6 +50,23 @@ pub async fn run(all: bool, dangling_only: bool, sort: ImgSort) -> Result<()> {
 
     if dangling_only {
         entries.retain(|e| e.dangling);
+    }
+
+    if json::enabled() {
+        json::emit(&serde_json::json!({
+            "images": entries.iter().map(|e| serde_json::json!({
+                "id": e.img.id,
+                "short_id": fmt::short_id(&e.img.id),
+                "repository": if e.dangling { serde_json::Value::Null } else { e.repo.as_str().into() },
+                "tag": if e.dangling { serde_json::Value::Null } else { e.tag.as_str().into() },
+                "dangling": e.dangling,
+                "size": json::size(e.img.size),
+                "shared_size": json::size(e.img.shared_size),
+                "containers": e.img.containers,
+                "created": json::age(e.img.created),
+            })).collect::<Vec<_>>(),
+        }));
+        return Ok(());
     }
 
     if entries.is_empty() {

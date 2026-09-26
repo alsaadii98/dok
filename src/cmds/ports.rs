@@ -11,6 +11,7 @@ use bollard::models::ContainerSummary;
 use std::collections::HashMap;
 
 use crate::dk;
+use crate::json;
 use crate::table::{Column, Table};
 use crate::theme::{self, *};
 
@@ -36,6 +37,31 @@ pub async fn run(all: bool) -> Result<()> {
     let list = dk::containers(&docker, all).await?;
 
     let mut rows = collect(&list);
+    if json::enabled() {
+        rows.sort_by(|a, b| {
+            a.host_port
+                .cmp(&b.host_port)
+                .then_with(|| a.proto.cmp(&b.proto))
+                .then_with(|| a.host_ip.cmp(&b.host_ip))
+                .then_with(|| a.container.cmp(&b.container))
+        });
+        mark_conflicts(&mut rows);
+        json::emit(&serde_json::json!({
+            "ports": rows.iter().map(|b| serde_json::json!({
+                // Empty means every interface; say so explicitly rather than
+                // making a consumer guess what "" meant.
+                "host_ip": if b.host_ip.is_empty() { serde_json::Value::Null } else { b.host_ip.as_str().into() },
+                "host_port": b.host_port,
+                "container_port": b.container_port,
+                "protocol": b.proto,
+                "container": b.container,
+                "project": json::opt(&b.project),
+                "state": b.state,
+                "conflict": b.conflict,
+            })).collect::<Vec<_>>(),
+        }));
+        return Ok(());
+    }
     if rows.is_empty() {
         let msg = if all {
             "no published ports"

@@ -11,6 +11,7 @@ use bollard::query_parameters::InspectContainerOptions;
 
 use crate::dk;
 use crate::fmt;
+use crate::json;
 use crate::table::{Column, Table};
 use crate::theme::{self, *};
 
@@ -50,6 +51,31 @@ pub async fn run(all: bool, failing_only: bool) -> Result<()> {
     let with_checks = checks.len();
     if failing_only {
         checks.retain(|c| c.status == "unhealthy" || c.streak > 0);
+    }
+
+    if json::enabled() {
+        checks.sort_by(|a, b| {
+            rank(&a.status).cmp(&rank(&b.status)).then_with(|| a.name.cmp(&b.name))
+        });
+        json::emit(&serde_json::json!({
+            "checks": checks.iter().map(|k| serde_json::json!({
+                "container": k.name,
+                "project": json::opt(&k.project),
+                "status": k.status,
+                "failing_streak": k.streak,
+                "interval_seconds": k.interval,
+                "last_probe": serde_json::json!({
+                    "exit_code": k.exit_code,
+                    "output": json::opt(&k.probe),
+                }),
+            })).collect::<Vec<_>>(),
+            "summary": {
+                "with_healthcheck": with_checks,
+                "without_healthcheck": total.saturating_sub(with_checks),
+                "containers": total,
+            },
+        }));
+        return Ok(());
     }
 
     if checks.is_empty() {
