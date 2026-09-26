@@ -4,10 +4,34 @@ use anyhow::Result;
 
 use crate::config::{self, Config};
 use crate::fmt;
+use crate::json;
 use crate::theme::{self, Theme, builtin};
 
 pub async fn run(cfg: &Config, active: &str, preview: bool) -> Result<()> {
     let names = config::theme_names(cfg);
+
+    if json::enabled() {
+        let hex = |c: theme::Rgb| format!("#{:02x}{:02x}{:02x}", c.0, c.1, c.2);
+        let mut out = Vec::new();
+        for name in &names {
+            let t = config::resolve_theme(cfg, name)?;
+            let p = &t.palette;
+            out.push(serde_json::json!({
+                "name": name,
+                "description": t.description,
+                "active": name == active,
+                // The nine semantic roles, resolved — a consumer can rebuild
+                // dok's colouring without knowing which theme produced it.
+                "palette": {
+                    "green": hex(p.green), "red": hex(p.red), "yellow": hex(p.yellow),
+                    "orange": hex(p.orange), "blue": hex(p.blue), "cyan": hex(p.cyan),
+                    "magenta": hex(p.magenta), "gray": hex(p.gray), "fg": hex(p.fg),
+                },
+            }));
+        }
+        json::emit(&serde_json::json!({ "themes": out, "active": active }));
+        return Ok(());
+    }
 
     if !preview {
         println!("{}", theme::header(&fmt::pad("  THEME", 18)));

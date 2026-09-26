@@ -5,6 +5,7 @@ use serde_json::Value;
 
 use crate::dk;
 use crate::fmt;
+use crate::json;
 use crate::table::{Column, Table};
 use crate::theme::{self, *};
 
@@ -85,6 +86,27 @@ pub async fn run(verbose: bool, top: usize) -> Result<()> {
             count: u.total_count.unwrap_or(0),
             items: u.items.as_deref().map(cache_items).unwrap_or_default(),
         });
+    }
+
+    if json::enabled() {
+        json::emit(&serde_json::json!({
+            "categories": sections.iter().map(|s| serde_json::json!({
+                "kind": s.label,
+                "total": json::size(s.total),
+                "reclaimable": json::size(s.reclaimable),
+                "count": s.count,
+                "active": s.active,
+                "items": s.items.iter().map(|i| serde_json::json!({
+                    "name": i.name,
+                    "size": json::size(i.size),
+                    "reclaimable": i.reclaimable,
+                    "note": json::opt(&i.note),
+                })).collect::<Vec<_>>(),
+            })).collect::<Vec<_>>(),
+            "total": json::size(sections.iter().map(|s| s.total).sum::<i64>()),
+            "reclaimable": json::size(sections.iter().map(|s| s.reclaimable).sum::<i64>()),
+        }));
+        return Ok(());
     }
 
     let grand: i64 = sections.iter().map(|s| s.total).sum();

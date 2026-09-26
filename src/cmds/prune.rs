@@ -13,6 +13,7 @@ use bollard::models::ContainerSummary;
 use crate::cmds::df::{self, Item};
 use crate::dk;
 use crate::fmt;
+use crate::json;
 use crate::theme::{self, *};
 
 struct Group {
@@ -85,6 +86,32 @@ pub async fn run(all: bool, volumes: bool) -> Result<()> {
 
     let total: i64 = groups.iter().flat_map(|g| g.items.iter()).map(|i| i.size.max(0)).sum();
     let count: usize = groups.iter().map(|g| g.items.len()).sum();
+
+    if json::enabled() {
+        json::emit(&serde_json::json!({
+            "groups": groups.iter().map(|g| serde_json::json!({
+                "kind": g.label,
+                "reason": g.kind,
+                "count": g.items.len(),
+                "size": json::size(g.items.iter().map(|i| i.size.max(0)).sum::<i64>()),
+                "items": g.items.iter().map(|i| serde_json::json!({
+                    "name": i.name,
+                    "size": json::size(i.size),
+                    "note": json::opt(&i.note),
+                })).collect::<Vec<_>>(),
+            })).collect::<Vec<_>>(),
+            "total": json::size(total),
+            "count": count,
+            // Stated rather than implied: this command never removes anything.
+            "removed": false,
+            "command": format!(
+                "docker system prune{}{}",
+                if all { " -a" } else { "" },
+                if volumes { " --volumes" } else { "" }
+            ),
+        }));
+        return Ok(());
+    }
 
     for g in &groups {
         print_group(g);

@@ -7,6 +7,7 @@ use std::collections::BTreeMap;
 
 use crate::dk;
 use crate::fmt;
+use crate::json;
 use crate::theme::{self, *};
 
 #[derive(Copy, Clone, ValueEnum, PartialEq, Eq)]
@@ -21,6 +22,11 @@ pub async fn run(only: Option<Section>, all: bool) -> Result<()> {
     let containers = dk::containers(&docker, all).await?;
 
     let want = |s: Section| only.is_none() || only == Some(s);
+
+    if json::enabled() {
+        return tree_json(&docker, &containers, &want).await;
+    }
+
     let mut printed = false;
 
     if want(Section::Projects) {
@@ -40,6 +46,103 @@ pub async fn run(only: Option<Section>, all: bool) -> Result<()> {
         }
         volumes(&docker, &containers).await?;
     }
+    Ok(())
+}
+
+/// The same three sections as the tree, as nested objects. Membership is
+/// reconstructed from each container's own settings, exactly as the tree
+/// draws it, so the two can never disagree.
+async fn tree_json(
+    docker: &bollard::Docker,
+    containers: &[ContainerSummary],
+    want: &impl Fn(Section) -> bool,
+) -> Result<()> {
+    let mut doc = serde_json::Map::new();
+
+    if want(Section::Projects) {
+        let mut groups: BTreeMap<String, Vec<&ContainerSummary>> = BTreeMap::new();
+        for ct in containers {
+            groups
+                .entry(dk::label(ct, dk::COMPOSE_PROJECT).unwrap_or("").to_string())
+                .or_default()
+                .push(ct);
+        }
+        doc.insert(
+            "projects".into(),
+            groups
+                .iter()
+                .map(|(name, members)| {
+                    serde_json::json!({
+                        "name": json::opt(name),
+                        "containers": members.iter().map(|ct| serde_json::json!({
+                            "name": fmt::short_task_name(&dk::name_of(ct)),
+                            "service": json::opt(dk::label(ct, dk::COMPOSE_SERVICE).unwrap_or("")),
+                            "image": ct.image.clone().unwrap_or_default(),
+                            "state": dk::state_of(ct),
+                        })).collect::<Vec<_>>(),
+                    })
+                })
+                .collect::<Vec<_>>()
+                .into(),
+        );
+    }
+
+    if want(Section::Networks) {
+        let nets = dk::networks(docker).await?;
+        doc.insert(
+            "networks".into(),
+            nets.iter()
+                .map(|net| {
+                    let name = net.name.clone().unwrap_or_default();
+                    serde_json::json!({
+                        "name": name,
+                        "driver": net.driver.clone().unwrap_or_default(),
+                        "scope": net.scope.clone(),
+                        "subnet": net.ipam.as_ref()
+                            .and_then(|i| i.config.as_ref())
+                            .and_then(|c| c.first())
+                            .and_then(|c| c.subnet.clone()),
+                        "containers": containers.iter().filter_map(|ct| {
+                            let ep = ct.network_settings.as_ref()?.networks.as_ref()?.get(&name)?;
+                            Some(serde_json::json!({
+                                "name": fmt::short_task_name(&dk::name_of(ct)),
+                                "ip": ep.ip_address.clone(),
+                            }))
+                        }).collect::<Vec<_>>(),
+                    })
+                })
+                .collect::<Vec<_>>()
+                .into(),
+        );
+    }
+
+    if want(Section::Volumes) {
+        let vols = dk::volumes(docker).await?;
+        doc.insert(
+            "volumes".into(),
+            vols.iter()
+                .map(|v| {
+                    serde_json::json!({
+                        "name": v.name,
+                        "driver": v.driver,
+                        "mountpoint": v.mountpoint,
+                        "size": v.usage_data.as_ref().map(|u| json::size(u.size)),
+                        "ref_count": v.usage_data.as_ref().map(|u| u.ref_count),
+                        "used_by": containers.iter().filter_map(|ct| {
+                            let m = ct.mounts.as_ref()?.iter().find(|m| m.name.as_deref() == Some(&v.name))?;
+                            Some(serde_json::json!({
+                                "container": fmt::short_task_name(&dk::name_of(ct)),
+                                "destination": m.destination.clone(),
+                            }))
+                        }).collect::<Vec<_>>(),
+                    })
+                })
+                .collect::<Vec<_>>()
+                .into(),
+        );
+    }
+
+    json::emit(&serde_json::Value::Object(doc));
     Ok(())
 }
 

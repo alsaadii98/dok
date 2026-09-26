@@ -34,7 +34,7 @@ codebase.
 
 ## Next up (0.3)
 
-- [ ] **`--json` on every command** — same data, machine-readable, so `dok` can
+- [x] **`--json` on every command** — same data, machine-readable, so `dok` can
       sit in scripts as well as in front of a human.
       ([#11](https://github.com/alsaadii98/dok/issues/11))
 - [ ] **Remote contexts** — read `~/.docker/contexts` so `dok --context prod ps`
