@@ -1,6 +1,6 @@
 pkgbase = dok-bin
 	pkgdesc = Docker output, made readable - what eza is to ls (prebuilt binary)
-	pkgver = 0.1.5
+	pkgver = 0.2.1
 	pkgrel = 1
 	url = https://github.com/alsaadii98/dok
 	arch = x86_64
@@ -10,9 +10,9 @@ pkgbase = dok-bin
 	conflicts = dok
 	options = !strip
 	options = !debug
-	source_x86_64 = https://github.com/alsaadii98/dok/releases/download/v0.1.5/dok-0.1.5-x86_64-unknown-linux-musl.tar.gz
-	sha256sums_x86_64 = be83a557f47199a9da473a0e4c629ba853b8c9dbca0ec11abe5da41c9404b8c6
-	source_aarch64 = https://github.com/alsaadii98/dok/releases/download/v0.1.5/dok-0.1.5-aarch64-unknown-linux-musl.tar.gz
-	sha256sums_aarch64 = 5828052122c06384dd06fe06b5c50e039f7d6720926ab516cce9485bd55b7bdc
+	source_x86_64 = https://github.com/alsaadii98/dok/releases/download/v0.2.1/dok-0.2.1-x86_64-unknown-linux-musl.tar.gz
+	sha256sums_x86_64 = 9a6633197d257be79f9f8c2598507c5279dc65a9e21d37388717ddefd1164efb
+	source_aarch64 = https://github.com/alsaadii98/dok/releases/download/v0.2.1/dok-0.2.1-aarch64-unknown-linux-musl.tar.gz
+	sha256sums_aarch64 = 2ace37a16f5296d208407779dbbb2aa8f776a3fd1573a078189e514892f28c2f
 
 pkgname = dok-bin
