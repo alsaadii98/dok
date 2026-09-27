@@ -101,7 +101,9 @@ pip install fonttools brotli     # once: embeds Geist Mono in the screenshots
 
 `gen-docs.py` reads every command's `--help`, runs `--demo --json` for the JSON
 samples, and greps `src/` for the Docker API calls listed on the internals page,
-so the manual cannot drift from the binary. It refuses to run if a subcommand
+so the manual cannot drift from the binary. The release workflow runs both
+scripts against the released linux binary and commits the result to `main`, so
+you only need to run them yourself to preview a change. It refuses to run if a subcommand
 exists that the manual does not cover. Descriptions and examples live in the
 `COMMANDS` table at the top of the script.
 
