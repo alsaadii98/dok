@@ -4,6 +4,19 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- The release workflow regenerates `bucket/dok.json` from the release it just
+  published and commits it to `main`. This repo doubles as its own scoop
+  bucket, so nothing external runs `checkver` for it and the manifest had
+  drifted up to three releases behind on four separate occasions. The new
+  `scripts/gen-scoop.sh` mirrors `gen-formula.sh`: it reads the `.sha256` the
+  workflow uploads next to the archive, so the checksum always matches what
+  people download. The AUR PKGBUILDs stay manual — they push to a separate
+  remote with the maintainer's own credentials.
+
 ## [0.3.0] - 2026-09-27
 
 ### Added
