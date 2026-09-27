@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dok manual: every command, option and output format</title>
+<meta name="description" content="The dok manual. Every command, its options, real output and JSON shape, generated from the binary.">
+<meta name="keywords" content="dok manual, docker cli readable output, docker ps json output, docker cli tool, dok documentation">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://dok.alsaadii98.com/man/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#070708">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="dok">
+<meta property="og:title" content="dok manual: every command, option and output format">
+<meta property="og:description" content="The dok manual. Every command, its options, real output and JSON shape, generated from the binary.">
+<meta property="og:url" content="https://dok.alsaadii98.com/man/">
+<meta property="og:image" content="https://dok.alsaadii98.com/img/dok-social.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/man.css">
+<script src="/assets/site.js" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "dok", "item": "https://dok.alsaadii98.com/"}, {"@type": "ListItem", "position": 2, "name": "Manual", "item": "https://dok.alsaadii98.com/man/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "dok manual: every command, option and output format", "description": "The dok manual. Every command, its options, real output and JSON shape, generated from the binary.", "url": "https://dok.alsaadii98.com/man/", "inLanguage": "en", "about": {"@type": "SoftwareApplication", "name": "dok", "url": "https://dok.alsaadii98.com/", "applicationCategory": "DeveloperApplication", "operatingSystem": "macOS, Linux, Windows"}, "author": {"@type": "Person", "name": "alsaadii98", "url": "https://github.com/alsaadii98"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="atmos" aria-hidden="true"></div>
+<p id="live" class="sr" aria-live="polite"></p>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <ul>
+      <li class="opt"><a href="/#commands">commands</a></li>
+      <li class="opt"><a href="/#json">json</a></li>
+      <li class="opt2"><a href="/#install">install</a></li>
+      <li><a href="/man/" aria-current="page">manual</a></li>
+      <li><a class="gh" href="https://github.com/alsaadii98/dok" aria-label="dok on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg><span class="opt2">GitHub</span></a></li>
+    </ul>
+  </div>
+</header>
+<div class="wrap man">
+  <nav class="side" aria-label="Manual">
+  <ul class="top"><li><a href="/man/" aria-current="page">dok(1) overview</a></li><li><a href="/man/internals/">dok(7) internals</a></li></ul>
+  <p class="grp">Containers</p><ul><li><a href="/man/ps/">ps</a></li><li><a href="/man/ports/">ports</a></li><li><a href="/man/health/">health</a></li><li><a href="/man/inspect/">inspect</a></li><li><a href="/man/logs/">logs</a></li><li><a href="/man/top/">top</a></li></ul><p class="grp">Images</p><ul><li><a href="/man/images/">images</a></li><li><a href="/man/history/">history</a></li></ul><p class="grp">Disk</p><ul><li><a href="/man/df/">df</a></li><li><a href="/man/prune/">prune</a></li></ul><p class="grp">System</p><ul><li><a href="/man/tree/">tree</a></li><li><a href="/man/events/">events</a></li><li><a href="/man/stats/">stats</a></li></ul><p class="grp">Setup</p><ul><li><a href="/man/themes/">themes</a></li><li><a href="/man/completions/">completions</a></li><li><a href="/man/update/">update</a></li><li><a href="/man/uninstall/">uninstall</a></li></ul>
+</nav>
+  <main id="main" class="article">
+    <div class="manhead" aria-hidden="true"><span>DOK(1)</span><span>dok manual</span><span>DOK(1)</span></div>
+    <h1><span class="p">$</span> dok</h1>
+    <p class="about">Docker output, made readable.</p>
+    <h2 id="synopsis">Synopsis</h2>
+    <div class="code"><pre><code translate="no">dok [OPTIONS] &lt;COMMAND&gt;</code></pre></div>
+    <h2 id="description">Description</h2>
+    <div class="prose">
+      <p>dok reads the Docker daemon&#8217;s API directly and renders containers, images, logs, disk usage and events for a person to read. Every command prints one static screen and exits, except <a href="/man/stats/"><code>stats</code></a>, so output pipes into <code>grep</code>, <code>less</code> and <code>jq</code> like any other Unix tool.</p>
+      <p>dok is read-only. It never starts, stops, execs into or removes anything, which makes it safe to point at a production socket. <a href="/man/internals/">dok(7)</a> lists every Docker API call it makes.</p>
+    </div>
+    <h2 id="commands">Commands</h2>
+    <h3>Containers</h3><div class="idx"><a class="row" href="/man/ps/"><code translate="no">dok ps</code><span>List containers, grouped by compose project</span></a><a class="row" href="/man/ports/"><code translate="no">dok ports</code><span>Every published port in one table, sorted by port</span></a><a class="row" href="/man/health/"><code translate="no">dok health</code><span>Containers with a healthcheck: status, failing streak, last probe</span></a><a class="row" href="/man/inspect/"><code translate="no">dok inspect</code><span>Readable summary of a container's configuration and state</span></a><a class="row" href="/man/logs/"><code translate="no">dok logs</code><span>Tail logs from one or more containers with level colouring</span></a><a class="row" href="/man/top/"><code translate="no">dok top</code><span>Processes running inside containers, as a tree</span></a></div><h3>Images</h3><div class="idx"><a class="row" href="/man/images/"><code translate="no">dok images</code><span>List images with size and age gradients</span></a><a class="row" href="/man/history/"><code translate="no">dok history</code><span>Layers of an image with size bars and readable instructions</span></a></div><h3>Disk</h3><div class="idx"><a class="row" href="/man/df/"><code translate="no">dok df</code><span>Disk usage by images, containers, volumes and build cache</span></a><a class="row" href="/man/prune/"><code translate="no">dok prune</code><span>What <code translate="no">docker system prune</code> would remove. Never removes anything</span></a></div><h3>System</h3><div class="idx"><a class="row" href="/man/tree/"><code translate="no">dok tree</code><span>Tree view of compose projects, networks and volumes</span></a><a class="row" href="/man/events/"><code translate="no">dok events</code><span>Live daemon event stream, colour-coded</span></a><a class="row" href="/man/stats/"><code translate="no">dok stats</code><span>Live CPU / memory / IO dashboard</span></a></div><h3>Setup</h3><div class="idx"><a class="row" href="/man/themes/"><code translate="no">dok themes</code><span>List or preview themes</span></a><a class="row" href="/man/completions/"><code translate="no">dok completions</code><span>Print a shell completion script to stdout</span></a><a class="row" href="/man/update/"><code translate="no">dok update</code><span>Check for a newer dok and install it</span></a><a class="row" href="/man/uninstall/"><code translate="no">dok uninstall</code><span>Remove dok, or print the command that does</span></a></div>
+    <h2 id="options">Global options</h2>
+    <dl class="opts"><dt><code translate="no">--color &lt;COLOR&gt;</code></dt><dd>When to colourise output<span class="meta">default: auto</span><span class="meta">possible values: auto, always, never</span></dd><dt><code translate="no">--icons &lt;ICONS&gt;</code></dt><dd>Which icon set to use<span class="meta">possible values:</span><span class="meta">auto:    Nerd Font glyphs when the terminal looks capable, else unicode</span><span class="meta">nerd:    Nerd Font glyphs (requires a patched font)</span><span class="meta">unicode: Plain unicode symbols</span><span class="meta">none:    No icons at all</span><span class="meta">default: auto</span></dd><dt><code translate="no">--theme &lt;THEME&gt;</code></dt><dd>Theme name (see <code translate="no">dok themes</code>); overrides DOK_THEME and the config file</dd><dt><code translate="no">--json</code></dt><dd>Emit JSON instead of a table. Implies --color never</dd></dl>
+    <p class="prose note">Colour and icons turn off by themselves when output is not a terminal, and <code>NO_COLOR</code> is honoured.</p>
+    <h2 id="json">JSON output</h2>
+    <div class="prose">
+      <p><code>--json</code> works on every command that has something to show. It carries dok&#8217;s data rather than the raw API: the compose project, the service name, the health verdict, the reclaimable flag. Run <code>docker inspect</code> for the raw payload.</p>
+      <p>Sizes and ages arrive as both the number and the rendering, so nothing has to be parsed back:</p>
+    </div>
+    <div class="code"><pre><code translate="no">{
+  <span class="k">&quot;size&quot;</span>: {
+    <span class="k">&quot;bytes&quot;</span>: <span class="n">1181116006</span>,
+    <span class="k">&quot;human&quot;</span>: <span class="s">&quot;1.1GB&quot;</span>
+  }
+}</code></pre></div>
+    <div class="prose">
+      <p>An absent value is <code>null</code>, never an empty string. <a href="/man/logs/"><code>logs</code></a> and <a href="/man/events/"><code>events</code></a> are streams and emit NDJSON, one object per line. <code>--json</code> implies <code>--color never</code> and suppresses the update notice, since anything after the document would break a parser.</p>
+    </div>
+    <h2 id="config">Configuration</h2>
+    <div class="prose"><p><code>dok themes --init</code> writes <code>~/.config/dok/config.toml</code>:</p></div>
+    <div class="code"><pre><code translate="no"><span class="k">theme</span> = <span class="s">"mine"</span>
+<span class="k">icons</span> = <span class="s">"nerd"</span>          <span class="c"># auto | nerd | unicode | none</span>
+
+[themes.mine]
+<span class="k">base</span>   = <span class="s">"gruvbox"</span>      <span class="c"># start from any built-in</span>
+<span class="k">glyphs</span> = <span class="s">"heavy"</span>        <span class="c"># unicode | ascii | heavy | slim</span>
+<span class="k">layout</span> = <span class="s">"grid"</span>         <span class="c"># default | ruled | grid | quiet | ascii</span>
+<span class="k">green</span>  = <span class="s">"#00ff00"</span>      <span class="c"># override any palette role</span></code></pre></div>
+    <div class="prose"><p>Theme precedence is <code>--theme</code>, then <code>DOK_THEME</code>, then the config file, then <code>default</code>.</p></div>
+    <h2 id="environment">Environment</h2>
+    <dl class="opts">
+      <dt><code translate="no">DOCKER_HOST</code></dt><dd>Where the daemon is. Unset means <code>/var/run/docker.sock</code>, or the named pipe on Windows.</dd>
+      <dt><code translate="no">DOK_THEME</code></dt><dd>Theme name, below <code>--theme</code> and above the config file.</dd>
+      <dt><code translate="no">NO_COLOR</code></dt><dd>Any value turns colour off, as <code>--color never</code> does.</dd>
+      <dt><code translate="no">DOK_NERD_FONT</code></dt><dd><code>1</code> forces Nerd Font glyphs, <code>0</code> refuses them.</dd>
+      <dt><code translate="no">DOK_NO_UPDATE_CHECK</code></dt><dd>Any value stops the once-a-day release check.</dd>
+      <dt><code translate="no">DOK_DEMO</code></dt><dd>Same as <code>--demo</code>: render the built-in example stack, no daemon needed.</dd>
+    </dl>
+    <h2 id="see-also">See also</h2>
+    <p class="prose"><a href="/man/internals/">dok(7)</a>, <a href="https://github.com/alsaadii98/dok">github.com/alsaadii98/dok</a></p>
+    <div class="manfoot"><span>dok 0.3.0</span><span>2026-09-27</span><span>DOK(1)</span></div>
+  </main>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <a href="/man/">Manual</a>
+    <a href="https://github.com/alsaadii98/dok">GitHub</a>
+    <a href="https://crates.io/crates/dok-cli">crates.io</a>
+    <a href="https://github.com/alsaadii98/dok/releases">Releases</a>
+    <a href="https://github.com/alsaadii98/dok/blob/main/LICENSE">MIT</a>
+    <span>&copy; 2026 <a href="https://github.com/alsaadii98">alsaadii98</a></span>
+  </div>
+</footer>
+</body>
+</html>

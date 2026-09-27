@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What is taking up Docker disk space | dok df</title>
+<meta name="description" content="dok df breaks Docker disk usage down by images, containers, volumes and build cache, and lists the biggest items in each.">
+<meta name="keywords" content="docker disk space, what is using docker disk space, docker system df explained, docker disk usage by image, docker build cache size">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://dok.alsaadii98.com/man/df/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#070708">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="dok">
+<meta property="og:title" content="What is taking up Docker disk space | dok df">
+<meta property="og:description" content="dok df breaks Docker disk usage down by images, containers, volumes and build cache, and lists the biggest items in each.">
+<meta property="og:url" content="https://dok.alsaadii98.com/man/df/">
+<meta property="og:image" content="https://dok.alsaadii98.com/img/dok-social.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/man.css">
+<script src="/assets/site.js" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "dok", "item": "https://dok.alsaadii98.com/"}, {"@type": "ListItem", "position": 2, "name": "Manual", "item": "https://dok.alsaadii98.com/man/"}, {"@type": "ListItem", "position": 3, "name": "dok df", "item": "https://dok.alsaadii98.com/man/df/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "What is taking up Docker disk space | dok df", "description": "dok df breaks Docker disk usage down by images, containers, volumes and build cache, and lists the biggest items in each.", "url": "https://dok.alsaadii98.com/man/df/", "inLanguage": "en", "about": {"@type": "SoftwareApplication", "name": "dok", "url": "https://dok.alsaadii98.com/", "applicationCategory": "DeveloperApplication", "operatingSystem": "macOS, Linux, Windows"}, "author": {"@type": "Person", "name": "alsaadii98", "url": "https://github.com/alsaadii98"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="atmos" aria-hidden="true"></div>
+<p id="live" class="sr" aria-live="polite"></p>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <ul>
+      <li class="opt"><a href="/#commands">commands</a></li>
+      <li class="opt"><a href="/#json">json</a></li>
+      <li class="opt2"><a href="/#install">install</a></li>
+      <li><a href="/man/" aria-current="page">manual</a></li>
+      <li><a class="gh" href="https://github.com/alsaadii98/dok" aria-label="dok on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg><span class="opt2">GitHub</span></a></li>
+    </ul>
+  </div>
+</header>
+<div class="wrap man">
+  <nav class="side" aria-label="Manual">
+  <ul class="top"><li><a href="/man/">dok(1) overview</a></li><li><a href="/man/internals/">dok(7) internals</a></li></ul>
+  <p class="grp">Containers</p><ul><li><a href="/man/ps/">ps</a></li><li><a href="/man/ports/">ports</a></li><li><a href="/man/health/">health</a></li><li><a href="/man/inspect/">inspect</a></li><li><a href="/man/logs/">logs</a></li><li><a href="/man/top/">top</a></li></ul><p class="grp">Images</p><ul><li><a href="/man/images/">images</a></li><li><a href="/man/history/">history</a></li></ul><p class="grp">Disk</p><ul><li><a href="/man/df/" aria-current="page">df</a></li><li><a href="/man/prune/">prune</a></li></ul><p class="grp">System</p><ul><li><a href="/man/tree/">tree</a></li><li><a href="/man/events/">events</a></li><li><a href="/man/stats/">stats</a></li></ul><p class="grp">Setup</p><ul><li><a href="/man/themes/">themes</a></li><li><a href="/man/completions/">completions</a></li><li><a href="/man/update/">update</a></li><li><a href="/man/uninstall/">uninstall</a></li></ul>
+</nav>
+  <main id="main" class="article">
+    <div class="manhead" aria-hidden="true"><span>DOK-DF(1)</span><span>dok manual</span><span>DOK-DF(1)</span></div>
+    <h1><span class="p">$</span> dok df</h1>
+    <p class="about">Disk usage by images, containers, volumes and build cache</p>
+    <h2 id="synopsis">Synopsis</h2>
+    <div class="code"><pre><code translate="no">dok df [OPTIONS]</code></pre></div>
+    <h2 id="description">Description</h2>
+    <div class="prose"><p>Disk usage per category (images, containers, volumes and build cache) with a bar split into the part in use and the part that could be reclaimed.</p><p><code translate="no">-v</code> lists the biggest items in each category, which is usually where the answer to “what ate the disk” is.</p></div>
+    <h2 id="options">Options</h2>
+    <dl class="opts"><dt><code translate="no">-v, --verbose</code></dt><dd>Also list the biggest items in each category</dd><dt><code translate="no">--top &lt;TOP&gt;</code></dt><dd>How many items to list per category with --verbose<span class="meta">default: 10</span></dd></dl>
+    <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
+    <h2 id="examples">Examples</h2>
+    <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok df" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok df  <span class="c"># one bar per category</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok df -v" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok df -v  <span class="c"># plus the biggest offenders</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok df -v --top 20" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok df -v --top 20  <span class="c"># twenty per category</span></code></pre></div></div>
+    <h2 id="output">Output</h2>
+    <figure class="shot"><img src="/img/df.svg" width="670" height="754" loading="lazy" decoding="async" alt="Output of dok df against the demo stack"><figcaption>Rendered from <code>dok df --demo</code>, dok’s built-in example stack.</figcaption></figure>
+    <h2 id="json">JSON output</h2>
+    <div class="code"><button class="copy" type="button" data-copy="dok df -v --json" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok df -v --json
+{
+  <span class="k">&quot;categories&quot;</span>: [
+    {
+      <span class="k">&quot;active&quot;</span>: <span class="n">7</span>,
+      <span class="k">&quot;count&quot;</span>: <span class="n">8</span>,
+      <span class="k">&quot;items&quot;</span>: [
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;ghcr.io/demo-shop/worker:1.4.2&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;1 container&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">false</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">1140000000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;1.1GB&quot;</span>
+          }
+        },
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;postgres:16-alpine&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;1 container&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">false</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">411000000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;411MB&quot;</span>
+          }
+        },
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;ghcr.io/demo-shop/api:1.4.2&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;1 container&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">false</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">271000000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;271MB&quot;</span>
+          }
+        },
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;grafana/grafana:11.2.0&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;1 container&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">false</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">168000000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;168MB&quot;</span>
+          }
+        },
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;nginx:1.27-alpine&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;1 container&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">false</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">78000000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;78MB&quot;</span>
+          }
+        },
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;redis:7-alpine&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;1 container&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">false</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">59000000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;59MB&quot;</span>
+          }
+        },
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;alpine:3.20&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;1 container&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">false</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">8100000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;8.1MB&quot;</span>
+          }
+        },
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;&lt;none&gt; 4c9e2f81a76b&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;0 containers&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">true</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">244000000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;244MB&quot;</span>
+          }
+        },
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;ghcr.io/demo-shop/api:1.4.1&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;0 containers&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">true</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">268000000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;268MB&quot;</span>
+          }
+        }
+      ],
+      <span class="k">&quot;kind&quot;</span>: <span class="s">&quot;images&quot;</span>,
+      <span class="k">&quot;reclaimable&quot;</span>: {
+        <span class="k">&quot;bytes&quot;</span>: <span class="n">244000000</span>,
+        <span class="k">&quot;human&quot;</span>: <span class="s">&quot;244MB&quot;</span>
+      },
+      <span class="k">&quot;total&quot;</span>: {
+        <span class="k">&quot;bytes&quot;</span>: <span class="n">2379100000</span>,
+        <span class="k">&quot;human&quot;</span>: <span class="s">&quot;2.4GB&quot;</span>
+      }
+    },
+    {
+      <span class="k">&quot;active&quot;</span>: <span class="n">5</span>,
+      <span class="k">&quot;count&quot;</span>: <span class="n">7</span>,
+      <span class="k">&quot;items&quot;</span>: [
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-api-1&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;running&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">false</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">12000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;12kB&quot;</span>
+          }
+        },
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-web-1&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;running&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">false</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">21000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;21kB&quot;</span>
+          }
+        },
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-postgres-1&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;running&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">false</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">30000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;30kB&quot;</span>
+          }
+        },
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-redis-1&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;running&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">false</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">39000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;39kB&quot;</span>
+          }
+        },
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-worker-1&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;exited&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">true</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">48000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;48kB&quot;</span>
+          }
+        },
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;metrics-1&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;running&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">false</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">57000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;57kB&quot;</span>
+          }
+        },
+        {
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;scratch-box&quot;</span>,
+          <span class="k">&quot;note&quot;</span>: <span class="s">&quot;created&quot;</span>,
+          <span class="k">&quot;reclaimable&quot;</span>: <span class="b">true</span>,
+          <span class="k">&quot;size&quot;</span>: {
+            <span class="k">&quot;bytes&quot;</span>: <span class="n">66000</span>,
+            <span class="k">&quot;human&quot;</span>: <span class="s">&quot;66kB&quot;</span>
+          }
+        }
+      ],
+      <span class="k">&quot;kind&quot;</span>: <span class="s">&quot;containers&quot;</span>,
+      <span class="k">&quot;reclaimable&quot;</span>: {
+        <span class="k">&quot;bytes&quot;</span>: <span class="n">96000</span>,
+        <span class="k">&quot;human&quot;</span>: <span class="s">&quot;96kB&quot;</span>
+      },
+      <span class="k">&quot;total&quot;</span>: {
+        <span class="k">&quot;bytes&quot;</span>: <span class="n">141000</span>,
+        <span class="k">&quot;human&quot;</span>: <span class="s">&quot;141kB&quot;</span>
+      }
+    }
+  ],
+  <span class="k">&quot;reclaimable&quot;</span>: {
+    <span class="k">&quot;bytes&quot;</span>: <span class="n">1241096000</span>,
+    <span class="k">&quot;human&quot;</span>: <span class="s">&quot;1.2GB&quot;</span>
+  },
+  <span class="k">&quot;total&quot;</span>: {
+    <span class="k">&quot;bytes&quot;</span>: <span class="n">3714341000</span>,
+    <span class="k">&quot;human&quot;</span>: <span class="s">&quot;3.7GB&quot;</span>
+  }
+}</code></pre></div>
+    <p class="prose note">Longer arrays are cut to their first two elements here.</p>
+    <h2 id="see-also">See also</h2>
+    <p class="prose"><a href="/man/prune/">dok-prune(1)</a>, <a href="/man/images/">dok-images(1)</a>, <a href="/man/internals/">dok(7)</a></p>
+    <div class="manfoot"><span>dok 0.3.0</span><span>2026-09-27</span><span>DOK-DF(1)</span></div>
+  </main>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <a href="/man/">Manual</a>
+    <a href="https://github.com/alsaadii98/dok">GitHub</a>
+    <a href="https://crates.io/crates/dok-cli">crates.io</a>
+    <a href="https://github.com/alsaadii98/dok/releases">Releases</a>
+    <a href="https://github.com/alsaadii98/dok/blob/main/LICENSE">MIT</a>
+    <span>&copy; 2026 <a href="https://github.com/alsaadii98">alsaadii98</a></span>
+  </div>
+</footer>
+</body>
+</html>

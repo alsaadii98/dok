@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://dok.alsaadii98.com/</loc>
-    <lastmod>2026-09-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <url><loc>https://dok.alsaadii98.com/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/internals/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/ps/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/ports/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/health/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/inspect/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/logs/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/top/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/images/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/history/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/df/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/prune/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/tree/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/events/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/stats/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/themes/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/completions/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/update/</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://dok.alsaadii98.com/man/uninstall/</loc><lastmod>2026-09-27</lastmod></url>
 </urlset>

@@ -1,0 +1,50 @@
+[
+ [
+  "How do I make docker ps output readable?",
+  "Run dok ps. It reads the Docker socket directly and prints containers grouped by compose project with coloured state dots, health marks, short ids, published ports and relative ages, sized to your terminal width."
+ ],
+ [
+  "How do I find which container is using a port?",
+  "Run dok ports. It prints every published port across every container in one flat table sorted by host port, so finding the owner of 5432 is a glance or a grep. It skips exposed-but-unpublished ports, collapses the IPv4 and IPv6 rows Docker reports for a wildcard binding into one row, and marks any address, port and protocol claimed by two containers."
+ ],
+ [
+  "What is a good docker ps alternative?",
+  "dok ps is a drop-in read-only alternative to docker ps. Unlike docker ps --format it groups containers by compose project and shows the service name rather than the mangled container name, renders sizes and ages in human units, and shrinks columns to fit the terminal instead of wrapping."
+ ],
+ [
+  "How do I find which Docker image layer is making an image large?",
+  "Run dok history <image>. It lists every layer top-down in build order with a bar showing its share of the image, marks each layer over 10% of the total, and recovers the Dockerfile instruction from both the classic builder and BuildKit instead of showing /bin/sh -c #(nop)."
+ ],
+ [
+  "How do I see why a Docker healthcheck is failing?",
+  "Run dok health. It lists only the containers that declare a healthcheck, sorted with unhealthy first, showing the failing streak, the healthcheck interval, the probe's exit code and the first line of its output."
+ ],
+ [
+  "How do I get JSON output from docker ps?",
+  "Run dok ps --json. Every dok command takes --json and emits the same data the table shows, including the derived fields docker does not give you: the compose project, the service name, the health verdict. Sizes and ages arrive as both the number and the human rendering, so nothing has to be re-parsed. dok logs and dok events emit NDJSON, one object per line, because they are streams."
+ ],
+ [
+  "What will docker system prune delete?",
+  "Run dok prune. It shows exactly what docker system prune would remove. stopped containers, dangling images, unused networks and build cache. grouped by kind and sized, without removing anything. It draws the same line docker does: dangling images by default, every unused image with -a, volumes only with --volumes. It then prints the docker command that does the removing."
+ ],
+ [
+  "Does dok have shell completions?",
+  "Yes. dok completions <shell> prints a script for bash, zsh, fish, nushell, powershell or elvish, generated from the same definition the CLI is built from. Homebrew installs them automatically; the .deb and .rpm include bash, zsh and fish; every release attaches a tarball with all six."
+ ],
+ [
+  "Is there a readable alternative to docker inspect?",
+  "dok inspect folds the inspect JSON into identity, state, config, resources, network, mounts and labels, masks credential-looking environment values by default, and highlights privileged mode, added capabilities, OOM kills and failing healthchecks."
+ ],
+ [
+  "How is dok different from lazydocker or ctop?",
+  "lazydocker and ctop are full-screen TUIs you drive interactively. dok prints one static, pipeable screen per command and is read-only: it never starts, stops, execs into or removes containers."
+ ],
+ [
+  "How do I install dok?",
+  "brew install alsaadii98/tap/dok, cargo install dok-cli, makepkg from the PKGBUILDs in the repo on Arch, apk add --allow-untrusted ./dok-x86_64.apk on Alpine, the .deb or .rpm from the releases page, nix run github:alsaadii98/dok, or scoop bucket add dok https://github.com/alsaadii98/dok followed by scoop install dok/dok on Windows."
+ ],
+ [
+  "How do I update dok?",
+  "Run dok update. dok checks GitHub for a newer release at most once a day and prints a one-line notice after a command's output. A standalone binary is replaced in place after its release checksum is verified; if dok was installed by brew, apk, dpkg, rpm or cargo it prints that package manager's upgrade command instead. Set DOK_NO_UPDATE_CHECK=1 to disable the check."
+ ]
+]

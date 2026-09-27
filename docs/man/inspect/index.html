@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A readable docker inspect, with secrets masked | dok inspect</title>
+<meta name="description" content="dok inspect folds the docker inspect JSON into readable sections and masks credential-looking environment values by default.">
+<meta name="keywords" content="docker inspect readable, docker inspect format, docker inspect environment variables, docker inspect healthcheck, docker inspect mounts">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://dok.alsaadii98.com/man/inspect/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#070708">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="dok">
+<meta property="og:title" content="A readable docker inspect, with secrets masked | dok inspect">
+<meta property="og:description" content="dok inspect folds the docker inspect JSON into readable sections and masks credential-looking environment values by default.">
+<meta property="og:url" content="https://dok.alsaadii98.com/man/inspect/">
+<meta property="og:image" content="https://dok.alsaadii98.com/img/dok-social.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/man.css">
+<script src="/assets/site.js" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "dok", "item": "https://dok.alsaadii98.com/"}, {"@type": "ListItem", "position": 2, "name": "Manual", "item": "https://dok.alsaadii98.com/man/"}, {"@type": "ListItem", "position": 3, "name": "dok inspect", "item": "https://dok.alsaadii98.com/man/inspect/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "A readable docker inspect, with secrets masked | dok inspect", "description": "dok inspect folds the docker inspect JSON into readable sections and masks credential-looking environment values by default.", "url": "https://dok.alsaadii98.com/man/inspect/", "inLanguage": "en", "about": {"@type": "SoftwareApplication", "name": "dok", "url": "https://dok.alsaadii98.com/", "applicationCategory": "DeveloperApplication", "operatingSystem": "macOS, Linux, Windows"}, "author": {"@type": "Person", "name": "alsaadii98", "url": "https://github.com/alsaadii98"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="atmos" aria-hidden="true"></div>
+<p id="live" class="sr" aria-live="polite"></p>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <ul>
+      <li class="opt"><a href="/#commands">commands</a></li>
+      <li class="opt"><a href="/#json">json</a></li>
+      <li class="opt2"><a href="/#install">install</a></li>
+      <li><a href="/man/" aria-current="page">manual</a></li>
+      <li><a class="gh" href="https://github.com/alsaadii98/dok" aria-label="dok on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg><span class="opt2">GitHub</span></a></li>
+    </ul>
+  </div>
+</header>
+<div class="wrap man">
+  <nav class="side" aria-label="Manual">
+  <ul class="top"><li><a href="/man/">dok(1) overview</a></li><li><a href="/man/internals/">dok(7) internals</a></li></ul>
+  <p class="grp">Containers</p><ul><li><a href="/man/ps/">ps</a></li><li><a href="/man/ports/">ports</a></li><li><a href="/man/health/">health</a></li><li><a href="/man/inspect/" aria-current="page">inspect</a></li><li><a href="/man/logs/">logs</a></li><li><a href="/man/top/">top</a></li></ul><p class="grp">Images</p><ul><li><a href="/man/images/">images</a></li><li><a href="/man/history/">history</a></li></ul><p class="grp">Disk</p><ul><li><a href="/man/df/">df</a></li><li><a href="/man/prune/">prune</a></li></ul><p class="grp">System</p><ul><li><a href="/man/tree/">tree</a></li><li><a href="/man/events/">events</a></li><li><a href="/man/stats/">stats</a></li></ul><p class="grp">Setup</p><ul><li><a href="/man/themes/">themes</a></li><li><a href="/man/completions/">completions</a></li><li><a href="/man/update/">update</a></li><li><a href="/man/uninstall/">uninstall</a></li></ul>
+</nav>
+  <main id="main" class="article">
+    <div class="manhead" aria-hidden="true"><span>DOK-INSPECT(1)</span><span>dok manual</span><span>DOK-INSPECT(1)</span></div>
+    <h1><span class="p">$</span> dok inspect</h1>
+    <p class="about">Readable summary of a container's configuration and state</p>
+    <h2 id="synopsis">Synopsis</h2>
+    <div class="code"><pre><code translate="no">dok inspect [OPTIONS] &lt;CONTAINERS&gt;...</code></pre></div>
+    <h2 id="description">Description</h2>
+    <div class="prose"><p>The inspect JSON folded into identity, state, config, resources, network, mounts and labels. Privileged mode, added capabilities, OOM kills and failing healthchecks are called out in colour.</p><p>Environment variables appear only with <code translate="no">--env</code>. Values whose keys look like credentials (<code translate="no">PASSWORD</code>, <code translate="no">SECRET</code>, <code translate="no">TOKEN</code>, <code translate="no">API_KEY</code> and similar) are replaced by their length unless <code translate="no">--show-secrets</code> is given. <code translate="no">--json</code> masks exactly the same way.</p></div>
+    <h2 id="arguments">Arguments</h2>
+    <dl class="opts"><dt><code translate="no">&lt;CONTAINERS&gt;...</code></dt><dd>Container names or ids</dd></dl>
+    <h2 id="options">Options</h2>
+    <dl class="opts"><dt><code translate="no">-e, --env</code></dt><dd>Print environment variables</dd><dt><code translate="no">--show-secrets</code></dt><dd>Do not mask password/token-looking env values</dd></dl>
+    <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
+    <h2 id="examples">Examples</h2>
+    <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok inspect api" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok inspect api  <span class="c"># by name, service or id prefix</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok inspect api --env" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok inspect api --env  <span class="c"># include environment variables</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok inspect api db" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok inspect api db  <span class="c"># several at once</span></code></pre></div></div>
+    <h2 id="output">Output</h2>
+    <figure class="shot"><img src="/img/inspect.svg" width="720" height="1054" loading="lazy" decoding="async" alt="Output of dok inspect against the demo stack"><figcaption>Rendered from <code>dok inspect --demo</code>, dok’s built-in example stack.</figcaption></figure>
+    <h2 id="json">JSON output</h2>
+    <div class="code"><button class="copy" type="button" data-copy="dok inspect api --json" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok inspect api --json
+{
+  <span class="k">&quot;containers&quot;</span>: [
+    {
+      <span class="k">&quot;config&quot;</span>: {
+        <span class="k">&quot;command&quot;</span>: [
+          <span class="s">&quot;node&quot;</span>,
+          <span class="s">&quot;dist/server.js&quot;</span>
+        ],
+        <span class="k">&quot;entrypoint&quot;</span>: [
+          <span class="s">&quot;docker-entrypoint.sh&quot;</span>
+        ],
+        <span class="k">&quot;stop_signal&quot;</span>: <span class="s">&quot;SIGTERM&quot;</span>,
+        <span class="k">&quot;user&quot;</span>: <span class="s">&quot;node&quot;</span>,
+        <span class="k">&quot;working_dir&quot;</span>: <span class="s">&quot;/srv/app&quot;</span>
+      },
+      <span class="k">&quot;env&quot;</span>: <span class="b">null</span>,
+      <span class="k">&quot;health&quot;</span>: {
+        <span class="k">&quot;failing_streak&quot;</span>: <span class="n">0</span>,
+        <span class="k">&quot;last_probe&quot;</span>: {
+          <span class="k">&quot;exit_code&quot;</span>: <span class="n">0</span>,
+          <span class="k">&quot;output&quot;</span>: <span class="s">&quot;{\&quot;status\&quot;:\&quot;ok\&quot;,\&quot;db\&quot;:\&quot;up\&quot;,\&quot;queue\&quot;:\&quot;up\&quot;}\n&quot;</span>
+        },
+        <span class="k">&quot;status&quot;</span>: <span class="s">&quot;healthy&quot;</span>
+      },
+      <span class="k">&quot;id&quot;</span>: <span class="s">&quot;a1b2c3d4e5f60f2b7c4d8e9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c&quot;</span>,
+      <span class="k">&quot;image&quot;</span>: <span class="s">&quot;sha256:2372ac0330be1f8c5d92e4a7b3c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3&quot;</span>,
+      <span class="k">&quot;labels&quot;</span>: {
+        <span class="k">&quot;com.docker.compose.container-number&quot;</span>: <span class="s">&quot;1&quot;</span>,
+        <span class="k">&quot;com.docker.compose.project&quot;</span>: <span class="s">&quot;demo-shop&quot;</span>,
+        <span class="k">&quot;com.docker.compose.service&quot;</span>: <span class="s">&quot;api&quot;</span>,
+        <span class="k">&quot;org.opencontainers.image.source&quot;</span>: <span class="s">&quot;https://github.com/demo-shop/api&quot;</span>
+      },
+      <span class="k">&quot;mounts&quot;</span>: [
+        {
+          <span class="k">&quot;destination&quot;</span>: <span class="s">&quot;/srv/app/uploads&quot;</span>,
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop_uploads&quot;</span>,
+          <span class="k">&quot;read_write&quot;</span>: <span class="b">true</span>,
+          <span class="k">&quot;source&quot;</span>: <span class="s">&quot;/var/lib/docker/volumes/demo-shop_uploads/_data&quot;</span>,
+          <span class="k">&quot;type&quot;</span>: <span class="s">&quot;volume&quot;</span>
+        },
+        {
+          <span class="k">&quot;destination&quot;</span>: <span class="s">&quot;/srv/app/config.toml&quot;</span>,
+          <span class="k">&quot;name&quot;</span>: <span class="b">null</span>,
+          <span class="k">&quot;read_write&quot;</span>: <span class="b">false</span>,
+          <span class="k">&quot;source&quot;</span>: <span class="s">&quot;/etc/demo-shop/api.toml&quot;</span>,
+          <span class="k">&quot;type&quot;</span>: <span class="s">&quot;bind&quot;</span>
+        }
+      ],
+      <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-api-1&quot;</span>,
+      <span class="k">&quot;platform&quot;</span>: <span class="s">&quot;linux&quot;</span>,
+      <span class="k">&quot;state&quot;</span>: {
+        <span class="k">&quot;exit_code&quot;</span>: <span class="n">0</span>,
+        <span class="k">&quot;oom_killed&quot;</span>: <span class="b">null</span>,
+        <span class="k">&quot;pid&quot;</span>: <span class="n">21874</span>,
+        <span class="k">&quot;restart_count&quot;</span>: <span class="n">2</span>,
+        <span class="k">&quot;running&quot;</span>: <span class="b">true</span>,
+        <span class="k">&quot;started_at&quot;</span>: <span class="s">&quot;2026-08-17T06:12:44.118Z&quot;</span>,
+        <span class="k">&quot;status&quot;</span>: <span class="s">&quot;running&quot;</span>
+      }
+    }
+  ]
+}</code></pre></div>
+    <h2 id="see-also">See also</h2>
+    <p class="prose"><a href="/man/ps/">dok-ps(1)</a>, <a href="/man/health/">dok-health(1)</a>, <a href="/man/top/">dok-top(1)</a>, <a href="/man/internals/">dok(7)</a></p>
+    <div class="manfoot"><span>dok 0.3.0</span><span>2026-09-27</span><span>DOK-INSPECT(1)</span></div>
+  </main>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <a href="/man/">Manual</a>
+    <a href="https://github.com/alsaadii98/dok">GitHub</a>
+    <a href="https://crates.io/crates/dok-cli">crates.io</a>
+    <a href="https://github.com/alsaadii98/dok/releases">Releases</a>
+    <a href="https://github.com/alsaadii98/dok/blob/main/LICENSE">MIT</a>
+    <span>&copy; 2026 <a href="https://github.com/alsaadii98">alsaadii98</a></span>
+  </div>
+</footer>
+</body>
+</html>

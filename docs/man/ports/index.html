@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Find which Docker container is using a port | dok ports</title>
+<meta name="description" content="dok ports prints every published port across all containers in one table sorted by host port, so finding who owns 5432 takes one glance.">
+<meta name="keywords" content="docker which container is using port, docker port already in use, find docker container by port, docker list published ports, docker port 5432 in use">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://dok.alsaadii98.com/man/ports/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#070708">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="dok">
+<meta property="og:title" content="Find which Docker container is using a port | dok ports">
+<meta property="og:description" content="dok ports prints every published port across all containers in one table sorted by host port, so finding who owns 5432 takes one glance.">
+<meta property="og:url" content="https://dok.alsaadii98.com/man/ports/">
+<meta property="og:image" content="https://dok.alsaadii98.com/img/dok-social.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/man.css">
+<script src="/assets/site.js" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "dok", "item": "https://dok.alsaadii98.com/"}, {"@type": "ListItem", "position": 2, "name": "Manual", "item": "https://dok.alsaadii98.com/man/"}, {"@type": "ListItem", "position": 3, "name": "dok ports", "item": "https://dok.alsaadii98.com/man/ports/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Find which Docker container is using a port | dok ports", "description": "dok ports prints every published port across all containers in one table sorted by host port, so finding who owns 5432 takes one glance.", "url": "https://dok.alsaadii98.com/man/ports/", "inLanguage": "en", "about": {"@type": "SoftwareApplication", "name": "dok", "url": "https://dok.alsaadii98.com/", "applicationCategory": "DeveloperApplication", "operatingSystem": "macOS, Linux, Windows"}, "author": {"@type": "Person", "name": "alsaadii98", "url": "https://github.com/alsaadii98"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="atmos" aria-hidden="true"></div>
+<p id="live" class="sr" aria-live="polite"></p>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <ul>
+      <li class="opt"><a href="/#commands">commands</a></li>
+      <li class="opt"><a href="/#json">json</a></li>
+      <li class="opt2"><a href="/#install">install</a></li>
+      <li><a href="/man/" aria-current="page">manual</a></li>
+      <li><a class="gh" href="https://github.com/alsaadii98/dok" aria-label="dok on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg><span class="opt2">GitHub</span></a></li>
+    </ul>
+  </div>
+</header>
+<div class="wrap man">
+  <nav class="side" aria-label="Manual">
+  <ul class="top"><li><a href="/man/">dok(1) overview</a></li><li><a href="/man/internals/">dok(7) internals</a></li></ul>
+  <p class="grp">Containers</p><ul><li><a href="/man/ps/">ps</a></li><li><a href="/man/ports/" aria-current="page">ports</a></li><li><a href="/man/health/">health</a></li><li><a href="/man/inspect/">inspect</a></li><li><a href="/man/logs/">logs</a></li><li><a href="/man/top/">top</a></li></ul><p class="grp">Images</p><ul><li><a href="/man/images/">images</a></li><li><a href="/man/history/">history</a></li></ul><p class="grp">Disk</p><ul><li><a href="/man/df/">df</a></li><li><a href="/man/prune/">prune</a></li></ul><p class="grp">System</p><ul><li><a href="/man/tree/">tree</a></li><li><a href="/man/events/">events</a></li><li><a href="/man/stats/">stats</a></li></ul><p class="grp">Setup</p><ul><li><a href="/man/themes/">themes</a></li><li><a href="/man/completions/">completions</a></li><li><a href="/man/update/">update</a></li><li><a href="/man/uninstall/">uninstall</a></li></ul>
+</nav>
+  <main id="main" class="article">
+    <div class="manhead" aria-hidden="true"><span>DOK-PORTS(1)</span><span>dok manual</span><span>DOK-PORTS(1)</span></div>
+    <h1><span class="p">$</span> dok ports</h1>
+    <p class="about">Every published port in one table, sorted by port</p>
+    <h2 id="synopsis">Synopsis</h2>
+    <div class="code"><pre><code translate="no">dok ports [OPTIONS]</code></pre></div>
+    <h2 id="description">Description</h2>
+    <div class="prose"><p>One row per published binding, sorted by host port, so finding the owner of a port is a glance or a grep.</p><p>Exposed-but-unpublished ports are skipped, since nothing on the host can reach them. A wildcard binding that Docker reports twice, as <code translate="no">0.0.0.0</code> and <code translate="no">::</code>, collapses into one row. The <code translate="no">BIND</code> column appears only when some binding is narrower than every interface. When two containers claim the same address, port and protocol, both rows are marked.</p></div>
+    <h2 id="options">Options</h2>
+    <dl class="opts"><dt><code translate="no">-a, --all</code></dt><dd>Include stopped containers</dd></dl>
+    <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
+    <h2 id="examples">Examples</h2>
+    <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok ports" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ports  <span class="c"># every published port</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok ports -a" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ports -a  <span class="c"># include stopped containers</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok ports | grep 5432" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ports | grep 5432  <span class="c"># who owns 5432</span></code></pre></div></div>
+    <h2 id="output">Output</h2>
+    <figure class="shot"><img src="/img/ports.svg" width="536" height="254" loading="lazy" decoding="async" alt="Output of dok ports against the demo stack"><figcaption>Rendered from <code>dok ports --demo</code>, dok’s built-in example stack.</figcaption></figure>
+    <h2 id="json">JSON output</h2>
+    <div class="code"><button class="copy" type="button" data-copy="dok ports --json" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ports --json
+{
+  <span class="k">&quot;ports&quot;</span>: [
+    {
+      <span class="k">&quot;conflict&quot;</span>: <span class="b">false</span>,
+      <span class="k">&quot;container&quot;</span>: <span class="s">&quot;web&quot;</span>,
+      <span class="k">&quot;container_port&quot;</span>: <span class="n">80</span>,
+      <span class="k">&quot;host_ip&quot;</span>: <span class="b">null</span>,
+      <span class="k">&quot;host_port&quot;</span>: <span class="n">80</span>,
+      <span class="k">&quot;project&quot;</span>: <span class="s">&quot;demo-shop&quot;</span>,
+      <span class="k">&quot;protocol&quot;</span>: <span class="s">&quot;tcp&quot;</span>,
+      <span class="k">&quot;state&quot;</span>: <span class="s">&quot;running&quot;</span>
+    },
+    {
+      <span class="k">&quot;conflict&quot;</span>: <span class="b">false</span>,
+      <span class="k">&quot;container&quot;</span>: <span class="s">&quot;web&quot;</span>,
+      <span class="k">&quot;container_port&quot;</span>: <span class="n">443</span>,
+      <span class="k">&quot;host_ip&quot;</span>: <span class="b">null</span>,
+      <span class="k">&quot;host_port&quot;</span>: <span class="n">443</span>,
+      <span class="k">&quot;project&quot;</span>: <span class="s">&quot;demo-shop&quot;</span>,
+      <span class="k">&quot;protocol&quot;</span>: <span class="s">&quot;tcp&quot;</span>,
+      <span class="k">&quot;state&quot;</span>: <span class="s">&quot;running&quot;</span>
+    }
+  ]
+}</code></pre></div>
+    <p class="prose note">Longer arrays are cut to their first two elements here.</p>
+    <h2 id="see-also">See also</h2>
+    <p class="prose"><a href="/man/ps/">dok-ps(1)</a>, <a href="/man/tree/">dok-tree(1)</a>, <a href="/man/internals/">dok(7)</a></p>
+    <div class="manfoot"><span>dok 0.3.0</span><span>2026-09-27</span><span>DOK-PORTS(1)</span></div>
+  </main>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <a href="/man/">Manual</a>
+    <a href="https://github.com/alsaadii98/dok">GitHub</a>
+    <a href="https://crates.io/crates/dok-cli">crates.io</a>
+    <a href="https://github.com/alsaadii98/dok/releases">Releases</a>
+    <a href="https://github.com/alsaadii98/dok/blob/main/LICENSE">MIT</a>
+    <span>&copy; 2026 <a href="https://github.com/alsaadii98">alsaadii98</a></span>
+  </div>
+</footer>
+</body>
+</html>
