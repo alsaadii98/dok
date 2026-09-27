@@ -75,8 +75,12 @@ def anim(attr, pairs, total, calc="linear"):
     )
 
 
-def render_scene(scene, start, total, width, idx):
-    """One scene's <g>, animated on the global timeline that starts at `start`."""
+def render_scene(scene, start, total, width, idx, static=False):
+    """One scene's <g>, animated on the global timeline that starts at `start`.
+
+    static draws the scene as it looks once typed and printed, with no
+    animation at all: the frame the pause control and reduced motion show.
+    """
     out = []
     top = TITLEBAR + PAD_Y
     y_prompt = top + 13
@@ -95,7 +99,10 @@ def render_scene(scene, start, total, width, idx):
         (scene_end, 0),
         (total, 0),
     ]
-    out.append(f'<g opacity="0">{anim("opacity", gate, total)}')
+    if static:
+        out.append("<g>")
+    else:
+        out.append(f'<g opacity="0">{anim("opacity", gate, total)}')
 
     # Prompt marker.
     out.append(
@@ -103,34 +110,41 @@ def render_scene(scene, start, total, width, idx):
         f'font-weight="500">&#10095;</text>'
     )
 
-    # Command text, revealed by a clip that widens one character at a time.
-    clip = f"type{idx}"
-    steps = [(0, 0), (start + LEAD, 0)]
-    for i in range(1, len(scene.cmd) + 1):
-        steps.append((start + LEAD + i * PER_CHAR, round(i * CHAR_W, 2)))
-    steps.append((total, round(len(scene.cmd) * CHAR_W, 2)))
-    out.append(
-        f'<clipPath id="{clip}"><rect x="{x_cmd:.1f}" y="0" height="{TITLEBAR + 40:.0f}" '
-        f'width="0">{anim("width", steps, total, calc="discrete")}</rect></clipPath>'
-    )
-    out.append(
-        f'<g clip-path="url(#{clip})"><text x="{x_cmd:.1f}" y="{y_prompt:.1f}" '
-        f'fill="{HEAD}" xml:space="preserve">{esc(scene.cmd)}</text></g>'
-    )
+    if static:
+        # The command as typed, no clip, no caret.
+        out.append(
+            f'<text x="{x_cmd:.1f}" y="{y_prompt:.1f}" fill="{HEAD}" '
+            f'xml:space="preserve">{esc(scene.cmd)}</text>'
+        )
+    else:
+        # Command text, revealed by a clip that widens one character at a time.
+        clip = f"type{idx}"
+        steps = [(0, 0), (start + LEAD, 0)]
+        for i in range(1, len(scene.cmd) + 1):
+            steps.append((start + LEAD + i * PER_CHAR, round(i * CHAR_W, 2)))
+        steps.append((total, round(len(scene.cmd) * CHAR_W, 2)))
+        out.append(
+            f'<clipPath id="{clip}"><rect x="{x_cmd:.1f}" y="0" height="{TITLEBAR + 40:.0f}" '
+            f'width="0">{anim("width", steps, total, calc="discrete")}</rect></clipPath>'
+        )
+        out.append(
+            f'<g clip-path="url(#{clip})"><text x="{x_cmd:.1f}" y="{y_prompt:.1f}" '
+            f'fill="{HEAD}" xml:space="preserve">{esc(scene.cmd)}</text></g>'
+        )
 
-    # Caret: rides the clip edge while typing, then disappears with the output.
-    caret = [(0, 0), (start + LEAD - 0.05, 0), (start + LEAD, 1), (body_start, 1),
-             (body_start + 0.01, 0), (total, 0)]
-    caret_x = [(t, round(x_cmd + w, 2)) for t, w in steps]
-    out.append(
-        f'<g opacity="0">{anim("opacity", caret, total, calc="discrete")}'
-        f'<rect x="{x_cmd:.1f}" y="{y_prompt - 11:.1f}" width="{CHAR_W:.1f}" height="15" '
-        f'fill="{HEAD}" opacity=".75">'
-        f'{anim("x", caret_x, total, calc="discrete")}'
-        f'<animate attributeName="opacity" values=".85;.85;0;0" keyTimes="0;.5;.5;1" '
-        f'dur="1s" repeatCount="indefinite"/>'
-        f"</rect></g>"
-    )
+        # Caret: rides the clip edge while typing, then disappears with the output.
+        caret = [(0, 0), (start + LEAD - 0.05, 0), (start + LEAD, 1), (body_start, 1),
+                 (body_start + 0.01, 0), (total, 0)]
+        caret_x = [(t, round(x_cmd + w, 2)) for t, w in steps]
+        out.append(
+            f'<g opacity="0">{anim("opacity", caret, total, calc="discrete")}'
+            f'<rect x="{x_cmd:.1f}" y="{y_prompt - 11:.1f}" width="{CHAR_W:.1f}" height="15" '
+            f'fill="{HEAD}" opacity=".75">'
+            f'{anim("x", caret_x, total, calc="discrete")}'
+            f'<animate attributeName="opacity" values=".85;.85;0;0" keyTimes="0;.5;.5;1" '
+            f'dur="1s" repeatCount="indefinite"/>'
+            f"</rect></g>"
+        )
 
     # Output lines.
     per = min(PER_LINE, MAX_REVEAL / max(len(scene.lines), 1))
@@ -149,6 +163,9 @@ def render_scene(scene, start, total, width, idx):
                 attrs.append('text-decoration="underline"')
             spans.append(f'<tspan {" ".join(attrs)}>{esc(text)}</tspan>')
         if not spans:
+            continue
+        if static:
+            out.append(f'<text y="{y:.1f}" xml:space="preserve">{"".join(spans)}</text>')
             continue
         at = body_start + row * per
         show = [
@@ -179,9 +196,24 @@ def dedupe(pairs):
     return fixed
 
 
-def render(scenes, title, font):
-    cols = max(s.cols for s in scenes)
-    rows = max(s.rows for s in scenes)
+def fit(scene, rows):
+    """Cut a scene that runs past a fixed frame, the way a terminal of that
+    height would, and say how much was cut rather than drop it silently."""
+    room = rows - 2  # prompt line and spacer
+    if len(scene.lines) <= room:
+        return
+    cut = len(scene.lines) - (room - 1)
+    scene.lines = scene.lines[: room - 1] + parse(f"\x1b[38;2;106;115;130m\u2026 {cut} more lines\x1b[0m")
+
+
+def render(scenes, title, font, cols=0, rows=0, static=False):
+    """cols and rows fix the frame, so casts shown in turn in one slot are the
+    same size. Zero means fit the content, as before."""
+    if rows:
+        for sc in scenes:
+            fit(sc, rows)
+    cols = max(cols, max(sc.cols for sc in scenes))
+    rows = max(rows, max(sc.rows for sc in scenes))
     width = PAD_X * 2 + cols * CHAR_W
     height = TITLEBAR + PAD_Y * 2 + rows * LINE_H
     total = sum(s.duration for s in scenes)
@@ -193,8 +225,10 @@ def render(scenes, title, font):
     ]
 
     start = 0.0
-    for i, scene in enumerate(scenes):
-        out.append(render_scene(scene, start, total, width, i))
+    # A still of a multi-scene cast is its first scene, in the frame sized for
+    # all of them, so pausing never changes the size of the box.
+    for i, scene in enumerate(scenes[:1] if static else scenes):
+        out.append(render_scene(scene, start, total, width, i, static))
         start += scene.duration
 
     out.append("</svg>")
@@ -216,6 +250,9 @@ def main():
         "--font",
         default=FONT_STACK,
     )
+    ap.add_argument("--cols", type=int, default=0, help="fixed frame width in columns")
+    ap.add_argument("--rows", type=int, default=0, help="fixed frame height in rows; longer output is cut and marked")
+    ap.add_argument("--static", action="store_true", help="the final frame, with no animation")
     args = ap.parse_args()
 
     scenes = []
@@ -227,7 +264,7 @@ def main():
             scenes.append(Scene(cmd, fh.read()))
 
     with open(args.out, "w", encoding="utf-8") as fh:
-        fh.write(embed_font(render(scenes, args.title, args.font)) + "\n")
+        fh.write(embed_font(render(scenes, args.title, args.font, args.cols, args.rows, args.static)) + "\n")
     print(f"wrote {args.out}")
 
 

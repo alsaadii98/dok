@@ -83,19 +83,50 @@ cast hero "~/demo-shop" \
   "dok images=$RAW/images.ansi" \
   "dok logs -n 8=$RAW/logs.ansi" \
   "dok events --since 20m=$RAW/events.ansi"
+# and its still, the same size, for the pause control and reduced motion
+"$PY" scripts/ansi2cast.py --out docs/img/frame-hero.svg --title "~/demo-shop" --static \
+  --scene "dok ps -a=$RAW/ps.ansi" --scene "dok images=$RAW/images.ansi" \
+  --scene "dok logs -n 8=$RAW/logs.ansi" --scene "dok events --since 20m=$RAW/events.ansi"
 
-cast ps      "dok ps"      "dok ps -a=$RAW/ps.ansi"
-cast images  "dok images"  "dok images=$RAW/images.ansi"
-cast df      "dok df"      "dok df=$RAW/df-slim.ansi"
-cast tree    "dok tree"    "dok tree --only projects=$RAW/tree-p.ansi"
-cast logs    "dok logs"    "dok logs -n 8=$RAW/logs.ansi"
-cast inspect "dok inspect" "dok inspect api=$RAW/inspect.ansi"
-cast top     "dok top"     "dok top api=$RAW/top.ansi"
-cast events  "dok events"  "dok events --since 20m=$RAW/events.ansi"
-cast themes  "dok themes"  "dok themes=$RAW/themes.ansi"
-cast ports   "dok ports"   "dok ports=$RAW/ports.ansi"
-cast history "dok history" "dok history api=$RAW/history.ansi"
-cast health  "dok health"  "dok health=$RAW/health.ansi"
-cast prune   "dok prune"   "dok prune=$RAW/prune.ansi"
+# The command browser on the site shows one cast at a time in one slot, so
+# they share a frame: as wide as the widest command's output, and a fixed
+# height, like a terminal window. Output that runs longer is cut and marked.
+# Each also gets a static twin at the same size, which the pause control and
+# reduced motion show instead.
+FRAME_ROWS=17
+FRAME_COLS=$("$PY" - "$RAW" <<'EOF'
+import sys
+sys.path.insert(0, "scripts")
+from ansi2cast import Scene
+raw = sys.argv[1]
+specs = [("ps -a","ps"),("ports","ports"),("health","health"),("history api","history"),
+         ("prune","prune"),("images","images"),("df","df-slim"),("inspect api","inspect"),
+         ("logs -n 8","logs"),("top api","top"),("tree --only projects","tree-p"),
+         ("events --since 20m","events"),("themes","themes")]
+print(max(Scene("dok " + c, open(f"{raw}/{f}.ansi").read()).cols for c, f in specs))
+EOF
+)
+
+frame() {
+  local name=$1 cmd=$2 file=$3
+  "$PY" scripts/ansi2cast.py --out "docs/img/cast-$name.svg" --title "dok $name" \
+    --cols "$FRAME_COLS" --rows "$FRAME_ROWS" --scene "dok $cmd=$RAW/$file.ansi"
+  "$PY" scripts/ansi2cast.py --out "docs/img/frame-$name.svg" --title "dok $name" \
+    --cols "$FRAME_COLS" --rows "$FRAME_ROWS" --static --scene "dok $cmd=$RAW/$file.ansi"
+}
+
+frame ps      "ps -a"                ps
+frame ports   "ports"                ports
+frame health  "health"               health
+frame history "history api"          history
+frame prune   "prune"                prune
+frame images  "images"               images
+frame df      "df"                   df-slim
+frame inspect "inspect api"          inspect
+frame logs    "logs -n 8"            logs
+frame top     "top api"              top
+frame tree    "tree --only projects" tree-p
+frame events  "events --since 20m"   events
+frame themes  "themes"               themes
 
 echo "screenshots written to docs/img/"

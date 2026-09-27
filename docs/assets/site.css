@@ -105,6 +105,49 @@ samp {
   font-family: var(--mono);
 }
 
+/* Scrollbars in the page's palette instead of the OS default: thin, a
+   --line-2 thumb on a transparent track, brighter on hover. Standard
+   properties for Firefox and modern Chrome, the ::-webkit set for Safari. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-2);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--mut);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* The page's own scrollbar: a track in the page background, a touch wider
+   than the inner ones so it stays easy to grab. */
+html {
+  scrollbar-color: var(--line-2) var(--bg);
+}
+html::-webkit-scrollbar {
+  width: 11px;
+}
+html::-webkit-scrollbar-track {
+  background: var(--bg);
+  border-left: 1px solid var(--line);
+}
+html::-webkit-scrollbar-thumb {
+  border-width: 3px;
+}
+
 ::selection {
   background: var(--green);
   color: var(--green-ink);
