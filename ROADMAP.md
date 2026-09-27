@@ -32,11 +32,14 @@ codebase.
 - [x] **Shell completions** for bash/zsh/fish/nushell, generated in CI.
       ([#9](https://github.com/alsaadii98/dok/issues/9))
 
-## Next up (0.3)
+## Shipped (0.3)
 
 - [x] **`--json` on every command** — same data, machine-readable, so `dok` can
       sit in scripts as well as in front of a human.
       ([#11](https://github.com/alsaadii98/dok/issues/11))
+
+## Next up (0.4)
+
 - [ ] **Remote contexts** — read `~/.docker/contexts` so `dok --context prod ps`
       works like the docker CLI. Reading containers on a remote host is where
       the wall-of-text problem is worst.

@@ -47,7 +47,7 @@
   "codeRepository": "https://github.com/alsaadii98/dok",
   "programmingLanguage": "Rust",
   "license": "https://opensource.org/licenses/MIT",
-  "softwareVersion": "0.2.1",
+  "softwareVersion": "0.3.0",
   "keywords": "docker, cli, containers, docker ps, docker inspect, docker logs, rust, terminal, themes",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "author": {
@@ -102,6 +102,14 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Run dok health. It lists only the containers that declare a healthcheck, sorted with unhealthy first, showing the failing streak, the healthcheck interval, the probe's exit code and the first line of its output."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get JSON output from docker ps?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Run dok ps --json. Every dok command takes --json and emits the same data the table shows, including the derived fields docker does not give you: the compose project, the service name, the health verdict. Sizes and ages arrive as both the number and the human rendering, so nothing has to be re-parsed. dok logs and dok events emit NDJSON, one object per line, because they are streams."
       }
     },
     {
@@ -492,7 +500,7 @@ footer .sp{margin-left:auto}
 
   <section class="hero">
     <span class="pill" data-anim style="transition-delay:.03s">
-      <span class="v">v0.2.1</span> Rust · reads the docker socket · MIT
+      <span class="v">v0.3.0</span> Rust · reads the docker socket · MIT
     </span>
     <h1 data-anim style="transition-delay:.08s">Docker&nbsp;output,<br>made <em>readable</em>.</h1>
     <p class="sub" data-anim style="transition-delay:.14s">
@@ -547,6 +555,7 @@ footer .sp{margin-left:auto}
         <li><svg class="i"><use href="#i-stats"/></svg><b>dok stats</b><span>live CPU / memory dashboard</span></li>
         <li><svg class="i"><use href="#i-events"/></svg><b>dok events</b><span>colour-coded daemon events</span></li>
         <li><svg class="i"><use href="#i-themes"/></svg><b>dok themes</b><span>list and preview themes</span></li>
+        <li><svg class="i"><use href="#i-binary"/></svg><b>--json</b><span>on every command, NDJSON for streams</span></li>
         <li><svg class="i"><use href="#i-pipe"/></svg><b>dok completions</b><span>bash, zsh, fish, nushell, powershell, elvish</span></li>
         <li><svg class="i"><use href="#i-update"/></svg><b>dok update</b><span>check for a release, install it</span></li>
         <li><svg class="i"><use href="#i-download"/></svg><b>dok uninstall</b><span>remove it as cleanly as it arrived</span></li>
