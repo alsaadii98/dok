@@ -261,6 +261,93 @@ jobs:
           git pull --rebase origin main
           git push
 
+  docs:
+    name: regenerate the site and manual
+    # After scoop, because both commit to main; running them in sequence
+    # means the second rebases onto the first instead of racing it.
+    needs: [build, scoop]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+      # A push made with GITHUB_TOKEN does not trigger other workflows, so the
+      # site would never redeploy. workflow_dispatch is the documented
+      # exception, and dispatching needs this.
+      actions: write
+    steps:
+      # Generate from the tag, not from main. The manual must describe the
+      # release people download, and gen-docs.py refuses to run if the binary
+      # and the script disagree about which commands exist, which they would
+      # if main had moved ahead with an unreleased command.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # fonttools embeds Geist Mono in each screenshot.
+      - name: Install fonttools
+        run: pip install fonttools brotli
+
+      # The released linux binary, so the docs describe exactly what shipped.
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist-x86_64-unknown-linux-gnu
+          path: dist
+
+      - name: Unpack the released binary
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          tar -xzf "dist/dok-$version-x86_64-unknown-linux-gnu.tar.gz" -C dist
+          echo "DOK_BIN=$PWD/dist/dok-$version-x86_64-unknown-linux-gnu/dok" >> "$GITHUB_ENV"
+
+      - name: Regenerate screenshots, manual and landing page
+        run: |
+          "$DOK_BIN" --version
+          ./scripts/gen-screenshots.sh
+          ./scripts/gen-docs.py
+
+      # Carry only the generated files across to main. Hand-written assets
+      # (docs/assets, docs/fonts) are main's to own and are never touched.
+      - name: Move the generated files onto main
+        run: |
+          out=$(mktemp -d)
+          cp -R docs/index.html docs/sitemap.xml docs/man docs/img "$out/"
+          git fetch origin main
+          # Regenerating dirtied tracked files on the tag's tree, which would
+          # make the checkout refuse. They are safe in $out, so drop them.
+          git reset -q --hard
+          git clean -fdq docs
+          git checkout -B main origin/main
+          rm -rf docs/man
+          cp -R "$out/index.html" "$out/sitemap.xml" "$out/man" docs/
+          cp -R "$out/img/." docs/img/
+
+      - name: Commit and push
+        id: push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/index.html docs/sitemap.xml docs/man docs/img
+          if git diff --cached --quiet; then
+            echo "site already up to date"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "docs: regenerate the site and manual for ${GITHUB_REF_NAME#v}"
+          # Someone may have pushed to main while the release built.
+          git pull --rebase origin main
+          git push origin main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy the site
+        if: steps.push.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main
+
   homebrew:
     name: update homebrew tap
     needs: release

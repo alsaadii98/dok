@@ -8,6 +8,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- The release workflow regenerates the screenshots, the manual and the landing
+  page from the binary it just built, commits them to `main` and redeploys the
+  site. Before, the manual described whichever version someone last remembered
+  to regenerate it for. It generates from the tag rather than `main`, so the
+  site documents the release people download and never a command that is not
+  out yet.
+
 - The release workflow regenerates `bucket/dok.json` from the release it just
   published and commits it to `main`. This repo doubles as its own scoop
   bucket, so nothing external runs `checkver` for it and the manifest had
