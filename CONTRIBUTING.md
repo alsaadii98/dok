@@ -89,6 +89,22 @@ Palette guidance: `gray` must stay readable on your target background (it
 carries all secondary text), and `red` must be distinguishable from `orange`
 for people with red-green colour blindness — the `df` bars put them adjacent.
 
+## Regenerating the site
+
+The website and the manual under `docs/` are generated, not hand-edited:
+
+```sh
+pip install fonttools brotli     # once: embeds Geist Mono in the screenshots
+./scripts/gen-screenshots.sh     # docs/img/*.svg from `--demo` output
+./scripts/gen-docs.py            # docs/index.html and docs/man/ from the binary
+```
+
+`gen-docs.py` reads every command's `--help`, runs `--demo --json` for the JSON
+samples, and greps `src/` for the Docker API calls listed on the internals page,
+so the manual cannot drift from the binary. It refuses to run if a subcommand
+exists that the manual does not cover. Descriptions and examples live in the
+`COMMANDS` table at the top of the script.
+
 ## Regenerating the screenshots
 
 The images in `README.md` and the website are generated from real output, so

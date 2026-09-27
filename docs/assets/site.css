@@ -1,0 +1,460 @@
+/* dok.alsaadii98.com — shared by the landing page and every man page.
+ *
+ * Tokens come from the tool itself: the One Dark roles dok's default theme
+ * paints with, and the #0a0a0a the casts are rendered on, so a screenshot and
+ * the page around it are the same surface.
+ *
+ * Shape rule, applied everywhere: surfaces 12px (the radius baked into the
+ * rendered casts), controls 6px. Nothing else.
+ * Colour rule: green is the only accent in page chrome. The other roles appear
+ * only where they mean what they mean in dok's own output — syntax, status.
+ * Iconography is dok's own glyph set (├─ └─ ● ✔ ✖ →), set as text.
+ */
+
+@font-face {
+  font-family: "Geist";
+  src: url("../fonts/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src: url("../fonts/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+
+  --bg: #070708;
+  --surface: #0a0a0a;
+  --surface-2: #101012;
+  --surface-3: #16161a;
+  --line: #1c1c20;
+  --line-2: #2a2a30;
+
+  --head: #ededed;
+  --fg: #b4b8c0;
+  --mut: #80858e;
+
+  --green: #98c379;
+  --green-ink: #0b1a06;
+  --green-dim: rgb(152 195 121 / 0.12);
+
+  /* Output roles, never used as decoration. */
+  --blue: #61afef;
+  --cyan: #56b6c2;
+  --yellow: #e5c07b;
+  --red: #e06c75;
+  --magenta: #c678dd;
+  --gray: #6a7382;
+
+  --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --r-surface: 12px;
+  --r-control: 6px;
+
+  --max: 1200px;
+  --pad: clamp(1.25rem, 4vw, 2.5rem);
+  --nav-h: 64px;
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--nav-h) + 1rem);
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 16px/1.65 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  touch-action: manipulation;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--mono);
+}
+
+::selection {
+  background: var(--green);
+  color: var(--green-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+  border-radius: var(--r-control);
+}
+
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  border-radius: var(--r-control);
+  background: var(--green);
+  color: var(--green-ink);
+  font: 500 14px var(--mono);
+  text-decoration: none;
+}
+.skip:focus-visible {
+  top: 1rem;
+}
+
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--pad);
+}
+
+/* The terminal-grid atmosphere. Fixed and non-interactive, so it never
+   repaints while scrolling. */
+.atmos {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(56rem 32rem at 78% -6%, rgb(152 195 121 / 0.08), transparent 64%),
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 48px 48px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 48px 48px;
+  -webkit-mask-image: radial-gradient(90% 60% at 60% 0%, #000 10%, transparent 72%);
+  mask-image: radial-gradient(90% 60% at 60% 0%, #000 10%, transparent 72%);
+  opacity: 0.55;
+}
+
+/* ── nav ─────────────────────────────────────────────────────────────── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--nav-h);
+  border-bottom: 1px solid var(--line);
+  background: rgb(7 7 8 / 0.78);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  backdrop-filter: blur(12px) saturate(1.3);
+}
+.nav .wrap {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  height: 100%;
+}
+.brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.15rem;
+  font: 600 1.05rem var(--mono);
+  color: var(--head);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+.brand .sec {
+  color: var(--mut);
+  font-weight: 400;
+}
+.nav ul {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  margin: 0 0 0 auto;
+  padding: 0;
+  list-style: none;
+}
+.nav a:not(.brand) {
+  font: 400 0.875rem var(--mono);
+  color: var(--mut);
+  text-decoration: none;
+  transition: color 0.15s var(--ease);
+}
+.nav a:not(.brand):hover,
+.nav a[aria-current="page"] {
+  color: var(--head);
+}
+.gh {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-control);
+  transition: border-color 0.15s var(--ease), color 0.15s var(--ease);
+}
+.gh:hover {
+  border-color: var(--mut);
+}
+.gh svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+@media (max-width: 860px) {
+  .nav .opt {
+    display: none;
+  }
+}
+@media (max-width: 560px) {
+  .nav ul {
+    gap: 1rem;
+  }
+  .nav .opt2 {
+    display: none;
+  }
+}
+
+/* ── shared type ─────────────────────────────────────────────────────── */
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  color: var(--head);
+  font-family: var(--mono);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+h2 {
+  font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+  line-height: 1.12;
+}
+h3 {
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+.lede {
+  max-width: 62ch;
+  margin: 1rem 0 0;
+  font-size: 1.05rem;
+  color: var(--fg);
+  text-wrap: pretty;
+}
+.lede code,
+.prose code,
+.faq code,
+td code {
+  padding: 0.1em 0.35em;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface-2);
+  color: var(--head);
+  font-size: 0.88em;
+}
+
+section {
+  padding: clamp(4rem, 9vw, 7rem) 0;
+  border-top: 1px solid var(--line);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font: 500 0.9rem var(--mono);
+  color: var(--green);
+  text-decoration: none;
+}
+.link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ── code blocks with copy ───────────────────────────────────────────── */
+
+.code {
+  position: relative;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-surface);
+  background: var(--surface);
+}
+.code pre {
+  margin: 0;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  font-size: 0.82rem;
+  line-height: 1.75;
+  color: var(--fg);
+  tab-size: 2;
+}
+.code .p {
+  color: var(--green);
+  user-select: none;
+}
+.code .c {
+  color: var(--gray);
+}
+.code .k {
+  color: var(--cyan);
+}
+.code .s {
+  color: var(--green);
+}
+.code .n {
+  color: var(--yellow);
+}
+.code .b {
+  color: var(--magenta);
+}
+
+.copy {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-control);
+  background: var(--surface-2);
+  color: var(--mut);
+  font: 500 0.7rem var(--mono);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s var(--ease), color 0.15s var(--ease), border-color 0.15s var(--ease);
+}
+.code:hover .copy,
+.code:focus-within .copy,
+.copy:focus-visible,
+.copy[data-state="done"] {
+  opacity: 1;
+}
+.copy:hover {
+  color: var(--head);
+  border-color: var(--mut);
+}
+.copy:active {
+  transform: translateY(1px);
+}
+.copy[data-state="done"] {
+  color: var(--green);
+  border-color: rgb(152 195 121 / 0.5);
+}
+@media (hover: none) {
+  .copy {
+    opacity: 1;
+  }
+}
+
+/* The one prominent command on a page: install, inline with a copy button. */
+.cmdline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.55rem 0.55rem 0.55rem 1rem;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-control);
+  background: var(--surface);
+  font: 400 0.9rem var(--mono);
+  color: var(--head);
+}
+.cmdline .p {
+  color: var(--green);
+  user-select: none;
+}
+.cmdline code {
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+.cmdline .copy {
+  position: static;
+  opacity: 1;
+  margin-left: auto;
+  flex: none;
+}
+
+/* ── footer ──────────────────────────────────────────────────────────── */
+
+.foot {
+  padding: 3rem 0 4rem;
+  border-top: 1px solid var(--line);
+  font: 400 0.85rem var(--mono);
+  color: var(--mut);
+}
+.foot .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.75rem;
+}
+.foot a {
+  color: var(--fg);
+  text-decoration: none;
+}
+.foot a:hover {
+  color: var(--head);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.foot .brand {
+  margin-right: auto;
+}
+
+/* ── reveal ──────────────────────────────────────────────────────────────
+ * Headings rise as they enter view, so the eye lands on the new section's
+ * claim before its detail. CSS scroll-driven where supported; everywhere
+ * else they are simply visible. Never gated on JavaScript. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

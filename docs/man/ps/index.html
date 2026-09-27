@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A readable docker ps, grouped by compose project | dok ps</title>
+<meta name="description" content="dok ps lists Docker containers grouped by compose project, with service names, health, ports and ages that fit the terminal instead of wrapping.">
+<meta name="keywords" content="docker ps alternative, readable docker ps, docker ps grouped by compose project, pretty docker ps, docker ps format">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://dok.alsaadii98.com/man/ps/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#070708">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="dok">
+<meta property="og:title" content="A readable docker ps, grouped by compose project | dok ps">
+<meta property="og:description" content="dok ps lists Docker containers grouped by compose project, with service names, health, ports and ages that fit the terminal instead of wrapping.">
+<meta property="og:url" content="https://dok.alsaadii98.com/man/ps/">
+<meta property="og:image" content="https://dok.alsaadii98.com/img/dok-social.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/man.css">
+<script src="/assets/site.js" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "dok", "item": "https://dok.alsaadii98.com/"}, {"@type": "ListItem", "position": 2, "name": "Manual", "item": "https://dok.alsaadii98.com/man/"}, {"@type": "ListItem", "position": 3, "name": "dok ps", "item": "https://dok.alsaadii98.com/man/ps/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "A readable docker ps, grouped by compose project | dok ps", "description": "dok ps lists Docker containers grouped by compose project, with service names, health, ports and ages that fit the terminal instead of wrapping.", "url": "https://dok.alsaadii98.com/man/ps/", "inLanguage": "en", "about": {"@type": "SoftwareApplication", "name": "dok", "url": "https://dok.alsaadii98.com/", "applicationCategory": "DeveloperApplication", "operatingSystem": "macOS, Linux, Windows"}, "author": {"@type": "Person", "name": "alsaadii98", "url": "https://github.com/alsaadii98"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="atmos" aria-hidden="true"></div>
+<p id="live" class="sr" aria-live="polite"></p>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <ul>
+      <li class="opt"><a href="/#commands">commands</a></li>
+      <li class="opt"><a href="/#json">json</a></li>
+      <li class="opt2"><a href="/#install">install</a></li>
+      <li><a href="/man/" aria-current="page">manual</a></li>
+      <li><a class="gh" href="https://github.com/alsaadii98/dok" aria-label="dok on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg><span class="opt2">GitHub</span></a></li>
+    </ul>
+  </div>
+</header>
+<div class="wrap man">
+  <nav class="side" aria-label="Manual">
+  <ul class="top"><li><a href="/man/">dok(1) overview</a></li><li><a href="/man/internals/">dok(7) internals</a></li></ul>
+  <p class="grp">Containers</p><ul><li><a href="/man/ps/" aria-current="page">ps</a></li><li><a href="/man/ports/">ports</a></li><li><a href="/man/health/">health</a></li><li><a href="/man/inspect/">inspect</a></li><li><a href="/man/logs/">logs</a></li><li><a href="/man/top/">top</a></li></ul><p class="grp">Images</p><ul><li><a href="/man/images/">images</a></li><li><a href="/man/history/">history</a></li></ul><p class="grp">Disk</p><ul><li><a href="/man/df/">df</a></li><li><a href="/man/prune/">prune</a></li></ul><p class="grp">System</p><ul><li><a href="/man/tree/">tree</a></li><li><a href="/man/events/">events</a></li><li><a href="/man/stats/">stats</a></li></ul><p class="grp">Setup</p><ul><li><a href="/man/themes/">themes</a></li><li><a href="/man/completions/">completions</a></li><li><a href="/man/update/">update</a></li><li><a href="/man/uninstall/">uninstall</a></li></ul>
+</nav>
+  <main id="main" class="article">
+    <div class="manhead" aria-hidden="true"><span>DOK-PS(1)</span><span>dok manual</span><span>DOK-PS(1)</span></div>
+    <h1><span class="p">$</span> dok ps</h1>
+    <p class="about">List containers, grouped by compose project</p>
+    <h2 id="synopsis">Synopsis</h2>
+    <div class="code"><pre><code translate="no">dok ps [OPTIONS]</code></pre></div>
+    <h2 id="description">Description</h2>
+    <div class="prose"><p>Lists containers grouped by compose project, showing the service name rather than the container name compose generates. Each row carries a short id, a state dot, a health mark when the container runs a healthcheck, published ports as <code translate="no">:host→container</code>, and a relative age.</p><p>Columns shrink to fit the terminal instead of wrapping. Long names, images and port lists are capped at a share of the width and truncated past it, so one outlier cannot push the rest of the table off screen.</p></div>
+    <h2 id="options">Options</h2>
+    <dl class="opts"><dt><code translate="no">-a, --all</code></dt><dd>Include stopped containers</dd><dt><code translate="no">--flat</code></dt><dd>Do not group by compose project</dd><dt><code translate="no">-f, --filter &lt;FILTER&gt;</code></dt><dd>Only containers whose name or image matches</dd><dt><code translate="no">-s, --sort &lt;SORT&gt;</code></dt><dd>Sort key<span class="meta">default: name</span><span class="meta">possible values: name, age, state, image</span></dd></dl>
+    <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
+    <h2 id="examples">Examples</h2>
+    <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok ps" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ps  <span class="c"># running containers, grouped by project</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok ps -a" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ps -a  <span class="c"># include stopped containers</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok ps --flat -s age" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ps --flat -s age  <span class="c"># one flat list, newest first</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok ps -f postgres" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ps -f postgres  <span class="c"># only rows whose name or image matches</span></code></pre></div></div>
+    <h2 id="output">Output</h2>
+    <figure class="shot"><img src="/img/ps.svg" width="838" height="374" loading="lazy" decoding="async" alt="Output of dok ps against the demo stack"><figcaption>Rendered from <code>dok ps --demo</code>, dok’s built-in example stack.</figcaption></figure>
+    <h2 id="json">JSON output</h2>
+    <div class="code"><button class="copy" type="button" data-copy="dok ps -a --json" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ps -a --json
+{
+  <span class="k">&quot;containers&quot;</span>: [
+    {
+      <span class="k">&quot;created&quot;</span>: {
+        <span class="k">&quot;age_human&quot;</span>: <span class="s">&quot;6d&quot;</span>,
+        <span class="k">&quot;age_seconds&quot;</span>: <span class="n">518400</span>,
+        <span class="k">&quot;created&quot;</span>: <span class="n">1789982817</span>
+      },
+      <span class="k">&quot;health&quot;</span>: <span class="s">&quot;healthy&quot;</span>,
+      <span class="k">&quot;id&quot;</span>: <span class="s">&quot;a1b2c3d4e5f6&quot;</span>,
+      <span class="k">&quot;image&quot;</span>: <span class="s">&quot;ghcr.io/demo-shop/api:1.4.2&quot;</span>,
+      <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-api-1&quot;</span>,
+      <span class="k">&quot;ports&quot;</span>: [
+        {
+          <span class="k">&quot;container_port&quot;</span>: <span class="n">3000</span>,
+          <span class="k">&quot;host_ip&quot;</span>: <span class="s">&quot;0.0.0.0&quot;</span>,
+          <span class="k">&quot;host_port&quot;</span>: <span class="n">8080</span>,
+          <span class="k">&quot;protocol&quot;</span>: <span class="s">&quot;tcp&quot;</span>
+        }
+      ],
+      <span class="k">&quot;project&quot;</span>: <span class="s">&quot;demo-shop&quot;</span>,
+      <span class="k">&quot;service&quot;</span>: <span class="s">&quot;api&quot;</span>,
+      <span class="k">&quot;short_id&quot;</span>: <span class="s">&quot;a1b2c3d4e5f6&quot;</span>,
+      <span class="k">&quot;state&quot;</span>: <span class="s">&quot;running&quot;</span>,
+      <span class="k">&quot;status&quot;</span>: <span class="s">&quot;Up 3 hours (healthy)&quot;</span>
+    },
+    {
+      <span class="k">&quot;created&quot;</span>: {
+        <span class="k">&quot;age_human&quot;</span>: <span class="s">&quot;6d&quot;</span>,
+        <span class="k">&quot;age_seconds&quot;</span>: <span class="n">518400</span>,
+        <span class="k">&quot;created&quot;</span>: <span class="n">1789982817</span>
+      },
+      <span class="k">&quot;health&quot;</span>: <span class="s">&quot;healthy&quot;</span>,
+      <span class="k">&quot;id&quot;</span>: <span class="s">&quot;c3d4e5f6a1b2&quot;</span>,
+      <span class="k">&quot;image&quot;</span>: <span class="s">&quot;postgres:16-alpine&quot;</span>,
+      <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-postgres-1&quot;</span>,
+      <span class="k">&quot;ports&quot;</span>: [
+        {
+          <span class="k">&quot;container_port&quot;</span>: <span class="n">5432</span>,
+          <span class="k">&quot;host_ip&quot;</span>: <span class="s">&quot;127.0.0.1&quot;</span>,
+          <span class="k">&quot;host_port&quot;</span>: <span class="n">5432</span>,
+          <span class="k">&quot;protocol&quot;</span>: <span class="s">&quot;tcp&quot;</span>
+        }
+      ],
+      <span class="k">&quot;project&quot;</span>: <span class="s">&quot;demo-shop&quot;</span>,
+      <span class="k">&quot;service&quot;</span>: <span class="s">&quot;postgres&quot;</span>,
+      <span class="k">&quot;short_id&quot;</span>: <span class="s">&quot;c3d4e5f6a1b2&quot;</span>,
+      <span class="k">&quot;state&quot;</span>: <span class="s">&quot;running&quot;</span>,
+      <span class="k">&quot;status&quot;</span>: <span class="s">&quot;Up 3 hours (healthy)&quot;</span>
+    }
+  ]
+}</code></pre></div>
+    <p class="prose note">Longer arrays are cut to their first two elements here.</p>
+    <h2 id="see-also">See also</h2>
+    <p class="prose"><a href="/man/ports/">dok-ports(1)</a>, <a href="/man/health/">dok-health(1)</a>, <a href="/man/inspect/">dok-inspect(1)</a>, <a href="/man/tree/">dok-tree(1)</a>, <a href="/man/internals/">dok(7)</a></p>
+    <div class="manfoot"><span>dok 0.3.0</span><span>2026-09-27</span><span>DOK-PS(1)</span></div>
+  </main>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <a href="/man/">Manual</a>
+    <a href="https://github.com/alsaadii98/dok">GitHub</a>
+    <a href="https://crates.io/crates/dok-cli">crates.io</a>
+    <a href="https://github.com/alsaadii98/dok/releases">Releases</a>
+    <a href="https://github.com/alsaadii98/dok/blob/main/LICENSE">MIT</a>
+    <span>&copy; 2026 <a href="https://github.com/alsaadii98">alsaadii98</a></span>
+  </div>
+</footer>
+</body>
+</html>

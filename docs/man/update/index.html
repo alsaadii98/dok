@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Update dok to the latest release | dok update</title>
+<meta name="description" content="dok update checks GitHub for a newer release and replaces the binary after verifying its checksum, or prints your package manager&#x27;s command.">
+<meta name="keywords" content="update dok, dok upgrade">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://dok.alsaadii98.com/man/update/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#070708">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="dok">
+<meta property="og:title" content="Update dok to the latest release | dok update">
+<meta property="og:description" content="dok update checks GitHub for a newer release and replaces the binary after verifying its checksum, or prints your package manager&#x27;s command.">
+<meta property="og:url" content="https://dok.alsaadii98.com/man/update/">
+<meta property="og:image" content="https://dok.alsaadii98.com/img/dok-social.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/man.css">
+<script src="/assets/site.js" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "dok", "item": "https://dok.alsaadii98.com/"}, {"@type": "ListItem", "position": 2, "name": "Manual", "item": "https://dok.alsaadii98.com/man/"}, {"@type": "ListItem", "position": 3, "name": "dok update", "item": "https://dok.alsaadii98.com/man/update/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Update dok to the latest release | dok update", "description": "dok update checks GitHub for a newer release and replaces the binary after verifying its checksum, or prints your package manager's command.", "url": "https://dok.alsaadii98.com/man/update/", "inLanguage": "en", "about": {"@type": "SoftwareApplication", "name": "dok", "url": "https://dok.alsaadii98.com/", "applicationCategory": "DeveloperApplication", "operatingSystem": "macOS, Linux, Windows"}, "author": {"@type": "Person", "name": "alsaadii98", "url": "https://github.com/alsaadii98"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="atmos" aria-hidden="true"></div>
+<p id="live" class="sr" aria-live="polite"></p>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <ul>
+      <li class="opt"><a href="/#commands">commands</a></li>
+      <li class="opt"><a href="/#json">json</a></li>
+      <li class="opt2"><a href="/#install">install</a></li>
+      <li><a href="/man/" aria-current="page">manual</a></li>
+      <li><a class="gh" href="https://github.com/alsaadii98/dok" aria-label="dok on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg><span class="opt2">GitHub</span></a></li>
+    </ul>
+  </div>
+</header>
+<div class="wrap man">
+  <nav class="side" aria-label="Manual">
+  <ul class="top"><li><a href="/man/">dok(1) overview</a></li><li><a href="/man/internals/">dok(7) internals</a></li></ul>
+  <p class="grp">Containers</p><ul><li><a href="/man/ps/">ps</a></li><li><a href="/man/ports/">ports</a></li><li><a href="/man/health/">health</a></li><li><a href="/man/inspect/">inspect</a></li><li><a href="/man/logs/">logs</a></li><li><a href="/man/top/">top</a></li></ul><p class="grp">Images</p><ul><li><a href="/man/images/">images</a></li><li><a href="/man/history/">history</a></li></ul><p class="grp">Disk</p><ul><li><a href="/man/df/">df</a></li><li><a href="/man/prune/">prune</a></li></ul><p class="grp">System</p><ul><li><a href="/man/tree/">tree</a></li><li><a href="/man/events/">events</a></li><li><a href="/man/stats/">stats</a></li></ul><p class="grp">Setup</p><ul><li><a href="/man/themes/">themes</a></li><li><a href="/man/completions/">completions</a></li><li><a href="/man/update/" aria-current="page">update</a></li><li><a href="/man/uninstall/">uninstall</a></li></ul>
+</nav>
+  <main id="main" class="article">
+    <div class="manhead" aria-hidden="true"><span>DOK-UPDATE(1)</span><span>dok manual</span><span>DOK-UPDATE(1)</span></div>
+    <h1><span class="p">$</span> dok update</h1>
+    <p class="about">Check for a newer dok and install it</p>
+    <h2 id="synopsis">Synopsis</h2>
+    <div class="code"><pre><code translate="no">dok update [OPTIONS]</code></pre></div>
+    <h2 id="description">Description</h2>
+    <div class="prose"><p>Checks GitHub for a newer release. A standalone binary is replaced in place, after its archive is verified against the release's <code translate="no">.sha256</code>. A packaged install is left alone and the package manager's own upgrade command is printed instead.</p><p>dok also checks at most once a day and prints one dim line after a command's output. It never does so when output is piped or <code translate="no">--json</code> is set. <code translate="no">DOK_NO_UPDATE_CHECK=1</code> turns it off.</p></div>
+    <h2 id="options">Options</h2>
+    <dl class="opts"><dt><code translate="no">--check</code></dt><dd>Only report what is available; do not install anything</dd><dt><code translate="no">-y, --yes</code></dt><dd>Install without asking</dd></dl>
+    <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
+    <h2 id="examples">Examples</h2>
+    <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok update --check" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok update --check  <span class="c"># report, install nothing</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok update" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok update  <span class="c"># install, after asking</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok update -y" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok update -y  <span class="c"># install without asking</span></code></pre></div></div>
+    <h2 id="see-also">See also</h2>
+    <p class="prose"><a href="/man/uninstall/">dok-uninstall(1)</a>, <a href="/man/internals/">dok(7)</a></p>
+    <div class="manfoot"><span>dok 0.3.0</span><span>2026-09-27</span><span>DOK-UPDATE(1)</span></div>
+  </main>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <a href="/man/">Manual</a>
+    <a href="https://github.com/alsaadii98/dok">GitHub</a>
+    <a href="https://crates.io/crates/dok-cli">crates.io</a>
+    <a href="https://github.com/alsaadii98/dok/releases">Releases</a>
+    <a href="https://github.com/alsaadii98/dok/blob/main/LICENSE">MIT</a>
+    <span>&copy; 2026 <a href="https://github.com/alsaadii98">alsaadii98</a></span>
+  </div>
+</footer>
+</body>
+</html>

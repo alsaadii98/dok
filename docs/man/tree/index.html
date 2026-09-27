@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docker networks, volumes and compose projects as a tree | dok tree</title>
+<meta name="description" content="dok tree shows compose projects, networks with each container&#x27;s IP, and volumes with where they are mounted.">
+<meta name="keywords" content="docker network containers ip, which containers use a docker volume, docker network list containers, docker compose project overview">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://dok.alsaadii98.com/man/tree/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#070708">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="dok">
+<meta property="og:title" content="Docker networks, volumes and compose projects as a tree | dok tree">
+<meta property="og:description" content="dok tree shows compose projects, networks with each container&#x27;s IP, and volumes with where they are mounted.">
+<meta property="og:url" content="https://dok.alsaadii98.com/man/tree/">
+<meta property="og:image" content="https://dok.alsaadii98.com/img/dok-social.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/man.css">
+<script src="/assets/site.js" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "dok", "item": "https://dok.alsaadii98.com/"}, {"@type": "ListItem", "position": 2, "name": "Manual", "item": "https://dok.alsaadii98.com/man/"}, {"@type": "ListItem", "position": 3, "name": "dok tree", "item": "https://dok.alsaadii98.com/man/tree/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Docker networks, volumes and compose projects as a tree | dok tree", "description": "dok tree shows compose projects, networks with each container's IP, and volumes with where they are mounted.", "url": "https://dok.alsaadii98.com/man/tree/", "inLanguage": "en", "about": {"@type": "SoftwareApplication", "name": "dok", "url": "https://dok.alsaadii98.com/", "applicationCategory": "DeveloperApplication", "operatingSystem": "macOS, Linux, Windows"}, "author": {"@type": "Person", "name": "alsaadii98", "url": "https://github.com/alsaadii98"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="atmos" aria-hidden="true"></div>
+<p id="live" class="sr" aria-live="polite"></p>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <ul>
+      <li class="opt"><a href="/#commands">commands</a></li>
+      <li class="opt"><a href="/#json">json</a></li>
+      <li class="opt2"><a href="/#install">install</a></li>
+      <li><a href="/man/" aria-current="page">manual</a></li>
+      <li><a class="gh" href="https://github.com/alsaadii98/dok" aria-label="dok on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg><span class="opt2">GitHub</span></a></li>
+    </ul>
+  </div>
+</header>
+<div class="wrap man">
+  <nav class="side" aria-label="Manual">
+  <ul class="top"><li><a href="/man/">dok(1) overview</a></li><li><a href="/man/internals/">dok(7) internals</a></li></ul>
+  <p class="grp">Containers</p><ul><li><a href="/man/ps/">ps</a></li><li><a href="/man/ports/">ports</a></li><li><a href="/man/health/">health</a></li><li><a href="/man/inspect/">inspect</a></li><li><a href="/man/logs/">logs</a></li><li><a href="/man/top/">top</a></li></ul><p class="grp">Images</p><ul><li><a href="/man/images/">images</a></li><li><a href="/man/history/">history</a></li></ul><p class="grp">Disk</p><ul><li><a href="/man/df/">df</a></li><li><a href="/man/prune/">prune</a></li></ul><p class="grp">System</p><ul><li><a href="/man/tree/" aria-current="page">tree</a></li><li><a href="/man/events/">events</a></li><li><a href="/man/stats/">stats</a></li></ul><p class="grp">Setup</p><ul><li><a href="/man/themes/">themes</a></li><li><a href="/man/completions/">completions</a></li><li><a href="/man/update/">update</a></li><li><a href="/man/uninstall/">uninstall</a></li></ul>
+</nav>
+  <main id="main" class="article">
+    <div class="manhead" aria-hidden="true"><span>DOK-TREE(1)</span><span>dok manual</span><span>DOK-TREE(1)</span></div>
+    <h1><span class="p">$</span> dok tree</h1>
+    <p class="about">Tree view of compose projects, networks and volumes</p>
+    <h2 id="synopsis">Synopsis</h2>
+    <div class="code"><pre><code translate="no">dok tree [OPTIONS]</code></pre></div>
+    <h2 id="description">Description</h2>
+    <div class="prose"><p>Three trees: compose projects and their containers, networks with the IP of each attached container, and volumes with where each is mounted.</p><p>Network and volume membership is read from each container's own settings, since the list endpoints do not report it.</p></div>
+    <h2 id="options">Options</h2>
+    <dl class="opts"><dt><code translate="no">--only &lt;ONLY&gt;</code></dt><dd>Show only this section<span class="meta">possible values: projects, networks, volumes</span></dd><dt><code translate="no">-a, --all</code></dt><dd>Include stopped containers</dd></dl>
+    <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
+    <h2 id="examples">Examples</h2>
+    <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok tree" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok tree  <span class="c"># all three</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok tree --only networks" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok tree --only networks  <span class="c"># one section</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok tree -a" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok tree -a  <span class="c"># include stopped containers</span></code></pre></div></div>
+    <h2 id="output">Output</h2>
+    <figure class="shot"><img src="/img/tree.svg" width="670" height="714" loading="lazy" decoding="async" alt="Output of dok tree against the demo stack"><figcaption>Rendered from <code>dok tree --demo</code>, dok’s built-in example stack.</figcaption></figure>
+    <h2 id="json">JSON output</h2>
+    <div class="code"><button class="copy" type="button" data-copy="dok tree --json" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok tree --json
+{
+  <span class="k">&quot;networks&quot;</span>: [
+    {
+      <span class="k">&quot;containers&quot;</span>: [],
+      <span class="k">&quot;driver&quot;</span>: <span class="s">&quot;bridge&quot;</span>,
+      <span class="k">&quot;name&quot;</span>: <span class="s">&quot;bridge&quot;</span>,
+      <span class="k">&quot;scope&quot;</span>: <span class="s">&quot;local&quot;</span>,
+      <span class="k">&quot;subnet&quot;</span>: <span class="s">&quot;172.17.0.0/16&quot;</span>
+    },
+    {
+      <span class="k">&quot;containers&quot;</span>: [
+        {
+          <span class="k">&quot;ip&quot;</span>: <span class="s">&quot;172.19.0.4&quot;</span>,
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-api-1&quot;</span>
+        },
+        {
+          <span class="k">&quot;ip&quot;</span>: <span class="s">&quot;172.19.0.5&quot;</span>,
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-web-1&quot;</span>
+        },
+        {
+          <span class="k">&quot;ip&quot;</span>: <span class="s">&quot;172.19.0.2&quot;</span>,
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-postgres-1&quot;</span>
+        },
+        {
+          <span class="k">&quot;ip&quot;</span>: <span class="s">&quot;172.19.0.3&quot;</span>,
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-redis-1&quot;</span>
+        }
+      ],
+      <span class="k">&quot;driver&quot;</span>: <span class="s">&quot;bridge&quot;</span>,
+      <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop_default&quot;</span>,
+      <span class="k">&quot;scope&quot;</span>: <span class="s">&quot;local&quot;</span>,
+      <span class="k">&quot;subnet&quot;</span>: <span class="s">&quot;172.19.0.0/16&quot;</span>
+    }
+  ],
+  <span class="k">&quot;projects&quot;</span>: [
+    {
+      <span class="k">&quot;containers&quot;</span>: [
+        {
+          <span class="k">&quot;image&quot;</span>: <span class="s">&quot;ghcr.io/demo-shop/api:1.4.2&quot;</span>,
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-api-1&quot;</span>,
+          <span class="k">&quot;service&quot;</span>: <span class="s">&quot;api&quot;</span>,
+          <span class="k">&quot;state&quot;</span>: <span class="s">&quot;running&quot;</span>
+        },
+        {
+          <span class="k">&quot;image&quot;</span>: <span class="s">&quot;nginx:1.27-alpine&quot;</span>,
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-web-1&quot;</span>,
+          <span class="k">&quot;service&quot;</span>: <span class="s">&quot;web&quot;</span>,
+          <span class="k">&quot;state&quot;</span>: <span class="s">&quot;running&quot;</span>
+        },
+        {
+          <span class="k">&quot;image&quot;</span>: <span class="s">&quot;postgres:16-alpine&quot;</span>,
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-postgres-1&quot;</span>,
+          <span class="k">&quot;service&quot;</span>: <span class="s">&quot;postgres&quot;</span>,
+          <span class="k">&quot;state&quot;</span>: <span class="s">&quot;running&quot;</span>
+        },
+        {
+          <span class="k">&quot;image&quot;</span>: <span class="s">&quot;redis:7-alpine&quot;</span>,
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop-redis-1&quot;</span>,
+          <span class="k">&quot;service&quot;</span>: <span class="s">&quot;redis&quot;</span>,
+          <span class="k">&quot;state&quot;</span>: <span class="s">&quot;running&quot;</span>
+        }
+      ],
+      <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop&quot;</span>
+    },
+    {
+      <span class="k">&quot;containers&quot;</span>: [
+        {
+          <span class="k">&quot;image&quot;</span>: <span class="s">&quot;grafana/grafana:11.2.0&quot;</span>,
+          <span class="k">&quot;name&quot;</span>: <span class="s">&quot;metrics-1&quot;</span>,
+          <span class="k">&quot;service&quot;</span>: <span class="s">&quot;grafana&quot;</span>,
+          <span class="k">&quot;state&quot;</span>: <span class="s">&quot;running&quot;</span>
+        }
+      ],
+      <span class="k">&quot;name&quot;</span>: <span class="s">&quot;observability&quot;</span>
+    }
+  ],
+  <span class="k">&quot;volumes&quot;</span>: [
+    {
+      <span class="k">&quot;driver&quot;</span>: <span class="s">&quot;local&quot;</span>,
+      <span class="k">&quot;mountpoint&quot;</span>: <span class="s">&quot;/var/lib/docker/volumes/demo-shop_pgdata/_data&quot;</span>,
+      <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop_pgdata&quot;</span>,
+      <span class="k">&quot;ref_count&quot;</span>: <span class="n">1</span>,
+      <span class="k">&quot;size&quot;</span>: {
+        <span class="k">&quot;bytes&quot;</span>: <span class="n">312000000</span>,
+        <span class="k">&quot;human&quot;</span>: <span class="s">&quot;312MB&quot;</span>
+      },
+      <span class="k">&quot;used_by&quot;</span>: [
+        {
+          <span class="k">&quot;container&quot;</span>: <span class="s">&quot;demo-shop-postgres-1&quot;</span>,
+          <span class="k">&quot;destination&quot;</span>: <span class="s">&quot;/var/lib/postgresql/data&quot;</span>
+        }
+      ]
+    },
+    {
+      <span class="k">&quot;driver&quot;</span>: <span class="s">&quot;local&quot;</span>,
+      <span class="k">&quot;mountpoint&quot;</span>: <span class="s">&quot;/var/lib/docker/volumes/demo-shop_cache/_data&quot;</span>,
+      <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop_cache&quot;</span>,
+      <span class="k">&quot;ref_count&quot;</span>: <span class="n">1</span>,
+      <span class="k">&quot;size&quot;</span>: {
+        <span class="k">&quot;bytes&quot;</span>: <span class="n">3100000</span>,
+        <span class="k">&quot;human&quot;</span>: <span class="s">&quot;3.1MB&quot;</span>
+      },
+      <span class="k">&quot;used_by&quot;</span>: [
+        {
+          <span class="k">&quot;container&quot;</span>: <span class="s">&quot;demo-shop-redis-1&quot;</span>,
+          <span class="k">&quot;destination&quot;</span>: <span class="s">&quot;/data&quot;</span>
+        }
+      ]
+    }
+  ]
+}</code></pre></div>
+    <p class="prose note">Longer arrays are cut to their first two elements here.</p>
+    <h2 id="see-also">See also</h2>
+    <p class="prose"><a href="/man/ps/">dok-ps(1)</a>, <a href="/man/ports/">dok-ports(1)</a>, <a href="/man/internals/">dok(7)</a></p>
+    <div class="manfoot"><span>dok 0.3.0</span><span>2026-09-27</span><span>DOK-TREE(1)</span></div>
+  </main>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <a href="/man/">Manual</a>
+    <a href="https://github.com/alsaadii98/dok">GitHub</a>
+    <a href="https://crates.io/crates/dok-cli">crates.io</a>
+    <a href="https://github.com/alsaadii98/dok/releases">Releases</a>
+    <a href="https://github.com/alsaadii98/dok/blob/main/LICENSE">MIT</a>
+    <span>&copy; 2026 <a href="https://github.com/alsaadii98">alsaadii98</a></span>
+  </div>
+</footer>
+</body>
+</html>

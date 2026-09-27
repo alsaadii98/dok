@@ -8,6 +8,10 @@ output, so the docs can never drift from what the tool actually prints.
 """
 
 import argparse
+import base64
+import io
+import re
+from pathlib import Path
 import html
 import re
 import sys
@@ -22,16 +26,22 @@ PAD_X = 20.0
 PAD_Y = 18.0
 TITLEBAR = 38.0
 
-# Chrome palette, shared with ansi2cast.py and with the website's cards
-# (docs/index.html :root) so a frame dropped into a tile is the same surface.
-BG = "#0a0a0a"
-BAR = "#0f0f0f"
-LINE = "#1f1f1f"
-FG = "#a1a1a1"
-HEAD = "#ededed"
-DOT = "#2a2a2a"
-MUTED = "#5a5a5a"
-RADIUS = 12.0
+# Chrome palette, shared with ansi2cast.py and with the website's tokens
+# (docs/assets/site.css :root), so a frame set into a page is the same surface.
+BG = "#0a0a0a"      # --surface
+BAR = "#101012"     # --surface-2
+LINE = "#1c1c20"    # --line
+FG = "#b4b8c0"      # --fg
+HEAD = "#ededed"    # --head
+MUTED = "#80858e"   # --mut
+RADIUS = 12.0       # --r-surface
+
+# Geist Mono is the site's monospace. An SVG inside <img> cannot load the
+# page's web fonts, so each file carries its own copy, subset to the glyphs
+# that file actually draws. Its advance is exactly 0.6em, the grid above.
+FONT_FILE = Path(__file__).resolve().parent.parent / "docs/fonts/GeistMono-Variable.woff2"
+FONT_NAME = "dok-mono"
+FONT_STACK = f'{FONT_NAME}, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace'
 
 # The 16 ANSI colours, for output that does not use truecolor.
 BASIC = {
@@ -124,6 +134,62 @@ def parse(text):
     return lines
 
 
+def chrome(width, height, title):
+    """Frame, title bar and title. No traffic-light dots: the title sits left,
+    set like the running header of a man page."""
+    out = [
+        f'<rect x=".5" y=".5" width="{width - 1:.0f}" height="{height - 1:.0f}" '
+        f'rx="{RADIUS - 0.5:.1f}" fill="{BG}" stroke="{LINE}"/>',
+        f'<path d="M0 {RADIUS:.0f}a{RADIUS:.0f} {RADIUS:.0f} 0 0 1 {RADIUS:.0f}-{RADIUS:.0f}'
+        f'h{width - 2 * RADIUS:.0f}a{RADIUS:.0f} {RADIUS:.0f} 0 0 1 {RADIUS:.0f} {RADIUS:.0f}'
+        f'v{TITLEBAR - RADIUS:.0f}H0z" fill="{BAR}"/>',
+        f'<path d="M0 {TITLEBAR:.0f}h{width:.0f}" stroke="{LINE}"/>',
+    ]
+    if title:
+        out.append(
+            f'<text x="{PAD_X:.1f}" y="{TITLEBAR / 2 + 4:.0f}" fill="{MUTED}" '
+            f'font-size="11.5">{html.escape(title)}</text>'
+        )
+    return out
+
+
+def embed_font(svg):
+    """Inline Geist Mono, subset to exactly the characters this SVG draws.
+
+    Without fonttools installed the SVG still works: it names the same stack,
+    and the viewer's own monospace fills in, as before.
+    """
+    try:
+        from fontTools import subset
+        from fontTools.ttLib import TTFont
+    except ImportError:
+        return svg
+    if not FONT_FILE.exists():
+        return svg
+    chars = {c for chunk in re.findall(r">([^<]+)<", svg) for c in html.unescape(chunk)}
+    chars.discard("\n")
+    font = TTFont(str(FONT_FILE))
+    opts = subset.Options()
+    opts.flavor = "woff2"
+    # No GSUB: each run is drawn as plain text, and a ligature would fuse
+    # characters the grid has placed one column apart.
+    opts.layout_features = []
+    opts.name_IDs = []
+    opts.notdef_outline = False
+    sub = subset.Subsetter(options=opts)
+    sub.populate(unicodes=[ord(c) for c in chars])
+    sub.subset(font)
+    buf = io.BytesIO()
+    font.flavor = "woff2"
+    font.save(buf)
+    b64 = base64.b64encode(buf.getvalue()).decode()
+    style = (
+        f'<style>@font-face{{font-family:{FONT_NAME};'
+        f'src:url(data:font/woff2;base64,{b64}) format("woff2");font-weight:100 900}}</style>'
+    )
+    return re.sub(r"(<svg[^>]*>)", lambda m: m.group(1) + style, svg, count=1)
+
+
 def render(lines, title, font):
     cols = max((sum(len(t) for t, _ in runs) for runs in lines), default=0)
     width = PAD_X * 2 + cols * CHAR_W
@@ -133,20 +199,8 @@ def render(lines, title, font):
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width:.0f}" height="{height:.0f}" '
         f'viewBox="0 0 {width:.0f} {height:.0f}" font-family="{html.escape(font)}" '
         f'font-size="14">',
-        f'<rect x=".5" y=".5" width="{width - 1:.0f}" height="{height - 1:.0f}" '
-        f'rx="{RADIUS - 0.5:.1f}" fill="{BG}" stroke="{LINE}"/>',
-        f'<path d="M0 {RADIUS:.0f}a{RADIUS:.0f} {RADIUS:.0f} 0 0 1 {RADIUS:.0f}-{RADIUS:.0f}'
-        f'h{width - 2 * RADIUS:.0f}a{RADIUS:.0f} {RADIUS:.0f} 0 0 1 {RADIUS:.0f} {RADIUS:.0f}'
-        f'v{TITLEBAR - RADIUS:.0f}H0z" fill="{BAR}"/>',
-        f'<path d="M0 {TITLEBAR:.0f}h{width:.0f}" stroke="{LINE}"/>',
+        *chrome(width, height, title),
     ]
-    for i in range(3):
-        out.append(f'<circle cx="{22 + i * 16}" cy="{TITLEBAR / 2:.0f}" r="4.5" fill="{DOT}"/>')
-    if title:
-        out.append(
-            f'<text x="{width / 2:.0f}" y="{TITLEBAR / 2 + 4:.0f}" fill="{MUTED}" '
-            f'font-size="11.5" text-anchor="middle">{html.escape(title)}</text>'
-        )
 
     for row, runs in enumerate(lines):
         y = TITLEBAR + PAD_Y + row * LINE_H + 13
@@ -177,13 +231,13 @@ def main():
     ap.add_argument("--title", default="", help="text shown in the window title bar")
     ap.add_argument(
         "--font",
-        default="JetBrains Mono, SFMono-Regular, Menlo, Consolas, monospace",
+        default=FONT_STACK,
         help="font stack used in the SVG",
     )
     args = ap.parse_args()
 
     text = sys.stdin.read()
-    svg = render(parse(text), args.title, args.font)
+    svg = embed_font(render(parse(text), args.title, args.font))
     with open(args.out, "w", encoding="utf-8") as fh:
         fh.write(svg + "\n")
     print(f"wrote {args.out}")

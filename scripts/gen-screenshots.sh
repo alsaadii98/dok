@@ -14,6 +14,9 @@ cd "$(dirname "$0")/.."
 mkdir -p docs/img
 
 BIN=${DOK_BIN:-target/release/dok}
+# Embedding Geist Mono needs fonttools. Without it the SVGs still render,
+# in the viewer's own monospace:  pip install fonttools brotli
+PY=${PYTHON:-python3}
 [ -x "$BIN" ] || cargo build --release
 
 RAW=$(mktemp -d)
@@ -44,7 +47,7 @@ capture prune    prune
 
 # Static frames for the README.
 still() {
-  python3 scripts/ansi2svg.py --out "docs/img/$1.svg" --title "$2" <"$RAW/$1.ansi"
+  "$PY" scripts/ansi2svg.py --out "docs/img/$1.svg" --title "$2" <"$RAW/$1.ansi"
 }
 still ps      "dok ps -a"
 still images  "dok images"
@@ -57,6 +60,10 @@ still ports   "dok ports"
 still history "dok history api"
 still health  "dok health"
 still prune   "dok prune"
+# Static frames for the two commands that only had casts, so every animation
+# on the site has a still to fall back to under prefers-reduced-motion.
+still top     "dok top api"
+still events  "dok events --since 20m"
 
 # Animated casts for the website.
 cast() {
@@ -66,12 +73,12 @@ cast() {
   for spec in "$@"; do
     scenes+=(--scene "$spec")
   done
-  python3 scripts/ansi2cast.py --out "docs/img/cast-$out.svg" --title "$title" "${scenes[@]}"
+  "$PY" scripts/ansi2cast.py --out "docs/img/cast-$out.svg" --title "$title" "${scenes[@]}"
 }
 
 # The hero cycles through four commands in one file. They are picked to be
 # roughly the same height, so the frame does not sit half-empty between scenes.
-cast hero "dok — demo stack" \
+cast hero "~/demo-shop" \
   "dok ps -a=$RAW/ps.ansi" \
   "dok images=$RAW/images.ansi" \
   "dok logs -n 8=$RAW/logs.ansi" \

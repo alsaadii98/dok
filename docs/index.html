@@ -3,893 +3,193 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>dok — pretty docker ps, images, inspect &amp; logs</title>
-<meta name="description" content="dok is a fast Rust CLI that makes docker ps, docker images, docker inspect, docker logs and docker system df human-readable: colour, icons, compose-project grouping, human sizes and ages, and 10 themes.">
-<meta name="keywords" content="docker, docker cli, docker ps, pretty docker ps, docker images, docker inspect, docker logs, docker stats, docker system df, docker compose, container management, rust cli, terminal tool, tui, eza, lazydocker alternative, ctop alternative, dive alternative, devops tools, sysadmin, colorized output, themes">
-<meta name="author" content="Ali H. Abdulhadi (@alsaadii98)">
+<title>dok: a readable docker ps, images, inspect, logs and disk usage</title>
+<meta name="description" content="dok is a Rust CLI that makes Docker output readable: containers grouped by compose project, which container owns a port, image layers, disk usage and logs, with JSON for scripts.">
+<meta name="keywords" content="docker ps alternative, readable docker ps, pretty docker ps, docker cli tool, docker which container is using port, docker disk space, docker system prune dry run, docker inspect readable, docker logs multiple containers, docker image layer size, docker healthcheck failing, docker ps json, eza for docker, lazydocker alternative, rust docker cli, compose project containers">
+<meta name="author" content="alsaadii98">
 <meta name="robots" content="index, follow, max-image-preview:large">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#070708">
 <meta name="color-scheme" content="dark">
 <link rel="canonical" href="https://dok.alsaadii98.com/">
-
-<!-- Open Graph -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="dok">
-<meta property="og:title" content="dok — docker output, made readable">
-<meta property="og:description" content="A Rust CLI that renders docker ps, images, inspect, logs and disk usage for humans. Compose grouping, human sizes and ages, and themes that change glyphs and layout.">
+<meta property="og:title" content="dok: Docker output, made readable">
+<meta property="og:description" content="What eza is to ls, dok is to Docker. Compose grouping, port ownership, image layers, disk usage and JSON for scripts. One Rust binary.">
 <meta property="og:url" content="https://dok.alsaadii98.com/">
 <meta property="og:image" content="https://dok.alsaadii98.com/img/dok-social.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="dok ps output: containers grouped by compose project with coloured state dots, ports and ages">
+<meta property="og:image:alt" content="dok ps output: containers grouped by compose project with state, health, ports and ages">
 <meta property="og:locale" content="en_US">
-
-<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="dok — docker output, made readable">
-<meta name="twitter:description" content="What eza is to ls, for docker. Colour, compose grouping, human sizes and ages, 10 themes. One Rust binary.">
+<meta name="twitter:title" content="dok: Docker output, made readable">
+<meta name="twitter:description" content="What eza is to ls, dok is to Docker. One Rust binary, read-only, with JSON for scripts.">
 <meta name="twitter:image" content="https://dok.alsaadii98.com/img/dok-social.png">
-<meta name="twitter:image:alt" content="dok ps output: containers grouped by compose project with coloured state dots, ports and ages">
-
-<!-- Structured data: the software itself -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "dok",
-  "applicationCategory": "DeveloperApplication",
-  "applicationSubCategory": "Command Line Utility",
-  "operatingSystem": "macOS, Linux, Windows",
-  "description": "A Rust CLI that renders docker ps, images, inspect, logs, disk usage, events and stats for humans: colour, icons, compose-project grouping, human sizes and ages, and themes.",
-  "url": "https://dok.alsaadii98.com/",
-  "downloadUrl": "https://github.com/alsaadii98/dok/releases",
-  "codeRepository": "https://github.com/alsaadii98/dok",
-  "programmingLanguage": "Rust",
-  "license": "https://opensource.org/licenses/MIT",
-  "softwareVersion": "0.3.0",
-  "keywords": "docker, cli, containers, docker ps, docker inspect, docker logs, rust, terminal, themes",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "author": {
-    "@type": "Person",
-    "name": "Ali H. Abdulhadi",
-    "url": "https://github.com/alsaadii98"
-  }
-}
-</script>
-
-<!-- Structured data: the questions people actually search -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "How do I make docker ps output readable?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Run dok ps. It reads the Docker socket directly and prints containers grouped by compose project with coloured state dots, health marks, short ids, published ports and relative ages, sized to your terminal width."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I find which container is using a port?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Run dok ports. It prints every published port across every container in one flat table sorted by host port, so finding the owner of 5432 is a glance or a grep. It skips exposed-but-unpublished ports, collapses the IPv4 and IPv6 rows Docker reports for a wildcard binding into one row, and marks any address, port and protocol claimed by two containers."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is a good docker ps alternative?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "dok ps is a drop-in read-only alternative to docker ps. Unlike docker ps --format it groups containers by compose project and shows the service name rather than the mangled container name, renders sizes and ages in human units, and shrinks columns to fit the terminal instead of wrapping."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I find which Docker image layer is making an image large?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Run dok history <image>. It lists every layer top-down in build order with a bar showing its share of the image, marks each layer over 10% of the total, and recovers the Dockerfile instruction from both the classic builder and BuildKit instead of showing /bin/sh -c #(nop)."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I see why a Docker healthcheck is failing?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Run dok health. It lists only the containers that declare a healthcheck, sorted with unhealthy first, showing the failing streak, the healthcheck interval, the probe's exit code and the first line of its output."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I get JSON output from docker ps?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Run dok ps --json. Every dok command takes --json and emits the same data the table shows, including the derived fields docker does not give you: the compose project, the service name, the health verdict. Sizes and ages arrive as both the number and the human rendering, so nothing has to be re-parsed. dok logs and dok events emit NDJSON, one object per line, because they are streams."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What will docker system prune delete?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Run dok prune. It shows exactly what docker system prune would remove — stopped containers, dangling images, unused networks and build cache — grouped by kind and sized, without removing anything. It draws the same line docker does: dangling images by default, every unused image with -a, volumes only with --volumes. It then prints the docker command that does the removing."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does dok have shell completions?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. dok completions <shell> prints a script for bash, zsh, fish, nushell, powershell or elvish, generated from the same definition the CLI is built from. Homebrew installs them automatically; the .deb and .rpm include bash, zsh and fish; every release attaches a tarball with all six."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is there a readable alternative to docker inspect?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "dok inspect folds the inspect JSON into identity, state, config, resources, network, mounts and labels, masks credential-looking environment values by default, and highlights privileged mode, added capabilities, OOM kills and failing healthchecks."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How is dok different from lazydocker or ctop?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "lazydocker and ctop are full-screen TUIs you drive interactively. dok prints one static, pipeable screen per command and is read-only: it never starts, stops, execs into or removes containers."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I install dok?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "brew install alsaadii98/tap/dok, cargo install dok-cli, makepkg from the PKGBUILDs in the repo on Arch, apk add --allow-untrusted ./dok-x86_64.apk on Alpine, the .deb or .rpm from the releases page, nix run github:alsaadii98/dok, or scoop bucket add dok https://github.com/alsaadii98/dok followed by scoop install dok/dok on Windows."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I update dok?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Run dok update. dok checks GitHub for a newer release at most once a day and prints a one-line notice after a command's output. A standalone binary is replaced in place after its release checksum is verified; if dok was installed by brew, apk, dpkg, rpm or cargo it prints that package manager's upgrade command instead. Set DOK_NO_UPDATE_CHECK=1 to disable the check."
-      }
-    }
-  ]
-}
-</script>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Fonts must never gate the first paint: loaded as print, promoted on load,
-     with the system stack carrying the page until they arrive. -->
-<link rel="stylesheet" media="print" onload="this.media='all'"
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
-<noscript>
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
-</noscript>
-<!-- The reveal animation only exists when scripting does; without this class
-     every [data-anim] element stays at its final, visible state. -->
-<script>document.documentElement.classList.add('js')</script>
-<style>
-:root{
-  /* Same values the cast SVGs are drawn with, so images and cards match. */
-  --bg:#000;
-  --card:#0a0a0a;
-  --card-2:#0f0f0f;
-  --line:#1f1f1f;
-  --line-2:#2e2e2e;
-  --fg:#a1a1a1;
-  --mut:#6b6b6b;
-  --head:#ededed;
-  --green:#98c379;
-  --blue:#61afef;
-  --yellow:#e5c07b;
-  --red:#e06c75;
-  --magenta:#c678dd;
-  --cyan:#56b6c2;
-  --sans:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-  --r:12px;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;background:var(--bg);color:var(--fg);
-  font:15px/1.6 var(--sans);letter-spacing:-.011em;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden;
-}
-a{color:inherit;text-decoration:none}
-code,.mono{font-family:var(--mono);font-size:.92em}
-.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
-svg.i{width:16px;height:16px;flex:0 0 auto;stroke:currentColor;fill:none;
-  stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-
-/* ── ambient background ── */
-.bg{position:fixed;inset:0;z-index:-1;pointer-events:none}
-.bg .grid{
-  position:absolute;inset:-2px;
-  background-image:linear-gradient(var(--line) 1px,transparent 1px),
-                   linear-gradient(90deg,var(--line) 1px,transparent 1px);
-  background-size:64px 64px;
-  mask-image:radial-gradient(120% 78% at 50% 0%,#000 18%,transparent 72%);
-  opacity:.45;
-}
-.bg .glow{
-  position:absolute;left:50%;top:-360px;width:960px;height:660px;transform:translateX(-50%);
-  background:radial-gradient(closest-side,rgba(152,195,121,.13),transparent 70%);
-  filter:blur(22px);animation:drift 18s ease-in-out infinite alternate;
-}
-@keyframes drift{from{transform:translateX(-56%) scale(1)}to{transform:translateX(-44%) scale(1.12)}}
-
-/* ── nav ── */
-header{position:sticky;top:0;z-index:30;backdrop-filter:blur(12px);
-  background:rgba(0,0,0,.72);border-bottom:1px solid var(--line)}
-header .wrap{display:flex;align-items:center;gap:20px;height:60px}
-.brand{color:var(--head);font-weight:600;font-size:14.5px;display:flex;align-items:center;gap:9px}
-.brand .led{width:9px;height:9px;border-radius:50%;background:var(--green);
-  box-shadow:0 0 0 0 rgba(152,195,121,.6);animation:pulse 2.6s ease-out infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(152,195,121,.55)}70%{box-shadow:0 0 0 9px rgba(152,195,121,0)}100%{box-shadow:0 0 0 0 rgba(152,195,121,0)}}
-.brand small{color:#555;font-weight:400}
-header nav{margin-left:auto;display:flex;align-items:center;gap:4px;font-size:13.5px}
-header nav a{color:var(--fg);padding:7px 11px;border-radius:8px;transition:background .16s,color .16s}
-header nav a:hover{color:var(--head);background:#111}
-.gh{border:1px solid var(--line);border-radius:8px;padding:7px 12px!important;
-  display:inline-flex;align-items:center;gap:7px;color:var(--head)!important}
-.gh:hover{border-color:var(--line-2)}
-
-/* ── hero ── */
-.hero{padding:96px 0 40px;text-align:center}
-.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);
-  border-radius:999px;padding:5px 13px 5px 8px;font-size:12.5px;color:var(--fg);background:#080808}
-.pill .v{background:#141414;border-radius:999px;padding:1px 8px;color:var(--head);font-size:11.5px;
-  font-family:var(--mono)}
-h1{
-  margin:22px 0 0;font-size:clamp(38px,7.4vw,78px);line-height:1.02;font-weight:600;
-  letter-spacing:-.045em;color:var(--head);
-  background:linear-gradient(180deg,#fff 30%,#8d8d8d);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-}
-h1 em{font-style:normal;
-  background:linear-gradient(90deg,var(--green),var(--cyan) 60%,var(--blue));
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-}
-.sub{margin:20px auto 0;max-width:60ch;font-size:17px;color:var(--fg)}
-.sub code{color:var(--head)}
-.sub a.u{color:var(--head);text-decoration:underline;text-underline-offset:3px}
-.actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:30px}
-.copy,.ghost{
-  display:inline-flex;align-items:center;gap:11px;border-radius:10px;padding:11px 16px;
-  font:inherit;font-size:13.5px;cursor:pointer;
-  transition:transform .16s,border-color .16s,background .16s,color .16s;
-}
-.copy{border:1px solid var(--line);background:var(--card);color:var(--head);font-family:var(--mono)}
-.copy:hover{border-color:var(--line-2);transform:translateY(-1px)}
-.copy .tag{color:#555;font-family:var(--sans);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
-.ghost{border:1px solid transparent;background:var(--head);color:#000;font-weight:500}
-.ghost:hover{transform:translateY(-1px);background:#fff}
-.ghost.alt{background:transparent;border-color:var(--line);color:var(--head)}
-.ghost.alt:hover{border-color:var(--line-2);background:#0c0c0c}
-
-/* Hero cast: the SVG already carries the card chrome, so it needs none. */
-.stage{position:relative;margin:44px auto 0;max-width:900px}
-.stage::after{content:"";position:absolute;left:8%;right:8%;bottom:-24px;height:60px;
-  background:radial-gradient(closest-side,rgba(152,195,121,.16),transparent);filter:blur(14px);
-  pointer-events:none}
-
-/* Terminal frames scroll sideways on narrow screens instead of shrinking the
-   monospace text into illegibility. */
-.frame{overflow-x:auto;border-radius:var(--r);-webkit-overflow-scrolling:touch;
-  scrollbar-width:thin;scrollbar-color:#2a2a2a transparent}
-.frame::-webkit-scrollbar{height:6px}
-.frame::-webkit-scrollbar-thumb{background:#242424;border-radius:99px}
-.frame img{display:block;width:100%;height:auto;border-radius:var(--r)}
-
-/* ── section headings ── */
-.sec{margin:86px 0 22px}
-.sec .eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--mut);font-size:12px;
-  letter-spacing:.14em;text-transform:uppercase;font-family:var(--mono)}
-.sec h2{margin:12px 0 0;font-size:clamp(24px,3.4vw,34px);line-height:1.15;font-weight:600;
-  letter-spacing:-.035em;color:var(--head)}
-.sec p{margin:9px 0 0;max-width:62ch}
-
-/* ── bento ── */
-.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
-/* Grid and flex children default to min-width:auto, which lets a wide terminal
-   frame push the whole layout past the viewport. */
-.tile,.frame,.stage{min-width:0;max-width:100%}
-.tile{
-  position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r);
-  padding:20px;grid-column:span 3;overflow:hidden;
-  transition:border-color .2s,transform .2s;
-}
-.tile:hover{border-color:var(--line-2);transform:translateY(-2px)}
-.tile::before{ /* cursor spotlight */
-  content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .25s;
-  background:radial-gradient(340px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.05),transparent 42%);
-}
-.tile:hover::before{opacity:1}
-.s2{grid-column:span 2}.s3{grid-column:span 3}.s4{grid-column:span 4}.s6{grid-column:span 6}
-
-.thead{display:flex;align-items:center;gap:10px;margin-bottom:4px}
-.ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
-  border:1px solid var(--line);background:var(--card-2);color:var(--fg)}
-.ic svg.i{width:15px;height:15px}
-.tile h3{margin:0;font-size:15px;color:var(--head);font-weight:600;letter-spacing:-.02em}
-.tile p.k{color:var(--mut);font-size:13.5px;margin:0 0 15px}
-
-/* cast tiles: no chrome of their own, the SVG supplies it */
-.cast{background:none;border:0;padding:0;margin:0}
-.cast::before{display:none}
-.cast:hover{transform:translateY(-3px)}
-.cast figcaption{display:flex;align-items:center;gap:9px;padding:11px 4px 0;
-  color:var(--mut);font-size:12.5px}
-.cast figcaption b{color:var(--head);font-weight:500;font-family:var(--mono);font-size:12.5px}
-.cast figcaption svg.i{width:14px;height:14px;color:var(--fg)}
-
-/* command list */
-ul.rows{list-style:none;margin:0;padding:0;font-size:13.5px}
-ul.rows li{display:flex;align-items:center;gap:11px;padding:8px 0;border-bottom:1px solid #141414;
-  transition:padding-left .18s}
-ul.rows li:last-child{border-bottom:0}
-ul.rows li:hover{padding-left:5px}
-ul.rows li:hover svg.i{color:var(--head)}
-ul.rows svg.i{color:#4d4d4d;transition:color .18s}
-ul.rows b{color:var(--head);font-weight:400;font-family:var(--mono);min-width:104px}
-ul.rows span{color:var(--mut)}
-
-/* code */
-pre{margin:0;background:#060606;border:1px solid var(--line);border-radius:10px;
-  padding:15px 17px;overflow-x:auto;font-family:var(--mono);font-size:12.8px;line-height:1.75;color:#d4d4d4}
-pre .c{color:#5a5a5a}
-pre .p{color:var(--green)}
-.sh{position:relative}
-.cbtn{position:absolute;top:8px;right:8px;display:inline-flex;align-items:center;gap:6px;
-  border:1px solid var(--line);background:#0d0d0d;color:var(--mut);border-radius:7px;
-  padding:5px 9px;font:inherit;font-size:11px;cursor:pointer;opacity:0;transition:.16s}
-.sh:hover .cbtn,.cbtn:focus-visible{opacity:1}
-.cbtn:hover{color:var(--head);border-color:var(--line-2)}
-.cbtn.done{color:var(--green);border-color:#25361d;opacity:1}
-.cbtn svg.i{width:13px;height:13px}
-@media(hover:none){.cbtn{opacity:1}}
-
-/* tabs */
-.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px}
-.tab{border:1px solid var(--line);background:transparent;color:#7d7d7d;border-radius:8px;
-  padding:6px 12px;font:inherit;font-size:12.5px;cursor:pointer;transition:.16s}
-.tab:hover{color:var(--head);border-color:var(--line-2)}
-.tab[aria-selected=true]{background:var(--head);border-color:var(--head);color:#000;font-weight:500}
-.panel{animation:fade .28s ease both;position:relative}
-.panel[hidden]{display:none}
-/* Every install command is meant to be run, so every one gets a copy button. */
-.pcopy{position:absolute;top:10px;right:10px;padding:4px 8px;border-radius:6px;
-  border:1px solid var(--line);background:var(--card);cursor:pointer;
-  opacity:0;transition:opacity .18s,border-color .18s}
-.panel:hover .pcopy,.pcopy:focus-visible{opacity:1}
-.pcopy:hover{border-color:var(--line-2)}
-@media(hover:none){.pcopy{opacity:1}}
-@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-
-/* theme chips */
-.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(146px,1fr));gap:10px}
-.chip{border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:var(--card-2);
-  transition:.18s}
-.chip:hover{border-color:var(--line-2);transform:translateY(-2px)}
-.chip .n{font-size:12.5px;color:var(--head);font-family:var(--mono)}
-.chip .s{display:flex;gap:3px;margin-top:8px}
-.chip .s i{height:13px;flex:1;border-radius:3px;transition:transform .18s}
-.chip:hover .s i{transform:scaleY(1.35)}
-
-/* stats */
-.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.num{border:1px solid var(--line);background:var(--card-2);border-radius:10px;padding:13px 14px}
-.num b{display:block;color:var(--head);font-size:24px;line-height:1.2;font-weight:600;letter-spacing:-.03em}
-.num span{color:var(--mut);font-size:11.5px}
-
-footer{border-top:1px solid var(--line);margin-top:88px;padding:26px 0 52px;color:var(--mut);font-size:13px}
-footer .wrap{display:flex;flex-wrap:wrap;gap:18px;align-items:center}
-footer a:hover{color:var(--head)}
-footer .sp{margin-left:auto}
-
-/* ── reveal ── */
-.js [data-anim]{opacity:0;transform:translateY(16px)}
-.js [data-anim].in{opacity:1;transform:none;
-  transition:opacity .6s cubic-bezier(.22,.7,.3,1),transform .6s cubic-bezier(.22,.7,.3,1)}
-@media (prefers-reduced-motion:reduce){
-  .js [data-anim],.js [data-anim].in{opacity:1;transform:none;transition:none}
-  .bg .glow,.brand .led{animation:none}
-  *{transition:none!important}
-}
-/* ── responsive ── */
-@media(max-width:1000px){
-  .bento{grid-template-columns:repeat(4,1fr)}
-  .tile,.s3,.s4,.s6{grid-column:span 4}
-  .s2{grid-column:span 2}
-}
-@media(max-width:760px){
-  .wrap{padding:0 18px}
-  .bento{grid-template-columns:1fr;gap:14px}
-  .tile,.s2,.s3,.s4,.s6{grid-column:span 1}
-  .hero{padding:56px 0 24px}
-  .sec{margin:60px 0 16px}
-  .stage{margin-top:32px}
-  .frame img{min-width:640px}      /* keep the terminal text legible; scroll it */
-  .nums{grid-template-columns:repeat(3,1fr)}
-  .chips{grid-template-columns:repeat(auto-fill,minmax(128px,1fr))}
-  .tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
-  .tabs::-webkit-scrollbar{display:none}
-  .tab{white-space:nowrap}
-}
-@media(max-width:560px){
-  body{font-size:14.5px}
-  h1{font-size:clamp(29px,8.4vw,38px);letter-spacing:-.032em}
-  .pill{font-size:11.5px}
-  header .wrap{gap:10px}
-  header nav a:not(.gh){display:none}
-  .brand small{display:none}
-  .hero{text-align:left}
-  .actions{justify-content:flex-start}
-  .copy{max-width:100%;overflow:hidden}
-  .copy>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .sub{font-size:15.5px}
-  .tile{padding:16px}
-  ul.rows b{min-width:92px}
-  pre{font-size:12px;padding:13px 14px}
-  footer .sp{margin-left:0;width:100%}
-}
-</style>
+<link rel="preload" href="/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/img/cast-hero.svg" as="image" fetchpriority="high">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/home.css">
+<script src="/assets/site.js" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "dok", "applicationCategory": "DeveloperApplication", "applicationSubCategory": "Command Line Utility", "operatingSystem": "macOS, Linux, Windows", "description": "dok is a Rust CLI that makes Docker output readable: containers grouped by compose project, which container owns a port, image layers, disk usage and logs, with JSON for scripts.", "url": "https://dok.alsaadii98.com/", "downloadUrl": "https://github.com/alsaadii98/dok/releases", "codeRepository": "https://github.com/alsaadii98/dok", "programmingLanguage": "Rust", "license": "https://opensource.org/licenses/MIT", "softwareVersion": "0.3.0", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "alsaadii98", "url": "https://github.com/alsaadii98"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I make docker ps output readable?", "acceptedAnswer": {"@type": "Answer", "text": "Run dok ps. It reads the Docker socket directly and prints containers grouped by compose project with coloured state dots, health marks, short ids, published ports and relative ages, sized to your terminal width."}}, {"@type": "Question", "name": "How do I find which container is using a port?", "acceptedAnswer": {"@type": "Answer", "text": "Run dok ports. It prints every published port across every container in one flat table sorted by host port, so finding the owner of 5432 is a glance or a grep. It skips exposed-but-unpublished ports, collapses the IPv4 and IPv6 rows Docker reports for a wildcard binding into one row, and marks any address, port and protocol claimed by two containers."}}, {"@type": "Question", "name": "What is a good docker ps alternative?", "acceptedAnswer": {"@type": "Answer", "text": "dok ps is a drop-in read-only alternative to docker ps. Unlike docker ps --format it groups containers by compose project and shows the service name rather than the mangled container name, renders sizes and ages in human units, and shrinks columns to fit the terminal instead of wrapping."}}, {"@type": "Question", "name": "How do I find which Docker image layer is making an image large?", "acceptedAnswer": {"@type": "Answer", "text": "Run dok history <image>. It lists every layer top-down in build order with a bar showing its share of the image, marks each layer over 10% of the total, and recovers the Dockerfile instruction from both the classic builder and BuildKit instead of showing /bin/sh -c #(nop)."}}, {"@type": "Question", "name": "How do I see why a Docker healthcheck is failing?", "acceptedAnswer": {"@type": "Answer", "text": "Run dok health. It lists only the containers that declare a healthcheck, sorted with unhealthy first, showing the failing streak, the healthcheck interval, the probe's exit code and the first line of its output."}}, {"@type": "Question", "name": "How do I get JSON output from docker ps?", "acceptedAnswer": {"@type": "Answer", "text": "Run dok ps --json. Every dok command takes --json and emits the same data the table shows, including the derived fields docker does not give you: the compose project, the service name, the health verdict. Sizes and ages arrive as both the number and the human rendering, so nothing has to be re-parsed. dok logs and dok events emit NDJSON, one object per line, because they are streams."}}, {"@type": "Question", "name": "What will docker system prune delete?", "acceptedAnswer": {"@type": "Answer", "text": "Run dok prune. It shows exactly what docker system prune would remove. stopped containers, dangling images, unused networks and build cache. grouped by kind and sized, without removing anything. It draws the same line docker does: dangling images by default, every unused image with -a, volumes only with --volumes. It then prints the docker command that does the removing."}}, {"@type": "Question", "name": "Does dok have shell completions?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. dok completions <shell> prints a script for bash, zsh, fish, nushell, powershell or elvish, generated from the same definition the CLI is built from. Homebrew installs them automatically; the .deb and .rpm include bash, zsh and fish; every release attaches a tarball with all six."}}, {"@type": "Question", "name": "Is there a readable alternative to docker inspect?", "acceptedAnswer": {"@type": "Answer", "text": "dok inspect folds the inspect JSON into identity, state, config, resources, network, mounts and labels, masks credential-looking environment values by default, and highlights privileged mode, added capabilities, OOM kills and failing healthchecks."}}, {"@type": "Question", "name": "How is dok different from lazydocker or ctop?", "acceptedAnswer": {"@type": "Answer", "text": "lazydocker and ctop are full-screen TUIs you drive interactively. dok prints one static, pipeable screen per command and is read-only: it never starts, stops, execs into or removes containers."}}, {"@type": "Question", "name": "How do I install dok?", "acceptedAnswer": {"@type": "Answer", "text": "brew install alsaadii98/tap/dok, cargo install dok-cli, makepkg from the PKGBUILDs in the repo on Arch, apk add --allow-untrusted ./dok-x86_64.apk on Alpine, the .deb or .rpm from the releases page, nix run github:alsaadii98/dok, or scoop bucket add dok https://github.com/alsaadii98/dok followed by scoop install dok/dok on Windows."}}, {"@type": "Question", "name": "How do I update dok?", "acceptedAnswer": {"@type": "Answer", "text": "Run dok update. dok checks GitHub for a newer release at most once a day and prints a one-line notice after a command's output. A standalone binary is replaced in place after its release checksum is verified; if dok was installed by brew, apk, dpkg, rpm or cargo it prints that package manager's upgrade command instead. Set DOK_NO_UPDATE_CHECK=1 to disable the check."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "dok", "url": "https://dok.alsaadii98.com/"}</script>
 </head>
 <body>
-
-<div class="bg"><div class="grid"></div><div class="glow"></div></div>
-
-<!-- icon sprite: one stroke style everywhere on the page -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <symbol id="i-ps" viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="m3 7.5 9 4.5 9-4.5M12 12v9"/></symbol>
-    <symbol id="i-health" viewBox="0 0 24 24"><path d="M3 12h4l2-5 3 10 2.5-5H21"/></symbol>
-    <symbol id="i-history" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><path d="M4 6v12"/></symbol>
-    <symbol id="i-ports" viewBox="0 0 24 24"><path d="M3 12h9"/><path d="m9 9 3 3-3 3"/><rect x="15" y="4" width="6" height="16" rx="1"/></symbol>
-    <symbol id="i-images" viewBox="0 0 24 24"><path d="m12 2 9 5-9 5-9-5z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></symbol>
-    <symbol id="i-df" viewBox="0 0 24 24"><path d="M3 13h18"/><path d="m5 13 2.2-7.3A1 1 0 0 1 8.2 5h7.6a1 1 0 0 1 1 .7L19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1z"/><path d="M8 16h.01M11.5 16h.01"/></symbol>
-    <symbol id="i-inspect" viewBox="0 0 24 24"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M8 12h8M8 9h5M8 15h6"/></symbol>
-    <symbol id="i-logs" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></symbol>
-    <symbol id="i-top" viewBox="0 0 24 24"><path d="M3 12h4l3 8 4-16 3 8h4"/></symbol>
-    <symbol id="i-tree" viewBox="0 0 24 24"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M6 16.5V6a1 1 0 0 1 1-1h8.5"/><path d="M6 12h9.5"/></symbol>
-    <symbol id="i-stats" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="m12 13 4-4M12 3v1"/></symbol>
-    <symbol id="i-events" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.6"/><path d="M8.6 8.6a4.8 4.8 0 0 0 0 6.8M15.4 15.4a4.8 4.8 0 0 0 0-6.8"/><path d="M5.6 5.6a9 9 0 0 0 0 12.8M18.4 18.4a9 9 0 0 0 0-12.8"/></symbol>
-    <symbol id="i-update" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></symbol>
-    <symbol id="i-themes" viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 1 9-9c0 2-1.6 3-3 3h-1.5a2 2 0 0 0-1.4 3.4A2 2 0 0 1 12 21z"/><circle cx="8" cy="10" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16" cy="10" r="1"/></symbol>
-    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
-    <symbol id="i-socket" viewBox="0 0 24 24"><path d="M9 2v6M15 2v6"/><path d="M6 8h12v3a6 6 0 0 1-12 0z"/><path d="M12 17v5"/></symbol>
-    <symbol id="i-binary" viewBox="0 0 24 24"><path d="m21 8-9-5-9 5 9 5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></symbol>
-    <symbol id="i-pipe" viewBox="0 0 24 24"><path d="m4 17 6-5-6-5"/><path d="M12 19h8"/></symbol>
-    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/><path d="M9 5v4M15 10v4M7 15v4"/></symbol>
-    <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m10 8.5 6 3.5-6 3.5z"/></symbol>
-    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 21h16"/></symbol>
-    <symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-4 1.5-4-2-6-2.5m12 4.5v-3.6a3 3 0 0 0-.9-2.4c2.9-.3 6-1.4 6-6.4a4.7 4.7 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.3s-1-.3-3.4 1.3a11.6 11.6 0 0 0-6 0C6.9 2.7 5.9 3 5.9 3a4.3 4.3 0 0 0-.1 3.3A4.7 4.7 0 0 0 4.5 9.5c0 5 3 6.1 5.9 6.4a3 3 0 0 0-.9 2.3V22"/></symbol>
-    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
-    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></symbol>
-    <symbol id="i-check" viewBox="0 0 24 24"><path d="m20 6-11 11-5-5"/></symbol>
-  </defs>
-</svg>
-
-<header>
+<a class="skip" href="#main">Skip to content</a>
+<div class="atmos" aria-hidden="true"></div>
+<p id="live" class="sr" aria-live="polite"></p>
+<header class="nav">
   <div class="wrap">
-    <a class="brand" href="#top"><span class="led"></span>dok <small>/ dok</small></a>
-    <nav>
-      <a href="#commands">commands</a>
-      <a href="#install">install</a>
-      <a href="#themes">themes</a>
-      <a href="#update">updates</a>
-      <a class="gh" href="https://github.com/alsaadii98/dok">
-        <svg class="i"><use href="#i-gh"/></svg>GitHub
-      </a>
-    </nav>
+    <a class="brand" href="/">dok</a>
+    <ul>
+      <li class="opt"><a href="/#commands">commands</a></li>
+      <li class="opt"><a href="/#json">json</a></li>
+      <li class="opt2"><a href="/#install">install</a></li>
+      <li><a href="/man/">manual</a></li>
+      <li><a class="gh" href="https://github.com/alsaadii98/dok" aria-label="dok on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg><span class="opt2">GitHub</span></a></li>
+    </ul>
   </div>
 </header>
-
-<main id="top">
-<div class="wrap">
-
-  <section class="hero">
-    <span class="pill" data-anim style="transition-delay:.03s">
-      <span class="v">v0.3.0</span> Rust · reads the docker socket · MIT
-    </span>
-    <h1 data-anim style="transition-delay:.08s">Docker&nbsp;output,<br>made <em>readable</em>.</h1>
-    <p class="sub" data-anim style="transition-delay:.14s">
-      <code>dok</code> ships one binary — <code>dok</code>. It reads the
-      Docker socket and prints it for humans: colour that means something, compose
-      grouping, human sizes and ages, and real themes.
-      What <a class="u" href="https://eza.rocks/">eza</a> is to <code>ls</code>.
-    </p>
-    <div class="actions" data-anim style="transition-delay:.2s">
-      <button class="copy" data-copy="brew install alsaadii98/tap/dok">
-        <span><span style="color:var(--green)">$</span> brew install alsaadii98/tap/dok</span>
-        <span class="tag">copy</span>
-      </button>
-      <a class="ghost" href="#install">Install <svg class="i" style="stroke-width:2"><use href="#i-arrow"/></svg></a>
-      <a class="ghost alt" href="https://github.com/alsaadii98/dok">Source</a>
-    </div>
-    <div class="stage" data-anim style="transition-delay:.26s">
-      <div class="frame"><img src="img/cast-hero.svg" width="838" height="414"
-           alt="Animated terminal: dok ps -a, dok images, dok logs and dok events being typed and rendered"></div>
-    </div>
-  </section>
-  <!-- The reveal observer is at the foot of the document; without this the hero
-       sits at opacity:0 until the whole page has parsed. -->
-  <script>document.querySelectorAll('.hero [data-anim]').forEach(function(e){e.classList.add('in')})</script>
-
-  <section class="sec" id="commands" data-anim>
-    <span class="eyebrow"><svg class="i"><use href="#i-pipe"/></svg>commands</span>
-    <h2>Fifteen screens, one binary.</h2>
-    <p>Each command prints one static screen and exits. No TUI to learn, no state to
-       keep — it pipes into <code>grep</code> like anything else, and drops colour and
-       icons automatically when it is not a terminal.</p>
-  </section>
-
-  <div class="bento">
-
-    <div class="tile s3" data-anim>
-      <div class="thead"><span class="ic"><svg class="i"><use href="#i-pipe"/></svg></span>
-        <h3>The command set</h3></div>
-      <p class="k">Read-only, every one of them.</p>
-      <ul class="rows">
-        <li><svg class="i"><use href="#i-ps"/></svg><b>dok ps</b><span>containers, grouped by project</span></li>
-        <li><svg class="i"><use href="#i-ports"/></svg><b>dok ports</b><span>every published port, sorted by port</span></li>
-        <li><svg class="i"><use href="#i-health"/></svg><b>dok health</b><span>failing checks, streak and last probe</span></li>
-        <li><svg class="i"><use href="#i-history"/></svg><b>dok history</b><span>image layers, size bars, instructions</span></li>
-        <li><svg class="i"><use href="#i-images"/></svg><b>dok images</b><span>size and age gradients</span></li>
-        <li><svg class="i"><use href="#i-df"/></svg><b>dok df</b><span>disk usage, reclaimable bars</span></li>
-        <li><svg class="i"><use href="#i-df"/></svg><b>dok prune</b><span>what would be reclaimed, never removes</span></li>
-        <li><svg class="i"><use href="#i-inspect"/></svg><b>dok inspect</b><span>the JSON, folded and masked</span></li>
-        <li><svg class="i"><use href="#i-logs"/></svg><b>dok logs</b><span>merged tail, level colouring</span></li>
-        <li><svg class="i"><use href="#i-top"/></svg><b>dok top</b><span>process tree inside a container</span></li>
-        <li><svg class="i"><use href="#i-tree"/></svg><b>dok tree</b><span>projects, networks, volumes</span></li>
-        <li><svg class="i"><use href="#i-stats"/></svg><b>dok stats</b><span>live CPU / memory dashboard</span></li>
-        <li><svg class="i"><use href="#i-events"/></svg><b>dok events</b><span>colour-coded daemon events</span></li>
-        <li><svg class="i"><use href="#i-themes"/></svg><b>dok themes</b><span>list and preview themes</span></li>
-        <li><svg class="i"><use href="#i-binary"/></svg><b>--json</b><span>on every command, NDJSON for streams</span></li>
-        <li><svg class="i"><use href="#i-pipe"/></svg><b>dok completions</b><span>bash, zsh, fish, nushell, powershell, elvish</span></li>
-        <li><svg class="i"><use href="#i-update"/></svg><b>dok update</b><span>check for a release, install it</span></li>
-        <li><svg class="i"><use href="#i-download"/></svg><b>dok uninstall</b><span>remove it as cleanly as it arrived</span></li>
-      </ul>
-    </div>
-
-    <figure class="tile cast s3" data-anim>
-      <div class="frame"><img src="img/cast-logs.svg" width="830" height="314" loading="lazy"
-           alt="Animated dok logs: merged container logs with per-container colour and exploded JSON"></div>
-      <figcaption><svg class="i"><use href="#i-logs"/></svg>
-        <b>dok logs</b> one colour per container · stderr marked · JSON exploded</figcaption>
-    </figure>
-
-    <figure class="tile cast s2" data-anim>
-      <div class="frame"><img src="img/cast-df.svg" width="670" height="274" loading="lazy"
-           alt="Animated dok df: images, containers and volumes with reclaimable bars"></div>
-      <figcaption><svg class="i"><use href="#i-df"/></svg><b>dok df</b> what is reclaimable</figcaption>
-    </figure>
-
-    <figure class="tile cast s2" data-anim>
-      <div class="frame"><img src="img/cast-tree.svg" width="510" height="274" loading="lazy"
-           alt="Animated dok tree: compose projects and their services"></div>
-      <figcaption><svg class="i"><use href="#i-tree"/></svg><b>dok tree</b> how it wires up</figcaption>
-    </figure>
-
-    <figure class="tile cast s2" data-anim>
-      <div class="frame"><img src="img/cast-top.svg" width="687" height="194" loading="lazy"
-           alt="Animated dok top: the process tree inside a container"></div>
-      <figcaption><svg class="i"><use href="#i-top"/></svg><b>dok top</b> processes, as a tree</figcaption>
-    </figure>
-
-    <figure class="tile cast s4" data-anim>
-      <div class="frame"><img src="img/cast-events.svg" width="830" height="394" loading="lazy"
-           alt="Animated dok events: colour-coded container, image, volume and network events"></div>
-      <figcaption><svg class="i"><use href="#i-events"/></svg>
-        <b>dok events</b> lifecycle in order — exit codes, signals and health flips picked out</figcaption>
-    </figure>
-
-    <figure class="tile cast s2" data-anim>
-      <div class="frame"><img src="img/cast-ports.svg" width="536" height="294" loading="lazy"
-           alt="Animated dok ports: every published port in one table sorted by host port, with the bind address shown when it is narrower than every interface"></div>
-      <figcaption><svg class="i"><use href="#i-ports"/></svg><b>dok ports</b> who owns 5432</figcaption>
-    </figure>
-
-    <figure class="tile cast s2" data-anim>
-      <div class="frame"><img src="img/cast-history.svg" width="645" height="354" loading="lazy"
-           alt="Animated dok history: image layers in build order with a size bar each and the Dockerfile instruction recovered"></div>
-      <figcaption><svg class="i"><use href="#i-history"/></svg><b>dok history</b> which layer made it big</figcaption>
-    </figure>
-
-    <figure class="tile cast s2" data-anim>
-      <div class="frame"><img src="img/cast-prune.svg" width="603" height="394" loading="lazy"
-           alt="Animated dok prune: what docker system prune would remove, grouped by kind and sized, with the docker command that does it"></div>
-      <figcaption><svg class="i"><use href="#i-df"/></svg><b>dok prune</b> what would go — never removes</figcaption>
-    </figure>
-
-    <figure class="tile cast s4" data-anim>
-      <div class="frame"><img src="img/cast-health.svg" width="914" height="234" loading="lazy"
-           alt="Animated dok health: only the containers with a healthcheck, unhealthy first, with failing streak, interval and the last probe's output"></div>
-      <figcaption><svg class="i"><use href="#i-health"/></svg>
-        <b>dok health</b> failing streak, interval, and what the probe actually printed</figcaption>
-    </figure>
-
-    <div class="tile s2" data-anim>
-      <div class="thead"><span class="ic"><svg class="i"><use href="#i-shield"/></svg></span>
-        <h3>Safe by design</h3></div>
-      <p class="k">It looks. It never touches.</p>
-      <ul class="rows">
-        <li><svg class="i"><use href="#i-shield"/></svg><b>read-only</b><span>no start/stop/rm</span></li>
-        <li><svg class="i"><use href="#i-socket"/></svg><b>no shell-out</b><span>socket, not the CLI</span></li>
-        <li><svg class="i"><use href="#i-binary"/></svg><b>one binary</b><span>no runtime</span></li>
-        <li><svg class="i"><use href="#i-play"/></svg><b>--demo</b><span>works with no daemon</span></li>
-      </ul>
-      <div class="nums" style="margin-top:16px">
-        <div class="num"><b data-count="10">0</b><span>commands</span></div>
-        <div class="num"><b data-count="10">0</b><span>themes</span></div>
-        <div class="num"><b data-count="0">0</b><span>runtime deps</span></div>
+<main id="main">
+<div class="wrap" id="top">
+  <div class="hero">
+    <div>
+      <h1><span class="ln">Docker output,</span><span class="ln">made <span class="dec" data-decode>readable</span>.</span></h1>
+      <p class="lede">What <a href="https://eza.rocks/">eza</a> is to <code>ls</code>, dok is to Docker: containers, images, logs and disk usage, printed for a person to read.</p>
+      <div class="cta">
+        <div class="cmdline"><span class="p">$</span><code translate="no">brew install alsaadii98/tap/dok</code><button class="copy" type="button" data-copy="brew install alsaadii98/tap/dok" aria-label="Copy install command">copy</button></div>
+        <a class="link" href="/man/">Read the manual &rarr;</a>
       </div>
     </div>
-
-  </div>
-
-  <section class="sec" id="install" data-anim>
-    <span class="eyebrow"><svg class="i"><use href="#i-download"/></svg>install</span>
-    <h2>Nine ways in.</h2>
-    <p>No runtime dependencies. It needs a reachable Docker daemon and honours
-       <code>DOCKER_HOST</code>, the default socket and Windows named pipes.</p>
-  </section>
-
-  <div class="bento">
-    <div class="tile s4" data-anim>
-      <div class="tabs" role="tablist">
-        <button class="tab" role="tab" aria-selected="true" data-panel="brew">homebrew</button>
-        <button class="tab" role="tab" aria-selected="false" data-panel="cargo">cargo</button>
-        <button class="tab" role="tab" aria-selected="false" data-panel="arch">arch</button>
-        <button class="tab" role="tab" aria-selected="false" data-panel="deb">debian</button>
-        <button class="tab" role="tab" aria-selected="false" data-panel="rpm">fedora</button>
-        <button class="tab" role="tab" aria-selected="false" data-panel="alpine">alpine</button>
-        <button class="tab" role="tab" aria-selected="false" data-panel="nix">nix</button>
-        <button class="tab" role="tab" aria-selected="false" data-panel="scoop">windows</button>
-        <button class="tab" role="tab" aria-selected="false" data-panel="src">source</button>
-      </div>
-      <div class="panel" id="brew"><button class="pcopy" type="button" data-copy="brew install alsaadii98/tap/dok" aria-label="Copy install command"><span class="tag">copy</span></button><pre><span class="p">$</span> brew install alsaadii98/tap/dok</pre></div>
-      <div class="panel" id="cargo" hidden><button class="pcopy" type="button" data-copy="cargo install dok-cli" aria-label="Copy install command"><span class="tag">copy</span></button><pre><span class="p">$</span> cargo install dok-cli   <span class="c"># crate dok-cli, binary dok</span></pre></div>
-      <div class="panel" id="arch" hidden><button class="pcopy" type="button" data-copy="git clone https://github.com/alsaadii98/dok&#10;cd dok/packaging/aur&#10;makepkg -si -p PKGBUILD-bin" aria-label="Copy install command"><span class="tag">copy</span></button><pre><span class="c"># not on the AUR yet - build from the PKGBUILDs in the repo</span>
-<span class="p">$</span> git clone https://github.com/alsaadii98/dok
-<span class="p">$</span> cd dok/packaging/aur
-<span class="p">$</span> makepkg -si -p PKGBUILD-bin   <span class="c"># prebuilt</span></pre></div>
-      <div class="panel" id="deb" hidden><button class="pcopy" type="button" data-copy="curl -LO https://github.com/alsaadii98/dok/releases/latest/download/dok_amd64.deb&#10;sudo dpkg -i dok_amd64.deb" aria-label="Copy install command"><span class="tag">copy</span></button><pre><span class="p">$</span> curl -LO https://github.com/alsaadii98/dok/releases/latest/download/dok_amd64.deb
-<span class="p">$</span> sudo dpkg -i dok_amd64.deb</pre></div>
-      <div class="panel" id="rpm" hidden><button class="pcopy" type="button" data-copy="curl -LO https://github.com/alsaadii98/dok/releases/latest/download/dok.x86_64.rpm&#10;sudo rpm -i dok.x86_64.rpm" aria-label="Copy install command"><span class="tag">copy</span></button><pre><span class="p">$</span> curl -LO https://github.com/alsaadii98/dok/releases/latest/download/dok.x86_64.rpm
-<span class="p">$</span> sudo rpm -i dok.x86_64.rpm</pre></div>
-      <div class="panel" id="alpine" hidden><button class="pcopy" type="button" data-copy="wget https://github.com/alsaadii98/dok/releases/latest/download/dok-x86_64.apk&#10;apk add --allow-untrusted ./dok-x86_64.apk" aria-label="Copy install command"><span class="tag">copy</span></button><pre><span class="p">$</span> wget https://github.com/alsaadii98/dok/releases/latest/download/dok-x86_64.apk
-<span class="p">$</span> apk add --allow-untrusted ./dok-x86_64.apk   <span class="c"># aarch64 too</span></pre></div>
-      <div class="panel" id="nix" hidden><button class="pcopy" type="button" data-copy="nix run github:alsaadii98/dok" aria-label="Copy install command"><span class="tag">copy</span></button><pre><span class="p">$</span> nix run github:alsaadii98/dok</pre></div>
-      <div class="panel" id="scoop" hidden><button class="pcopy" type="button" data-copy="scoop bucket add dok https://github.com/alsaadii98/dok&#10;scoop install dok/dok" aria-label="Copy install command"><span class="tag">copy</span></button><pre><span class="p">$</span> scoop bucket add dok https://github.com/alsaadii98/dok
-<span class="p">$</span> scoop install dok/dok</pre></div>
-      <div class="panel" id="src" hidden><button class="pcopy" type="button" data-copy="git clone https://github.com/alsaadii98/dok&#10;cd dok &amp;&amp; cargo build --release" aria-label="Copy install command"><span class="tag">copy</span></button><pre><span class="p">$</span> git clone https://github.com/alsaadii98/dok
-<span class="p">$</span> cd dok &amp;&amp; cargo build --release</pre></div>
-      <p class="k" style="margin:15px 0 0">Then try it without a daemon:
-        <code>dok ps --demo</code>.</p>
-    </div>
-
-    <figure class="tile cast s2" data-anim>
-      <div class="frame"><img src="img/cast-images.svg" width="704" height="354" loading="lazy"
-           alt="Animated dok images: repository, tag, size and age with colour gradients"></div>
-      <figcaption><svg class="i"><use href="#i-images"/></svg><b>dok images</b> size &amp; age gradients</figcaption>
-    </figure>
-  </div>
-
-  <section class="sec" id="themes" data-anim>
-    <span class="eyebrow"><svg class="i"><use href="#i-themes"/></svg>themes</span>
-    <h2>Themes that change more than colour.</h2>
-    <p>A theme carries a palette, a glyph set and a layout. Switch to <code>ascii</code>
-       and the box glyphs, bars and tree marks become genuine ASCII — not colourless
-       Unicode.</p>
-  </section>
-
-  <div class="bento">
-    <div class="tile s4" data-anim>
-      <div class="thead"><span class="ic"><svg class="i"><use href="#i-themes"/></svg></span>
-        <h3>Ten built in</h3></div>
-      <p class="k">Pick per run with <code>--theme</code>, or set one and forget it.</p>
-      <div class="chips">
-        <div class="chip"><div class="n">default</div><div class="s"><i style="background:#98c379"></i><i style="background:#56b6c2"></i><i style="background:#61afef"></i><i style="background:#c678dd"></i><i style="background:#e5c07b"></i><i style="background:#e06c75"></i></div></div>
-        <div class="chip"><div class="n">dracula</div><div class="s"><i style="background:#50fa7b"></i><i style="background:#8be9fd"></i><i style="background:#bd93f9"></i><i style="background:#ff79c6"></i><i style="background:#f1fa8c"></i><i style="background:#ff5555"></i></div></div>
-        <div class="chip"><div class="n">nord</div><div class="s"><i style="background:#a3be8c"></i><i style="background:#88c0d0"></i><i style="background:#81a1c1"></i><i style="background:#b48ead"></i><i style="background:#ebcb8b"></i><i style="background:#bf616a"></i></div></div>
-        <div class="chip"><div class="n">gruvbox</div><div class="s"><i style="background:#b8bb26"></i><i style="background:#8ec07c"></i><i style="background:#83a598"></i><i style="background:#d3869b"></i><i style="background:#fabd2f"></i><i style="background:#fb4934"></i></div></div>
-        <div class="chip"><div class="n">catppuccin</div><div class="s"><i style="background:#a6e3a1"></i><i style="background:#94e2d5"></i><i style="background:#89b4fa"></i><i style="background:#cba6f7"></i><i style="background:#f9e2af"></i><i style="background:#f38ba8"></i></div></div>
-        <div class="chip"><div class="n">tokyonight</div><div class="s"><i style="background:#9ece6a"></i><i style="background:#7dcfff"></i><i style="background:#7aa2f7"></i><i style="background:#bb9af7"></i><i style="background:#e0af68"></i><i style="background:#f7768e"></i></div></div>
-        <div class="chip"><div class="n">solarized-light</div><div class="s"><i style="background:#4f7a28"></i><i style="background:#259286"></i><i style="background:#2176c7"></i><i style="background:#c61c6f"></i><i style="background:#a57705"></i><i style="background:#dc322f"></i></div></div>
-        <div class="chip"><div class="n">mono</div><div class="s"><i style="background:#e8e8e8"></i><i style="background:#b8b8b8"></i><i style="background:#e0e0e0"></i><i style="background:#a8a8a8"></i><i style="background:#d0d0d0"></i><i style="background:#707070"></i></div></div>
-        <div class="chip"><div class="n">matrix</div><div class="s"><i style="background:#00ff5f"></i><i style="background:#00ffaf"></i><i style="background:#00d75f"></i><i style="background:#87ff5f"></i><i style="background:#afff00"></i><i style="background:#ff0040"></i></div></div>
-        <div class="chip"><div class="n">ascii</div><div class="s"><i style="background:#98c379"></i><i style="background:#56b6c2"></i><i style="background:#61afef"></i><i style="background:#c678dd"></i><i style="background:#e5c07b"></i><i style="background:#e06c75"></i></div></div>
-      </div>
-    </div>
-
-    <figure class="tile cast s2" data-anim>
-      <div class="frame"><img src="img/cast-themes.svg" width="611" height="374" loading="lazy"
-           alt="Animated dok themes: the built-in theme list with sample swatches"></div>
-      <figcaption><svg class="i"><use href="#i-themes"/></svg><b>dok themes</b> list &amp; preview</figcaption>
-    </figure>
-
-    <div class="tile s4" data-anim>
-      <div class="thead"><span class="ic"><svg class="i"><use href="#i-sliders"/></svg></span>
-        <h3>Or build your own</h3></div>
-      <p class="k"><code>dok themes --init</code> writes this to <code>~/.config/dok/config.toml</code>.</p>
-<pre>theme = "mine"
-icons = "nerd"        <span class="c"># auto | nerd | unicode | none</span>
-
-[themes.mine]
-base   = "gruvbox"    <span class="c"># any built-in</span>
-glyphs = "heavy"      <span class="c"># unicode | ascii | heavy | slim</span>
-layout = "grid"       <span class="c"># default | ruled | grid | quiet</span>
-header = "dim"        <span class="c"># underline | bold | dim | caps</span>
-green  = "#00ff00"    <span class="c"># override any role</span></pre>
-      <p class="k" style="margin:14px 0 0">Or just <code>dok ps --theme nord</code>.</p>
-    </div>
-
-    <figure class="tile cast s2" data-anim>
-      <div class="frame"><img src="img/cast-inspect.svg" width="720" height="1094" loading="lazy"
-           alt="Animated dok inspect: the inspect JSON folded into sections with secrets masked"></div>
-      <figcaption><svg class="i"><use href="#i-inspect"/></svg><b>dok inspect</b> folded, secrets masked</figcaption>
-    </figure>
-  </div>
-
-  <section class="sec" id="update" data-anim>
-    <span class="eyebrow"><svg class="i"><use href="#i-update"/></svg>updates</span>
-    <h2>It tells you when it is old.</h2>
-    <p>dok asks GitHub for the latest release at most once a day and prints one dim
-       line under the output you asked for. Never when piped, never in the way.</p>
-  </section>
-
-  <div class="bento">
-    <div class="tile s3" data-anim>
-      <div class="thead"><span class="ic"><svg class="i"><use href="#i-update"/></svg></span>
-        <h3>One line, once a day</h3></div>
-      <p class="k">Printed after the output, not instead of it.</p>
-<pre>$ dok ps
-<span class="c">…your containers…</span>
-<span class="c">dok 0.1.5 is out (you have 0.1.4) — run `dok update`</span></pre>
-      <p class="k" style="margin:14px 0 0"><code>DOK_NO_UPDATE_CHECK=1</code> turns it off for good.</p>
-    </div>
-
-    <div class="tile s3" data-anim>
-      <div class="thead"><span class="ic"><svg class="i"><use href="#i-download"/></svg></span>
-        <h3>Then update in place</h3></div>
-      <p class="k">Checksum-verified, or the right package manager command.</p>
-<pre>$ dok update --check   <span class="c"># report only</span>
-$ dok update           <span class="c"># ask, then replace</span>
-$ dok update -y        <span class="c"># no questions</span></pre>
-      <p class="k" style="margin:14px 0 0">Installed by brew, scoop, apk, dpkg, rpm, pacman, nix
-         or cargo? dok prints that manager's upgrade command instead of touching a file it does not own.</p>
-      <p class="k" style="margin:14px 0 0"><code>dok uninstall</code> is the same idea in reverse: a
-         standalone binary deletes itself, a packaged one gets its manager's removal command printed.
-         <code>--purge</code> takes the config and cache with it.</p>
+    <div class="shotframe">
+      <picture><source srcset="/img/ps.svg" media="(prefers-reduced-motion: reduce)"><img src="/img/cast-hero.svg" data-still="/img/ps.svg" width="838" height="414" alt="dok ps -a, dok images, dok logs and dok events rendering in a terminal" fetchpriority="high"></picture>
+      <button class="pause" type="button" data-pause aria-pressed="false">Pause animations</button>
     </div>
   </div>
-
 </div>
-</main>
 
-<footer>
+<section id="how" aria-labelledby="how-h">
   <div class="wrap">
-    <span>MIT - Built by <a href="https://github.com/alsaadii98" style="color:var(--head)">@alsaadii98</a></span>
+    <h2 id="how-h" class="reveal">One socket. No shell-out.</h2>
+    <p class="lede">dok talks to the Docker API directly and lays out every table itself. It only ever reads, so it is safe to point at production.</p>
+    <ol class="pipe" data-pipeline><li style="--i:0"><span class="st">socket</span><code translate="no">docker.sock</code><span class="dsc">or DOCKER_HOST, or a named pipe</span></li><li style="--i:1"><span class="st">client</span><code translate="no">bollard</code><span class="dsc">the Docker HTTP API, in Rust</span></li><li style="--i:2"><span class="st">views</span><code translate="no">src/dk.rs</code><span class="dsc">names, compose labels, health</span></li><li style="--i:3"><span class="st">layout</span><code translate="no">src/table.rs</code><span class="dsc">measure, cap, shrink, pad</span></li><li style="--i:4"><span class="st">paint</span><code translate="no">src/theme.rs</code><span class="dsc">roles, glyphs, layout</span></li><li style="--i:5"><span class="st">out</span><code translate="no">your terminal</code><span class="dsc">or a pipe, or --json</span></li></ol>
+    <p class="facts"><span><b>11</b> Docker API calls, all reads</span><span><b>0</b> calls to the docker CLI</span><span><b>17</b> commands</span><a class="link" href="/man/internals/">How it works, in detail &rarr;</a></p>
+  </div>
+</section>
+
+<section id="commands" aria-labelledby="cmd-h">
+  <div class="wrap">
+    <h2 id="cmd-h" class="reveal">Read, never write.</h2>
+    <p class="lede">Every command prints one screen and exits, so it pipes into <code>grep</code> and <code>less</code> like anything else. Pick one to see it run.</p>
+    <div class="browser" data-tabs data-hash="cmd-">
+      <div role="tablist" aria-label="Commands" aria-orientation="vertical"><button role="tab" id="t-ps" data-key="ps" aria-selected="true" aria-controls="p-ps" tabindex="0">ps<span class="al">ls</span></button><button role="tab" id="t-ports" data-key="ports" aria-selected="false" aria-controls="p-ports" tabindex="-1">ports</button><button role="tab" id="t-health" data-key="health" aria-selected="false" aria-controls="p-health" tabindex="-1">health</button><button role="tab" id="t-history" data-key="history" aria-selected="false" aria-controls="p-history" tabindex="-1">history</button><button role="tab" id="t-prune" data-key="prune" aria-selected="false" aria-controls="p-prune" tabindex="-1">prune</button><button role="tab" id="t-images" data-key="images" aria-selected="false" aria-controls="p-images" tabindex="-1">images<span class="al">img</span></button><button role="tab" id="t-df" data-key="df" aria-selected="false" aria-controls="p-df" tabindex="-1">df<span class="al">du</span></button><button role="tab" id="t-inspect" data-key="inspect" aria-selected="false" aria-controls="p-inspect" tabindex="-1">inspect</button><button role="tab" id="t-logs" data-key="logs" aria-selected="false" aria-controls="p-logs" tabindex="-1">logs</button><button role="tab" id="t-top" data-key="top" aria-selected="false" aria-controls="p-top" tabindex="-1">top</button><button role="tab" id="t-tree" data-key="tree" aria-selected="false" aria-controls="p-tree" tabindex="-1">tree</button><button role="tab" id="t-events" data-key="events" aria-selected="false" aria-controls="p-events" tabindex="-1">events</button><button role="tab" id="t-themes" data-key="themes" aria-selected="false" aria-controls="p-themes" tabindex="-1">themes</button></div>
+      <div><div class="panel" role="tabpanel" id="p-ps" aria-labelledby="t-ps"><div class="head"><p>List containers, grouped by compose project</p><a class="link" href="/man/ps/">dok-ps(1) &rarr;</a></div><picture><source srcset="/img/ps.svg" media="(prefers-reduced-motion: reduce)"><img src="/img/cast-ps.svg" data-still="/img/ps.svg" width="838" height="414" alt="Output of dok ps" loading="lazy" decoding="async"></picture></div><div class="panel" role="tabpanel" id="p-ports" aria-labelledby="t-ports" hidden><div class="head"><p>Every published port in one table, sorted by port</p><a class="link" href="/man/ports/">dok-ports(1) &rarr;</a></div><picture><source srcset="/img/ports.svg" media="(prefers-reduced-motion: reduce)"><img src="/img/cast-ports.svg" data-still="/img/ports.svg" width="536" height="294" alt="Output of dok ports" loading="lazy" decoding="async"></picture></div><div class="panel" role="tabpanel" id="p-health" aria-labelledby="t-health" hidden><div class="head"><p>Containers with a healthcheck: status, failing streak, last probe</p><a class="link" href="/man/health/">dok-health(1) &rarr;</a></div><picture><source srcset="/img/health.svg" media="(prefers-reduced-motion: reduce)"><img src="/img/cast-health.svg" data-still="/img/health.svg" width="914" height="234" alt="Output of dok health" loading="lazy" decoding="async"></picture></div><div class="panel" role="tabpanel" id="p-history" aria-labelledby="t-history" hidden><div class="head"><p>Layers of an image with size bars and readable instructions</p><a class="link" href="/man/history/">dok-history(1) &rarr;</a></div><picture><source srcset="/img/history.svg" media="(prefers-reduced-motion: reduce)"><img src="/img/cast-history.svg" data-still="/img/history.svg" width="645" height="354" alt="Output of dok history" loading="lazy" decoding="async"></picture></div><div class="panel" role="tabpanel" id="p-prune" aria-labelledby="t-prune" hidden><div class="head"><p>What <code translate="no">docker system prune</code> would remove. Never removes anything</p><a class="link" href="/man/prune/">dok-prune(1) &rarr;</a></div><picture><source srcset="/img/prune.svg" media="(prefers-reduced-motion: reduce)"><img src="/img/cast-prune.svg" data-still="/img/prune.svg" width="603" height="394" alt="Output of dok prune" loading="lazy" decoding="async"></picture></div><div class="panel" role="tabpanel" id="p-images" aria-labelledby="t-images" hidden><div class="head"><p>List images with size and age gradients</p><a class="link" href="/man/images/">dok-images(1) &rarr;</a></div><picture><source srcset="/img/images.svg" media="(prefers-reduced-motion: reduce)"><img src="/img/cast-images.svg" data-still="/img/images.svg" width="704" height="374" alt="Output of dok images" loading="lazy" decoding="async"></picture></div><div class="panel" role="tabpanel" id="p-df" aria-labelledby="t-df" hidden><div class="head"><p>Disk usage by images, containers, volumes and build cache</p><a class="link" href="/man/df/">dok-df(1) &rarr;</a></div><picture><source srcset="/img/df.svg" media="(prefers-reduced-motion: reduce)"><img src="/img/cast-df.svg" data-still="/img/df.svg" width="670" height="274" alt="Output of dok df" loading="lazy" decoding="async"></picture></div><div class="panel" role="tabpanel" id="p-inspect" aria-labelledby="t-inspect" hidden><div class="head"><p>Readable summary of a container's configuration and state</p><a class="link" href="/man/inspect/">dok-inspect(1) &rarr;</a></div><picture><source srcset="/img/inspect.svg" media="(prefers-reduced-motion: reduce)"><img src="/img/cast-inspect.svg" data-still="/img/inspect.svg" width="720" height="1094" alt="Output of dok inspect" loading="lazy" decoding="async"></picture></div><div class="panel" role="tabpanel" id="p-logs" aria-labelledby="t-logs" hidden><div class="head"><p>Tail logs from one or more containers with level colouring</p><a class="link" href="/man/logs/">dok-logs(1) &rarr;</a></div><picture><source srcset="/img/logs.svg" media="(prefers-reduced-motion: reduce)"><img src="/img/cast-logs.svg" data-still="/img/logs.svg" width="830" height="314" alt="Output of dok logs" loading="lazy" decoding="async"></picture></div><div class="panel" role="tabpanel" id="p-top" aria-labelledby="t-top" hidden><div class="head"><p>Processes running inside containers, as a tree</p><a class="link" href="/man/top/">dok-top(1) &rarr;</a></div><picture><source srcset="/img/top.svg" media="(prefers-reduced-motion: reduce)"><img src="/img/cast-top.svg" data-still="/img/top.svg" width="687" height="194" alt="Output of dok top" loading="lazy" decoding="async"></picture></div><div class="panel" role="tabpanel" id="p-tree" aria-labelledby="t-tree" hidden><div class="head"><p>Tree view of compose projects, networks and volumes</p><a class="link" href="/man/tree/">dok-tree(1) &rarr;</a></div><picture><source srcset="/img/tree.svg" media="(prefers-reduced-motion: reduce)"><img src="/img/cast-tree.svg" data-still="/img/tree.svg" width="510" height="274" alt="Output of dok tree" loading="lazy" decoding="async"></picture></div><div class="panel" role="tabpanel" id="p-events" aria-labelledby="t-events" hidden><div class="head"><p>Live daemon event stream, colour-coded</p><a class="link" href="/man/events/">dok-events(1) &rarr;</a></div><picture><source srcset="/img/events.svg" media="(prefers-reduced-motion: reduce)"><img src="/img/cast-events.svg" data-still="/img/events.svg" width="830" height="394" alt="Output of dok events" loading="lazy" decoding="async"></picture></div><div class="panel" role="tabpanel" id="p-themes" aria-labelledby="t-themes" hidden><div class="head"><p>List or preview themes</p><a class="link" href="/man/themes/">dok-themes(1) &rarr;</a></div><picture><source srcset="/img/themes.svg" media="(prefers-reduced-motion: reduce)"><img src="/img/cast-themes.svg" data-still="/img/themes.svg" width="611" height="374" alt="Output of dok themes" loading="lazy" decoding="async"></picture></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="json" aria-labelledby="json-h">
+  <div class="wrap">
+    <h2 id="json-h" class="reveal">Pipe it anywhere.</h2>
+    <p class="lede"><code>--json</code> works on every command and carries what docker does not give you: the compose project, the service name, the health verdict.</p>
+    <div class="jsonsplit">
+      <div class="code"><button class="copy" type="button" data-copy="dok ports --json | jq &#x27;.ports[] | select(.host_port == 5432)&#x27;" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ports --json | jq &#x27;.ports[] | select(.host_port == 5432)&#x27;
+{
+  <span class="k">&quot;conflict&quot;</span>: <span class="b">false</span>,
+  <span class="k">&quot;container&quot;</span>: <span class="s">&quot;postgres&quot;</span>,
+  <span class="k">&quot;container_port&quot;</span>: <span class="n">5432</span>,
+  <span class="k">&quot;host_ip&quot;</span>: <span class="s">&quot;127.0.0.1&quot;</span>,
+  <span class="k">&quot;host_port&quot;</span>: <span class="n">5432</span>,
+  <span class="k">&quot;project&quot;</span>: <span class="s">&quot;demo-shop&quot;</span>,
+  <span class="k">&quot;protocol&quot;</span>: <span class="s">&quot;tcp&quot;</span>,
+  <span class="k">&quot;state&quot;</span>: <span class="s">&quot;running&quot;</span>
+}</code></pre></div>
+      <div class="side-list">
+        <div><p>Every service that is not healthy</p><div class="code"><button class="copy" type="button" data-copy="dok health --json | jq -r '.checks[] | select(.status != &quot;healthy&quot;) | .container'" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok health --json | jq -r '.checks[] | select(.status != "healthy") | .container'</code></pre></div></div>
+        <div><p>How much a prune would free</p><div class="code"><button class="copy" type="button" data-copy="dok prune --json | jq -r .total.human" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok prune --json | jq -r .total.human</code></pre></div></div>
+        <div><p>Only stderr, as it arrives</p><div class="code"><button class="copy" type="button" data-copy="dok logs -f --json | jq -c 'select(.stream == &quot;stderr&quot;)'" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok logs -f --json | jq -c 'select(.stream == "stderr")'</code></pre></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="themes" aria-labelledby="th-h">
+  <div class="wrap">
+    <h2 id="th-h" class="reveal">10 themes. Palette, glyphs and layout.</h2>
+    <p class="lede">A theme changes more than colour: its glyph set and table layout too, so <code>ascii</code> stays pure ASCII for CI logs. Start from any of them in <code>~/.config/dok/config.toml</code>.</p>
+    <div class="strip" role="region" tabindex="0" aria-label="Built-in themes"><article class="theme"><h3>default</h3><p>one-dark palette, rounded unicode</p><div class="sw" role="img" aria-label="default palette"><span style="background:#bec4d0"></span><span style="background:#6a7382"></span><span style="background:#e06c75"></span><span style="background:#d19a66"></span><span style="background:#e5c07b"></span><span style="background:#98c379"></span><span style="background:#56b6c2"></span><span style="background:#61afef"></span><span style="background:#c678dd"></span></div><code class="use" translate="no">dok ps --theme default</code></article><article class="theme"><h3>dracula</h3><p>high-contrast purples, heavy blocks</p><div class="sw" role="img" aria-label="dracula palette"><span style="background:#f8f8f2"></span><span style="background:#6272a4"></span><span style="background:#ff5555"></span><span style="background:#ffb86c"></span><span style="background:#f1fa8c"></span><span style="background:#50fa7b"></span><span style="background:#8be9fd"></span><span style="background:#bd93f9"></span><span style="background:#ff79c6"></span></div><code class="use" translate="no">dok ps --theme dracula</code></article><article class="theme"><h3>nord</h3><p>cool arctic palette, slim glyphs</p><div class="sw" role="img" aria-label="nord palette"><span style="background:#e5e9f0"></span><span style="background:#616e88"></span><span style="background:#bf616a"></span><span style="background:#d08770"></span><span style="background:#ebcb8b"></span><span style="background:#a3be8c"></span><span style="background:#88c0d0"></span><span style="background:#81a1c1"></span><span style="background:#b48ead"></span></div><code class="use" translate="no">dok ps --theme nord</code></article><article class="theme"><h3>gruvbox</h3><p>warm retro palette, ruled headers</p><div class="sw" role="img" aria-label="gruvbox palette"><span style="background:#ebdbb2"></span><span style="background:#928374"></span><span style="background:#fb4934"></span><span style="background:#fe8019"></span><span style="background:#fabd2f"></span><span style="background:#b8bb26"></span><span style="background:#8ec07c"></span><span style="background:#83a598"></span><span style="background:#d3869b"></span></div><code class="use" translate="no">dok ps --theme gruvbox</code></article><article class="theme"><h3>catppuccin</h3><p>soft pastels, slim glyphs</p><div class="sw" role="img" aria-label="catppuccin palette"><span style="background:#cdd6f4"></span><span style="background:#7f849c"></span><span style="background:#f38ba8"></span><span style="background:#fab387"></span><span style="background:#f9e2af"></span><span style="background:#a6e3a1"></span><span style="background:#94e2d5"></span><span style="background:#89b4fa"></span><span style="background:#cba6f7"></span></div><code class="use" translate="no">dok ps --theme catppuccin</code></article><article class="theme"><h3>tokyonight</h3><p>neon night palette, grid rules</p><div class="sw" role="img" aria-label="tokyonight palette"><span style="background:#c0caf5"></span><span style="background:#565f89"></span><span style="background:#f7768e"></span><span style="background:#ff9e64"></span><span style="background:#e0af68"></span><span style="background:#9ece6a"></span><span style="background:#7dcfff"></span><span style="background:#7aa2f7"></span><span style="background:#bb9af7"></span></div><code class="use" translate="no">dok ps --theme tokyonight</code></article><article class="theme"><h3>solarized-light</h3><p>for light terminals</p><div class="sw" role="img" aria-label="solarized-light palette"><span style="background:#35434b"></span><span style="background:#8a8a8a"></span><span style="background:#dc322f"></span><span style="background:#bd3612"></span><span style="background:#a57705"></span><span style="background:#4f7a28"></span><span style="background:#259286"></span><span style="background:#2176c7"></span><span style="background:#c61c6f"></span></div><code class="use" translate="no">dok ps --theme solarized-light</code></article><article class="theme"><h3>mono</h3><p>greyscale only, weight over hue</p><div class="sw" role="img" aria-label="mono palette"><span style="background:#cccccc"></span><span style="background:#707070"></span><span style="background:#ffffff"></span><span style="background:#c0c0c0"></span><span style="background:#d0d0d0"></span><span style="background:#e8e8e8"></span><span style="background:#b8b8b8"></span><span style="background:#e0e0e0"></span><span style="background:#a8a8a8"></span></div><code class="use" translate="no">dok ps --theme mono</code></article><article class="theme"><h3>matrix</h3><p>all green, heavy blocks</p><div class="sw" role="img" aria-label="matrix palette"><span style="background:#2fdd6f"></span><span style="background:#1f6f3f"></span><span style="background:#ff0040"></span><span style="background:#5fff87"></span><span style="background:#afff00"></span><span style="background:#00ff5f"></span><span style="background:#00ffaf"></span><span style="background:#00d75f"></span><span style="background:#87ff5f"></span></div><code class="use" translate="no">dok ps --theme matrix</code></article><article class="theme"><h3>ascii</h3><p>no unicode anywhere, plain rules</p><div class="sw" role="img" aria-label="ascii palette"><span style="background:#bec4d0"></span><span style="background:#6a7382"></span><span style="background:#e06c75"></span><span style="background:#d19a66"></span><span style="background:#e5c07b"></span><span style="background:#98c379"></span><span style="background:#56b6c2"></span><span style="background:#61afef"></span><span style="background:#c678dd"></span></div><code class="use" translate="no">dok ps --theme ascii</code></article></div>
+  </div>
+</section>
+
+<section id="install" aria-labelledby="in-h">
+  <div class="wrap">
+    <h2 id="in-h" class="reveal">9 ways in.</h2>
+    <p class="lede">One static binary, no runtime. It needs a reachable Docker daemon and honours <code>DOCKER_HOST</code>. Try it with no daemon at all: every command takes <code>--demo</code>.</p>
+    <div class="inst" data-tabs data-hash="install-">
+      <div role="tablist" aria-label="Install method"><button role="tab" id="it-brew" data-key="brew" aria-selected="true" aria-controls="brew" tabindex="0">homebrew</button><button role="tab" id="it-cargo" data-key="cargo" aria-selected="false" aria-controls="cargo" tabindex="-1">cargo</button><button role="tab" id="it-arch" data-key="arch" aria-selected="false" aria-controls="arch" tabindex="-1">arch</button><button role="tab" id="it-deb" data-key="deb" aria-selected="false" aria-controls="deb" tabindex="-1">debian</button><button role="tab" id="it-rpm" data-key="rpm" aria-selected="false" aria-controls="rpm" tabindex="-1">fedora</button><button role="tab" id="it-alpine" data-key="alpine" aria-selected="false" aria-controls="alpine" tabindex="-1">alpine</button><button role="tab" id="it-nix" data-key="nix" aria-selected="false" aria-controls="nix" tabindex="-1">nix</button><button role="tab" id="it-scoop" data-key="scoop" aria-selected="false" aria-controls="scoop" tabindex="-1">windows</button><button role="tab" id="it-src" data-key="src" aria-selected="false" aria-controls="src" tabindex="-1">source</button></div>
+      <div class="panel" role="tabpanel" id="brew" aria-labelledby="it-brew"><div class="code"><button class="copy" type="button" data-copy="brew install alsaadii98/tap/dok" aria-label="Copy homebrew install commands">copy</button><pre><code translate="no"><span class="p">$ </span>brew install alsaadii98/tap/dok</code></pre></div><p>macOS and Linux. Installs shell completions too.</p></div><div class="panel" role="tabpanel" id="cargo" aria-labelledby="it-cargo" hidden><div class="code"><button class="copy" type="button" data-copy="cargo install dok-cli" aria-label="Copy cargo install commands">copy</button><pre><code translate="no"><span class="p">$ </span>cargo install dok-cli</code></pre></div><p>Any platform with Rust 1.88+. The crate is dok-cli; the binary is dok.</p></div><div class="panel" role="tabpanel" id="arch" aria-labelledby="it-arch" hidden><div class="code"><button class="copy" type="button" data-copy="git clone https://github.com/alsaadii98/dok
+cd dok/packaging/aur
+makepkg -si -p PKGBUILD-bin" aria-label="Copy arch install commands">copy</button><pre><code translate="no"><span class="p">$ </span>git clone https://github.com/alsaadii98/dok
+<span class="p">$ </span>cd dok/packaging/aur
+<span class="p">$ </span>makepkg -si -p PKGBUILD-bin</code></pre></div><p>Prebuilt binary. Drop -p PKGBUILD-bin to build from source.</p></div><div class="panel" role="tabpanel" id="deb" aria-labelledby="it-deb" hidden><div class="code"><button class="copy" type="button" data-copy="curl -LO https://github.com/alsaadii98/dok/releases/latest/download/dok_amd64.deb
+sudo dpkg -i dok_amd64.deb" aria-label="Copy debian install commands">copy</button><pre><code translate="no"><span class="p">$ </span>curl -LO https://github.com/alsaadii98/dok/releases/latest/download/dok_amd64.deb
+<span class="p">$ </span>sudo dpkg -i dok_amd64.deb</code></pre></div><p>Debian and Ubuntu. Includes completions for bash, zsh and fish.</p></div><div class="panel" role="tabpanel" id="rpm" aria-labelledby="it-rpm" hidden><div class="code"><button class="copy" type="button" data-copy="curl -LO https://github.com/alsaadii98/dok/releases/latest/download/dok.x86_64.rpm
+sudo rpm -i dok.x86_64.rpm" aria-label="Copy fedora install commands">copy</button><pre><code translate="no"><span class="p">$ </span>curl -LO https://github.com/alsaadii98/dok/releases/latest/download/dok.x86_64.rpm
+<span class="p">$ </span>sudo rpm -i dok.x86_64.rpm</code></pre></div><p>Fedora and RHEL. Includes completions.</p></div><div class="panel" role="tabpanel" id="alpine" aria-labelledby="it-alpine" hidden><div class="code"><button class="copy" type="button" data-copy="wget https://github.com/alsaadii98/dok/releases/latest/download/dok-x86_64.apk
+apk add --allow-untrusted ./dok-x86_64.apk" aria-label="Copy alpine install commands">copy</button><pre><code translate="no"><span class="p">$ </span>wget https://github.com/alsaadii98/dok/releases/latest/download/dok-x86_64.apk
+<span class="p">$ </span>apk add --allow-untrusted ./dok-x86_64.apk</code></pre></div><p>Static musl binary, no dependencies. aarch64 too.</p></div><div class="panel" role="tabpanel" id="nix" aria-labelledby="it-nix" hidden><div class="code"><button class="copy" type="button" data-copy="nix run github:alsaadii98/dok" aria-label="Copy nix install commands">copy</button><pre><code translate="no"><span class="p">$ </span>nix run github:alsaadii98/dok</code></pre></div><p>Or nix profile install github:alsaadii98/dok.</p></div><div class="panel" role="tabpanel" id="scoop" aria-labelledby="it-scoop" hidden><div class="code"><button class="copy" type="button" data-copy="scoop bucket add dok https://github.com/alsaadii98/dok
+scoop install dok/dok" aria-label="Copy windows install commands">copy</button><pre><code translate="no"><span class="p">$ </span>scoop bucket add dok https://github.com/alsaadii98/dok
+<span class="p">$ </span>scoop install dok/dok</code></pre></div><p>This repository doubles as a scoop bucket.</p></div><div class="panel" role="tabpanel" id="src" aria-labelledby="it-src" hidden><div class="code"><button class="copy" type="button" data-copy="git clone https://github.com/alsaadii98/dok
+cd dok &amp;&amp; cargo build --release" aria-label="Copy source install commands">copy</button><pre><code translate="no"><span class="p">$ </span>git clone https://github.com/alsaadii98/dok
+<span class="p">$ </span>cd dok &amp;&amp; cargo build --release</code></pre></div><p>The binary lands in target/release/dok.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="update" aria-labelledby="up-h">
+  <div class="wrap upd">
+    <h2 id="up-h" class="reveal">It tells you when it is old.</h2>
+    <p class="lede">Once a day at most, dok checks for a release and prints one dim line after its output. Never when piped, never with <code>--json</code>. A packaged install gets its package manager&#8217;s command instead of an overwrite.</p>
+    <div class="code"><button class="copy" type="button" data-copy="dok update" aria-label="Copy command">copy</button><pre><code translate="no"><span class="c">dok 0.3.0 is out, run `dok update`</span>
+
+<span class="p">$ </span>dok update --check   <span class="c"># report only</span>
+<span class="p">$ </span>dok update           <span class="c"># install, after asking</span></code></pre></div>
+  </div>
+</section>
+
+<section id="compare" aria-labelledby="cmp-h">
+  <div class="wrap">
+    <h2 id="cmp-h" class="reveal">For reading, not driving.</h2>
+    <p class="lede">lazydocker is the right tool when you want to drive containers. dok is for when you want to read them.</p>
+    <div class="tbl">
+      <table>
+        <thead><tr><th scope="col"><span class="sr">Capability</span></th><th scope="col">dok</th><th scope="col">docker ps --format</th><th scope="col">dops</th><th scope="col">lazydocker / oxker</th></tr></thead>
+        <tbody><tr><th scope="row">Static, pipeable output</th><td class="y">yes</td><td class="">yes</td><td class="">yes</td><td class="">no, full-screen TUI</td></tr><tr><th scope="row">Grouped by compose project</th><td class="y">yes</td><td class="">no</td><td class="">no</td><td class="">partial</td></tr><tr><th scope="row">Readable inspect, secrets masked</th><td class="y">yes</td><td class="">no</td><td class="">no</td><td class="">partial</td></tr><tr><th scope="row">Which container owns a port</th><td class="y">yes</td><td class="">no</td><td class="">no</td><td class="">no</td></tr><tr><th scope="row">Disk usage, biggest offenders</th><td class="y">yes</td><td class="">no</td><td class="">no</td><td class="">partial</td></tr><tr><th scope="row">JSON with derived fields</th><td class="y">yes</td><td class="">raw only</td><td class="">no</td><td class="">no</td></tr><tr><th scope="row">Themes: palette, glyphs, layout</th><td class="y">yes</td><td class="">no</td><td class="">no</td><td class="">no</td></tr><tr><th scope="row">Start, stop, exec, remove</th><td class="">no, by design</td><td class="">no</td><td class="">no</td><td class="">yes</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="faq" aria-labelledby="faq-h">
+  <div class="wrap">
+    <h2 id="faq-h" class="reveal">Questions</h2>
+    <div class="faq"><details><summary>How do I make docker ps output readable?</summary><div class="a prose"><p>Run dok ps. It reads the Docker socket directly and prints containers grouped by compose project with coloured state dots, health marks, short ids, published ports and relative ages, sized to your terminal width.</p></div></details><details><summary>How do I find which container is using a port?</summary><div class="a prose"><p>Run dok ports. It prints every published port across every container in one flat table sorted by host port, so finding the owner of 5432 is a glance or a grep. It skips exposed-but-unpublished ports, collapses the IPv4 and IPv6 rows Docker reports for a wildcard binding into one row, and marks any address, port and protocol claimed by two containers.</p></div></details><details><summary>What is a good docker ps alternative?</summary><div class="a prose"><p>dok ps is a drop-in read-only alternative to docker ps. Unlike docker ps --format it groups containers by compose project and shows the service name rather than the mangled container name, renders sizes and ages in human units, and shrinks columns to fit the terminal instead of wrapping.</p></div></details><details><summary>How do I find which Docker image layer is making an image large?</summary><div class="a prose"><p>Run dok history &lt;image&gt;. It lists every layer top-down in build order with a bar showing its share of the image, marks each layer over 10% of the total, and recovers the Dockerfile instruction from both the classic builder and BuildKit instead of showing /bin/sh -c #(nop).</p></div></details><details><summary>How do I see why a Docker healthcheck is failing?</summary><div class="a prose"><p>Run dok health. It lists only the containers that declare a healthcheck, sorted with unhealthy first, showing the failing streak, the healthcheck interval, the probe's exit code and the first line of its output.</p></div></details><details><summary>How do I get JSON output from docker ps?</summary><div class="a prose"><p>Run dok ps --json. Every dok command takes --json and emits the same data the table shows, including the derived fields docker does not give you: the compose project, the service name, the health verdict. Sizes and ages arrive as both the number and the human rendering, so nothing has to be re-parsed. dok logs and dok events emit NDJSON, one object per line, because they are streams.</p></div></details><details><summary>What will docker system prune delete?</summary><div class="a prose"><p>Run dok prune. It shows exactly what docker system prune would remove. stopped containers, dangling images, unused networks and build cache. grouped by kind and sized, without removing anything. It draws the same line docker does: dangling images by default, every unused image with -a, volumes only with --volumes. It then prints the docker command that does the removing.</p></div></details><details><summary>Does dok have shell completions?</summary><div class="a prose"><p>Yes. dok completions &lt;shell&gt; prints a script for bash, zsh, fish, nushell, powershell or elvish, generated from the same definition the CLI is built from. Homebrew installs them automatically; the .deb and .rpm include bash, zsh and fish; every release attaches a tarball with all six.</p></div></details><details><summary>Is there a readable alternative to docker inspect?</summary><div class="a prose"><p>dok inspect folds the inspect JSON into identity, state, config, resources, network, mounts and labels, masks credential-looking environment values by default, and highlights privileged mode, added capabilities, OOM kills and failing healthchecks.</p></div></details><details><summary>How is dok different from lazydocker or ctop?</summary><div class="a prose"><p>lazydocker and ctop are full-screen TUIs you drive interactively. dok prints one static, pipeable screen per command and is read-only: it never starts, stops, execs into or removes containers.</p></div></details><details><summary>How do I install dok?</summary><div class="a prose"><p>brew install alsaadii98/tap/dok, cargo install dok-cli, makepkg from the PKGBUILDs in the repo on Arch, apk add --allow-untrusted ./dok-x86_64.apk on Alpine, the .deb or .rpm from the releases page, nix run github:alsaadii98/dok, or scoop bucket add dok https://github.com/alsaadii98/dok followed by scoop install dok/dok on Windows.</p></div></details><details><summary>How do I update dok?</summary><div class="a prose"><p>Run dok update. dok checks GitHub for a newer release at most once a day and prints a one-line notice after a command's output. A standalone binary is replaced in place after its release checksum is verified; if dok was installed by brew, apk, dpkg, rpm or cargo it prints that package manager's upgrade command instead. Set DOK_NO_UPDATE_CHECK=1 to disable the check.</p></div></details></div>
+  </div>
+</section>
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <a href="/man/">Manual</a>
     <a href="https://github.com/alsaadii98/dok">GitHub</a>
     <a href="https://crates.io/crates/dok-cli">crates.io</a>
-    <a href="https://github.com/alsaadii98/dok/blob/main/ROADMAP.md">Roadmap</a>
-    <span class="sp">built with <a href="https://github.com/fussybeaver/bollard" style="color:var(--head)">bollard</a> + <a href="https://ratatui.rs" style="color:var(--head)">ratatui</a></span>
+    <a href="https://github.com/alsaadii98/dok/releases">Releases</a>
+    <a href="https://github.com/alsaadii98/dok/blob/main/LICENSE">MIT</a>
+    <span>&copy; 2026 <a href="https://github.com/alsaadii98">alsaadii98</a></span>
   </div>
 </footer>
-
-<script>
-const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-// Reveal on scroll, staggered within each grid row.
-const io = new IntersectionObserver((entries) => {
-  entries.forEach((entry, i) => {
-    if (!entry.isIntersecting) return;
-    entry.target.style.transitionDelay =
-      entry.target.style.transitionDelay || `${Math.min(i, 5) * 60}ms`;
-    entry.target.classList.add('in');
-    io.unobserve(entry.target);
-  });
-}, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
-
-document.querySelectorAll('[data-anim]').forEach(el => {
-  if (reduced) { el.classList.add('in'); return; }
-  io.observe(el);
-});
-
-// Cursor spotlight inside cards.
-if (!reduced) {
-  document.querySelectorAll('.tile').forEach(tile => {
-    tile.addEventListener('pointermove', e => {
-      const r = tile.getBoundingClientRect();
-      tile.style.setProperty('--mx', `${e.clientX - r.left}px`);
-      tile.style.setProperty('--my', `${e.clientY - r.top}px`);
-    });
-  });
-}
-
-// Count up the stat tiles once they scroll into view.
-const counters = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (!entry.isIntersecting) return;
-    const el = entry.target;
-    const target = Number(el.dataset.count);
-    counters.unobserve(el);
-    if (reduced || target === 0) { el.textContent = String(target); return; }
-    let n = 0;
-    const step = () => {
-      n += Math.max(1, Math.ceil(target / 14));
-      el.textContent = String(Math.min(n, target));
-      if (n < target) requestAnimationFrame(step);
-    };
-    step();
-  });
-}, { threshold: 1 });
-document.querySelectorAll('[data-count]').forEach(el => counters.observe(el));
-
-// Install tabs.
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t === tab)));
-    document.querySelectorAll('.panel').forEach(p => { p.hidden = p.id !== tab.dataset.panel; });
-  });
-});
-
-// A copy button on every install snippet. The button copies the commands
-// themselves: no `$` prompt, no trailing comment.
-const commandsIn = pre => [...pre.childNodes]
-  .filter(n => !(n.nodeType === 1 && n.classList.contains('c')))   // drop comments
-  .map(n => n.textContent).join('')
-  .split('\n').map(l => l.replace(/^\s*\$\s?/, '').trim())
-  .filter(Boolean).join('\n');
-
-document.querySelectorAll('.panel pre').forEach(pre => {
-  const holder = document.createElement('div');
-  holder.className = 'sh';
-  pre.parentNode.insertBefore(holder, pre);
-  holder.appendChild(pre);
-
-  const btn = document.createElement('button');
-  btn.className = 'cbtn';
-  btn.type = 'button';
-  btn.innerHTML = '<svg class="i"><use href="#i-copy"/></svg>copy';
-  btn.setAttribute('aria-label', 'Copy install command');
-  btn.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(commandsIn(pre));
-      btn.innerHTML = '<svg class="i"><use href="#i-check"/></svg>copied';
-      btn.classList.add('done');
-      setTimeout(() => {
-        btn.innerHTML = '<svg class="i"><use href="#i-copy"/></svg>copy';
-        btn.classList.remove('done');
-      }, 1500);
-    } catch { /* clipboard blocked; the text is still selectable */ }
-  });
-  holder.appendChild(btn);
-});
-
-// Click-to-copy.
-document.querySelectorAll('[data-copy]').forEach(el => {
-  const tag = el.querySelector('.tag');
-  el.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(el.dataset.copy);
-      tag.textContent = 'copied';
-      tag.style.color = 'var(--green)';
-      setTimeout(() => { tag.textContent = 'copy'; tag.style.color = ''; }, 1400);
-    } catch { /* clipboard blocked; the text is still selectable */ }
-  });
-});
-</script>
 </body>
 </html>

@@ -20,8 +20,8 @@ import sys
 
 # Chrome geometry and palette live in ansi2svg, so the static frames and the
 # animated casts can never drift apart.
-from ansi2svg import BAR, BG, CHAR_W, DOT, FG, HEAD, LINE, LINE_H, MUTED, PAD_X, PAD_Y
-from ansi2svg import TITLEBAR, parse
+from ansi2svg import BG, CHAR_W, FG, FONT_STACK, HEAD, LINE, LINE_H, PAD_X, PAD_Y
+from ansi2svg import TITLEBAR, chrome, embed_font, parse
 
 GREEN = "#98c379"
 
@@ -189,19 +189,8 @@ def render(scenes, title, font):
     out = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width:.0f}" height="{height:.0f}" '
         f'viewBox="0 0 {width:.0f} {height:.0f}" font-family="{esc(font)}" font-size="14">',
-        f'<rect x=".5" y=".5" width="{width - 1:.0f}" height="{height - 1:.0f}" rx="11.5" '
-        f'fill="{BG}" stroke="{LINE}"/>',
-        f'<path d="M0 12a12 12 0 0 1 12-12h{width - 24:.0f}a12 12 0 0 1 12 12v{TITLEBAR - 12:.0f}'
-        f'H0z" fill="{BAR}"/>',
-        f'<path d="M0 {TITLEBAR:.0f}h{width:.0f}" stroke="{LINE}"/>',
+        *chrome(width, height, title),
     ]
-    for i in range(3):
-        out.append(f'<circle cx="{22 + i * 16}" cy="{TITLEBAR / 2:.0f}" r="4.5" fill="{DOT}"/>')
-    if title:
-        out.append(
-            f'<text x="{width / 2:.0f}" y="{TITLEBAR / 2 + 4:.0f}" fill="{MUTED}" '
-            f'font-size="11.5" text-anchor="middle">{esc(title)}</text>'
-        )
 
     start = 0.0
     for i, scene in enumerate(scenes):
@@ -225,7 +214,7 @@ def main():
     )
     ap.add_argument(
         "--font",
-        default="JetBrains Mono, SFMono-Regular, Menlo, Consolas, monospace",
+        default=FONT_STACK,
     )
     args = ap.parse_args()
 
@@ -238,7 +227,7 @@ def main():
             scenes.append(Scene(cmd, fh.read()))
 
     with open(args.out, "w", encoding="utf-8") as fh:
-        fh.write(render(scenes, args.title, args.font) + "\n")
+        fh.write(embed_font(render(scenes, args.title, args.font)) + "\n")
     print(f"wrote {args.out}")
 
 

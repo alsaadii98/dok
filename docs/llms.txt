@@ -9,7 +9,7 @@
 Install: `brew install alsaadii98/tap/dok` · `cargo install dok-cli` (crate is
 `dok-cli`, binary is `dok`). Requires a reachable Docker daemon; honours
 `DOCKER_HOST`. Every command takes `--demo` to run offline against a built-in
-example stack. Current version: 0.1.5. MIT.
+example stack. Current version: 0.3.0. MIT.
 
 ## Commands
 
@@ -27,6 +27,13 @@ example stack. Current version: 0.1.5. MIT.
 - `dok update` / `dok uninstall`: self-manage, or print the right package-manager command.
 
 ## Docs
+
+- [Manual](https://dok.alsaadii98.com/man/): dok(1). Every command, option, output and JSON shape, generated from the binary.
+- [How it works](https://dok.alsaadii98.com/man/internals/): dok(7). The socket, bollard, the read-only guarantee, ANSI-aware tables.
+- [dok ports](https://dok.alsaadii98.com/man/ports/): find which container is using a port.
+- [dok prune](https://dok.alsaadii98.com/man/prune/): see what docker system prune would delete.
+- [dok history](https://dok.alsaadii98.com/man/history/): find which layer makes an image large.
+- [dok health](https://dok.alsaadii98.com/man/health/): see why a healthcheck is failing.
 
 - [Homepage](https://dok.alsaadii98.com/): overview, screenshots, install matrix, FAQ.
 - [README](https://github.com/alsaadii98/dok/blob/main/README.md): full command reference and configuration.

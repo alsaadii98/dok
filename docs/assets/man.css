@@ -1,0 +1,348 @@
+/* The manual: set like a manpage, read like documentation. Section headings
+ * are uppercase because that is what SYNOPSIS and OPTIONS look like in man(1),
+ * and the running header and footer are the manpage's own convention. */
+
+.man {
+  display: grid;
+  grid-template-columns: 13.5rem minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  padding-top: 2.5rem;
+  padding-bottom: 5rem;
+}
+
+/* ── sidebar ─────────────────────────────────────────────────────────── */
+
+.side {
+  position: sticky;
+  top: calc(var(--nav-h) + 1.5rem);
+  align-self: start;
+  max-height: calc(100dvh - var(--nav-h) - 3rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  font: 400 0.85rem var(--mono);
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
+}
+.side ul {
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+.side .top {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.side .grp {
+  margin: 0 0 0.4rem;
+  color: var(--mut);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.side a {
+  display: block;
+  padding: 0.28rem 0 0.28rem 0.85rem;
+  border-left: 1px solid var(--line-2);
+  color: var(--fg);
+  text-decoration: none;
+  transition: color 0.15s var(--ease), border-color 0.15s var(--ease);
+}
+.side a:hover {
+  color: var(--head);
+  border-left-color: var(--mut);
+}
+.side a[aria-current="page"] {
+  color: var(--green);
+  border-left-color: var(--green);
+}
+
+/* ── article ─────────────────────────────────────────────────────────── */
+
+.article {
+  min-width: 0;
+  max-width: 50rem;
+}
+.manhead,
+.manfoot {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font: 400 0.75rem var(--mono);
+  color: var(--mut);
+  letter-spacing: 0.04em;
+}
+.manhead {
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--line);
+}
+.manfoot {
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+.manhead span:nth-child(2) {
+  text-align: center;
+}
+
+.article h1 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.1;
+}
+.article h1 .p {
+  color: var(--green);
+  margin-right: 0.15em;
+}
+.about {
+  margin: 0.85rem 0 0;
+  max-width: 60ch;
+  font-size: 1.1rem;
+  color: var(--head);
+  text-wrap: pretty;
+}
+.article h2 {
+  margin: 3rem 0 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+  scroll-margin-top: calc(var(--nav-h) + 1rem);
+}
+.article h3 {
+  margin: 1.75rem 0 0.6rem;
+  font-size: 0.9rem;
+  color: var(--head);
+}
+.prose {
+  max-width: 68ch;
+  text-wrap: pretty;
+}
+.prose p {
+  margin: 0 0 0.9rem;
+}
+.prose a,
+.opts a {
+  color: var(--head);
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 3px;
+}
+.prose a:hover {
+  text-decoration-color: var(--green);
+}
+.note {
+  font-size: 0.9rem;
+  color: var(--mut);
+}
+.note a {
+  color: var(--fg);
+}
+
+.stack {
+  display: grid;
+  gap: 0.6rem;
+}
+
+/* ── options ─────────────────────────────────────────────────────────── */
+
+.opts {
+  display: grid;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  gap: 0.2rem 1.5rem;
+  margin: 0 0 1rem;
+}
+.opts dt {
+  padding-top: 0.55rem;
+}
+.opts dt code {
+  font-size: 0.85rem;
+  color: var(--head);
+  overflow-wrap: anywhere;
+}
+.opts dd {
+  margin: 0;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--line);
+  min-width: 0;
+}
+.opts dd code {
+  font-size: 0.85em;
+  color: var(--head);
+}
+.opts .meta {
+  display: block;
+  margin-top: 0.25rem;
+  font: 400 0.78rem var(--mono);
+  color: var(--mut);
+}
+
+/* ── output screenshot ───────────────────────────────────────────────── */
+
+.shot {
+  margin: 0;
+}
+/* Natural size, never upscaled: a narrow render stretched to the column
+   would set its terminal text larger than the prose around it. */
+.shot img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--r-surface);
+}
+.shot figcaption {
+  margin-top: 0.7rem;
+  font-size: 0.85rem;
+  color: var(--mut);
+}
+.shot code {
+  font-size: 0.9em;
+  color: var(--fg);
+}
+
+/* ── overview command index ──────────────────────────────────────────── */
+
+.idx {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+.idx .row {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: 1.25rem;
+  padding: 0.7rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--fg);
+  transition: background-color 0.15s var(--ease);
+}
+.idx .row:hover {
+  background: var(--surface-2);
+}
+.idx .row code {
+  color: var(--green);
+  font-size: 0.9rem;
+}
+
+/* ── internals ───────────────────────────────────────────────────────── */
+
+.flow {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--mono);
+}
+.flow li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 13rem) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.65rem 0 0.65rem 1.4rem;
+}
+/* The tree stub dok draws its own groups with, as the connector. */
+.flow li::before {
+  content: "├─";
+  position: absolute;
+  left: 0;
+  color: var(--line-2);
+}
+.flow li:last-child::before {
+  content: "└─";
+}
+.flow .st {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mut);
+}
+.flow code {
+  color: var(--green);
+  font-size: 0.9rem;
+}
+.flow .dsc {
+  font: 400 0.9rem var(--sans);
+  color: var(--fg);
+}
+
+.calls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+.calls code {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-control);
+  background: var(--surface);
+  color: var(--head);
+  font-size: 0.82rem;
+}
+
+.article > .code,
+.article > .shot,
+.article > .stack {
+  margin-bottom: 1rem;
+}
+
+/* ── narrow ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .man {
+    grid-template-columns: 1fr;
+    padding-top: 1rem;
+  }
+  /* The sidebar becomes one horizontal strip of commands above the page. */
+  .side {
+    position: static;
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: visible;
+    display: flex;
+    gap: 0.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line);
+    -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent);
+    mask-image: linear-gradient(90deg, #000 88%, transparent);
+  }
+  .side ul,
+  .side .top {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .side .grp {
+    display: none;
+  }
+  .side a {
+    padding: 0.35rem 0.7rem;
+    border-left: 0;
+    border-bottom: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .side a[aria-current="page"] {
+    border-bottom-color: var(--green);
+  }
+  .opts {
+    grid-template-columns: 1fr;
+  }
+  .opts dt {
+    padding-top: 0.75rem;
+  }
+  .opts dd {
+    padding-top: 0.2rem;
+  }
+  .idx .row,
+  .flow li {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+  .manhead span:nth-child(2) {
+    display: none;
+  }
+}

@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-# Documentation for a CLI tool — crawling it is the point.
+# Documentation for a CLI tool: crawling it is the point.
 User-agent: GPTBot
 Allow: /
 User-agent: ClaudeBot
