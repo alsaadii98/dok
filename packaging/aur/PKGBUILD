@@ -1,6 +1,6 @@
 # Maintainer: Ali H. Abdulhadi <a.h.alsaady1998@gmail.com>
 pkgname=dok
-pkgver=0.2.1
+pkgver=0.3.0
 pkgrel=1
 pkgdesc="Docker output, made readable - what eza is to ls"
 arch=('x86_64' 'aarch64')
@@ -11,7 +11,7 @@ makedepends=('cargo')
 provides=('dok')
 conflicts=('dok-bin')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('f7762dacde4d29c0fc8b762549cd4902a986443799af010e30e44e7e21e31557')
+sha256sums=('f81affdbde4bcbb167fb79711962d0aad0e4740aca25ef682e2652b6e9b87b58')
 
 prepare() {
   cd "dok-$pkgver"

@@ -2,7 +2,7 @@
 # Prebuilt-binary package: no Rust toolchain required. The binary is the
 # static musl build from the matching GitHub release.
 pkgname=dok-bin
-pkgver=0.2.1
+pkgver=0.3.0
 pkgrel=1
 pkgdesc="Docker output, made readable - what eza is to ls (prebuilt binary)"
 arch=('x86_64' 'aarch64')
@@ -15,8 +15,8 @@ conflicts=('dok')
 options=('!strip' '!debug')
 source_x86_64=("$url/releases/download/v$pkgver/dok-$pkgver-x86_64-unknown-linux-musl.tar.gz")
 source_aarch64=("$url/releases/download/v$pkgver/dok-$pkgver-aarch64-unknown-linux-musl.tar.gz")
-sha256sums_x86_64=('9a6633197d257be79f9f8c2598507c5279dc65a9e21d37388717ddefd1164efb')
-sha256sums_aarch64=('2ace37a16f5296d208407779dbbb2aa8f776a3fd1573a078189e514892f28c2f')
+sha256sums_x86_64=('f3e4174394942ff74cf9fb534e76751a20b568413e1f6e8598986c92b0f8ce2c')
+sha256sums_aarch64=('24bcc8ed5d27917599e248f73ebf4c9f744e2b323f02296fd29df6d1e628bd00')
 
 package() {
   local dir="dok-$pkgver-$CARCH-unknown-linux-musl"
