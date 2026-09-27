@@ -1068,7 +1068,7 @@ def home_page(ver: str, today: str) -> str:
         panels.append(
             f'<div class="panel" role="tabpanel" id="p-{k}" aria-labelledby="t-{k}"{"" if i == 0 else " hidden"}>'
             f'<div class="head"><p>{md(about)}</p><a class="link" href="/man/{k}/">dok-{k}(1) &rarr;</a></div>'
-            + cast_img(cast, shot, f"Output of dok {k}", ' loading="lazy" decoding="async"') + "</div>"
+            + cast_img(f"cast-{k}.svg", f"frame-{k}.svg", f"Output of dok {k}", ' loading="lazy" decoding="async"') + "</div>"
         )
 
     inst_tabs, inst_panels = [], []
@@ -1106,6 +1106,21 @@ def home_page(ver: str, today: str) -> str:
     )
 
     hit_json = highlight(json.dumps(hit, indent=2))
+
+    # Each one-liner carries its caption as a shell comment inside its own box,
+    # so the column holds only boxes and can be stretched to the left block's
+    # exact top and bottom.
+    one_liners = [
+        ("every service that is not healthy",
+         "dok health --json | jq -r '.checks[] | select(.status != \"healthy\") | .container'"),
+        ("how much a prune would free", "dok prune --json | jq -r .total.human"),
+        ("only stderr, as it arrives", "dok logs -f --json | jq -c 'select(.stream == \"stderr\")'"),
+    ]
+    side_html = "".join(
+        f'<div class="code"><button class="copy" type="button" data-copy="{html.escape(c)}" aria-label="Copy command">copy</button>'
+        f'<pre><code translate="no"><span class="c"># {html.escape(n)}</span>\n<span class="p">$ </span>{html.escape(c)}</code></pre></div>'
+        for n, c in one_liners
+    )
 
     return f"""<!doctype html>
 <html lang="en">
@@ -1160,7 +1175,7 @@ def home_page(ver: str, today: str) -> str:
       </div>
     </div>
     <div class="shotframe">
-      {cast_img("cast-hero.svg", "ps.svg", "dok ps -a, dok images, dok logs and dok events rendering in a terminal", ' fetchpriority="high"')}
+      {cast_img("cast-hero.svg", "frame-hero.svg", "dok ps -a, dok images, dok logs and dok events rendering in a terminal", ' fetchpriority="high"')}
       <button class="pause" type="button" data-pause aria-pressed="false">Pause animations</button>
     </div>
   </div>
@@ -1193,10 +1208,7 @@ def home_page(ver: str, today: str) -> str:
     <div class="jsonsplit">
       <div class="code"><button class="copy" type="button" data-copy="{html.escape(jq_cmd)}" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>{html.escape(jq_cmd)}
 {hit_json}</code></pre></div>
-      <div class="side-list">
-        <div><p>Every service that is not healthy</p><div class="code"><button class="copy" type="button" data-copy="dok health --json | jq -r '.checks[] | select(.status != &quot;healthy&quot;) | .container'" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok health --json | jq -r '.checks[] | select(.status != "healthy") | .container'</code></pre></div></div>
-        <div><p>How much a prune would free</p><div class="code"><button class="copy" type="button" data-copy="dok prune --json | jq -r .total.human" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok prune --json | jq -r .total.human</code></pre></div></div>
-        <div><p>Only stderr, as it arrives</p><div class="code"><button class="copy" type="button" data-copy="dok logs -f --json | jq -c 'select(.stream == &quot;stderr&quot;)'" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok logs -f --json | jq -c 'select(.stream == "stderr")'</code></pre></div></div>
+      <div class="side-list">{side_html}</div>
       </div>
     </div>
   </div>

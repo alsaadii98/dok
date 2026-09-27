@@ -247,8 +247,10 @@
   color: var(--head);
 }
 .panel img {
-  width: auto;
-  max-width: 100%;
+  /* Every cast here shares one frame size, so filling the slot scales them
+     all identically: same box, same text size, whichever command is picked. */
+  width: 100%;
+  height: auto;
   border-radius: var(--r-surface);
 }
 @media (max-width: 860px) {
@@ -284,10 +286,14 @@
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
   gap: 1.25rem;
   margin-top: 2.5rem;
-  align-items: start;
+  /* Both columns the height of the taller, so the right column's first and
+     last boxes line up with the left block's top and bottom. */
+  align-items: stretch;
 }
 .jsonsplit .side-list {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   gap: 0.75rem;
   min-width: 0;
 }
@@ -296,11 +302,11 @@
 .jsonsplit .side-list > * {
   min-width: 0;
 }
-.jsonsplit .side-list p {
-  margin: 0 0 0.4rem;
-  font-size: 0.9rem;
-  color: var(--mut);
+.jsonsplit .side-list pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
+
 @media (max-width: 900px) {
   .jsonsplit {
     grid-template-columns: 1fr;
