@@ -40,6 +40,8 @@ src/
   demo.rs          canned fixtures behind --demo, used by the docs
 scripts/
   ansi2svg.py      renders real command output to the SVGs used in the docs
+  gen-formula.sh   Homebrew formula for a tag, from the release checksums
+  gen-scoop.sh     scoop manifest for a tag, same contract
 docs/              website (GitHub Pages) and generated screenshots
 packaging/         homebrew, AUR, alpine
 bucket/            scoop manifest (this repo doubles as a scoop bucket)
@@ -129,7 +131,12 @@ git push origin v0.2.0
 ```
 
 The release workflow builds every target, attaches archives, `.deb` and `.rpm`
-with checksums, publishes to crates.io and opens the Homebrew tap bump.
+with checksums, publishes to crates.io, bumps the Homebrew tap, and commits a
+regenerated `bucket/dok.json` back to `main`.
+
+The AUR PKGBUILDs stay manual — they push to a separate remote with your own
+credentials. Bump them by hand after a release, per
+[packaging/aur/README.md](packaging/aur/README.md).
 
 ## Code of conduct
 
