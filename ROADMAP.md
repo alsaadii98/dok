@@ -40,9 +40,10 @@ codebase.
 
 ## Next up (0.4)
 
-- [ ] **Remote contexts** — read `~/.docker/contexts` so `dok --context prod ps`
+- [x] **Remote contexts** — read `~/.docker/contexts` so `dok --context prod ps`
       works like the docker CLI. Reading containers on a remote host is where
       the wall-of-text problem is worst.
+- [ ] ssh contexts on a non-default port, without a `~/.ssh/config` alias.
 
 ## Later
 

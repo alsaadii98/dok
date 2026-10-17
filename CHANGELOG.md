@@ -4,6 +4,24 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Docker contexts. `dok --context prod ps` (or `-c prod`) reads the daemon
+  `docker --context prod ps` would, from the contexts the docker CLI keeps in
+  `~/.docker/contexts`. With no flag, dok picks the daemon the way docker
+  does: `DOCKER_HOST`, then `DOCKER_CONTEXT`, then the current context, then
+  the local socket. `ssh://` (macOS and Linux), `tcp://` with or without TLS,
+  and `unix://` endpoints are supported, and errors name the context they
+  came from. A mistyped name lists the contexts that exist.
+
+### Known gaps
+
+- `ssh://` contexts on a port other than 22 are refused with a short recipe
+  for a `~/.ssh/config` alias, which works. Contexts with `SkipTLSVerify` are
+  refused.
+
 ## [0.3.2] - 2026-10-17
 
 ### Added
