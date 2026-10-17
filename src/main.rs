@@ -2,6 +2,7 @@
 
 mod cmds;
 mod config;
+mod context;
 mod demo;
 mod dk;
 mod fmt;
@@ -42,6 +43,11 @@ struct Cli {
     /// Emit JSON instead of a table. Implies --color never
     #[arg(long, global = true)]
     json: bool,
+
+    /// Docker context to use (see `docker context ls`); overrides
+    /// DOCKER_HOST, DOCKER_CONTEXT and the current context
+    #[arg(short = 'c', long, global = true, value_name = "NAME")]
+    context: Option<String>,
 
     #[command(subcommand)]
     cmd: Cmd,
@@ -316,6 +322,7 @@ async fn main() -> Result<()> {
 
     demo::set(cli.demo || std::env::var_os("DOK_DEMO").is_some());
     json::set(cli.json);
+    dk::set_context(cli.context.clone());
 
     // A broken config file must not trap the user in an install they cannot
     // leave, so uninstall falls back to the defaults instead of refusing.
@@ -414,6 +421,13 @@ async fn main() -> Result<()> {
             print_completions(shell);
             Ok(())
         }
+    };
+
+    // A failure against a remote daemon should say which one: "connection
+    // refused" means something different for prod than for the local socket.
+    let result = match (result, context::active()) {
+        (Err(e), Some(ctx)) => Err(e.context(format!("using docker context {ctx}"))),
+        (r, _) => r,
     };
 
     // The nag comes after the output, never instead of it, and only when a
