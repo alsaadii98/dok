@@ -4,9 +4,13 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.1] - 2026-10-17
 
 ### Changed
+
+- Dependencies: clap 4.6.7, clap_complete 4.6.11, toml 1.1.6. The release
+  workflow moves to `docker/setup-qemu-action` v4 and `actions/setup-python`
+  v7, both of which now run on Node 24.
 
 - The release workflow regenerates the screenshots, the manual and the landing
   page from the binary it just built, commits them to `main` and redeploys the
