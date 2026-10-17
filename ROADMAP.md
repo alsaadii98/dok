@@ -51,7 +51,7 @@ codebase.
 - [ ] `dok compose` — project-level view: services, expected vs actual replicas,
       orphan containers
 - [ ] `dok watch` — `ps` redrawn from the event stream instead of polling
-- [ ] A man page generated from the clap definition **[good first issue]**
+- [x] Man pages generated from the clap definition: `man dok`, `man dok-ports`
       ([#10](https://github.com/alsaadii98/dok/issues/10))
 - [ ] Podman compatibility (the socket API is close enough to try)
 

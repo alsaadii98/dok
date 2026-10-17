@@ -263,6 +263,18 @@ enum Cmd {
         yes: bool,
     },
 
+    /// Generate man pages from the CLI definition
+    ///
+    /// Hidden: it is packaging plumbing, run by the release workflow and by
+    /// package builds, not something a user reaches for.
+    #[command(hide = true)]
+    Man {
+        /// Write dok.1 and one dok-<command>.1 per command into this
+        /// directory, instead of printing dok.1 to stdout
+        #[arg(long, value_name = "DIR")]
+        out_dir: Option<std::path::PathBuf>,
+    },
+
     /// Print a shell completion script to stdout
     Completions {
         /// Which shell to generate for
@@ -362,7 +374,10 @@ async fn main() -> Result<()> {
     // Anything appended after the document breaks every parser downstream,
     // so --json silences the nag the same way the script-producing commands do.
     let is_update = cli.json
-        || matches!(cli.cmd, Cmd::Update { .. } | Cmd::Uninstall { .. } | Cmd::Completions { .. });
+        || matches!(
+            cli.cmd,
+            Cmd::Update { .. } | Cmd::Uninstall { .. } | Cmd::Completions { .. } | Cmd::Man { .. }
+        );
     let result = match cli.cmd {
         Cmd::Ps { all, flat, filter, sort } => cmds::ps::run(all, flat, filter, sort).await,
         Cmd::Ports { all } => cmds::ports::run(all).await,
@@ -394,6 +409,7 @@ async fn main() -> Result<()> {
             }
         }
         Cmd::Tree { only, all } => cmds::tree::run(only, all).await,
+        Cmd::Man { out_dir } => print_man(out_dir),
         Cmd::Completions { shell } => {
             print_completions(shell);
             Ok(())
@@ -419,6 +435,43 @@ async fn main() -> Result<()> {
     result
 }
 
+/// Render man pages with clap_mangen, from the same definition the CLI and
+/// the completions are built from, so none of them can disagree.
+///
+/// Without a directory, dok(1) goes to stdout. With one, every visible
+/// command also gets its own page named the way git names its own:
+/// `man dok-ports`.
+fn print_man(out_dir: Option<std::path::PathBuf>) -> Result<()> {
+    use clap_mangen::Man;
+    // clap's built-in `help` subcommand would be listed in dok(1) as a
+    // dok-help(1) page that never exists. Drop it from this copy only; the
+    // real CLI keeps `dok help`.
+    let mut cmd = Cli::command().disable_help_subcommand(true);
+    // Propagates the global flags into every subcommand, so each page lists
+    // --json, --color and the rest.
+    cmd.build();
+
+    let Some(dir) = out_dir else {
+        Man::new(cmd).render(&mut std::io::stdout())?;
+        return Ok(());
+    };
+    std::fs::create_dir_all(&dir)?;
+    let mut buf = Vec::new();
+    Man::new(cmd.clone()).render(&mut buf)?;
+    std::fs::write(dir.join("dok.1"), &buf)?;
+    for sub in cmd.get_subcommands().filter(|s| !s.is_hide_set()) {
+        // clap names are &'static str without its "string" feature; this runs
+        // once per page in a process that exits right after, so leaking a few
+        // short names is cheaper than a feature flag for one command.
+        let name: &'static str = Box::leak(format!("dok-{}", sub.get_name()).into_boxed_str());
+        let page = sub.clone().name(name).display_name(name);
+        buf.clear();
+        Man::new(page).render(&mut buf)?;
+        std::fs::write(dir.join(format!("{name}.1")), &buf)?;
+    }
+    Ok(())
+}
+
 /// Write the completion script for one shell to stdout.
 fn print_completions(shell: ShellChoice) {
     use clap_complete::{Shell, generate};
@@ -441,4 +494,34 @@ fn nerd_font_likely() -> bool {
     }
     // These terminals ship or are commonly paired with patched fonts.
     matches!(std::env::var("TERM_PROGRAM").as_deref(), Ok("WezTerm") | Ok("ghostty") | Ok("kitty"))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Every visible command gets a page, the hidden ones do not, and each
+    /// page carries its own flags plus the propagated globals.
+    #[test]
+    fn man_pages_cover_every_visible_command() {
+        let dir = std::env::temp_dir().join(format!("dok-man-{}", std::process::id()));
+        print_man(Some(dir.clone())).unwrap();
+
+        let visible: Vec<String> = Cli::command()
+            .get_subcommands()
+            .filter(|s| !s.is_hide_set())
+            .map(|s| s.get_name().to_string())
+            .collect();
+        for name in &visible {
+            assert!(dir.join(format!("dok-{name}.1")).exists(), "no page for {name}");
+        }
+        assert!(!dir.join("dok-man.1").exists(), "the hidden man command got a page");
+
+        let ports = std::fs::read_to_string(dir.join("dok-ports.1")).unwrap();
+        assert!(ports.contains(".TH dok-ports"), "page is not titled dok-ports");
+        assert!(ports.contains("\\-\\-all"), "own flag missing");
+        assert!(ports.contains("\\-\\-json"), "global flag not propagated");
+
+        let _ = std::fs::remove_dir_all(&dir);
+    }
 }

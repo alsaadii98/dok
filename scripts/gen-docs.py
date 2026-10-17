@@ -807,6 +807,7 @@ def overview_page(ver: str, today: str) -> str:
     <h2 id="options">Global options</h2>
     {options_html(glob)}
     <p class="prose note">Colour and icons turn off by themselves when output is not a terminal, and <code>NO_COLOR</code> is honoured.</p>
+    <p class="prose note">This manual is also installed as man pages: <code>man dok</code> for this page, <code>man dok-ports</code> and so on for each command.</p>
     <h2 id="json">JSON output</h2>
     <div class="prose">
       <p><code>--json</code> works on every command that has something to show. It carries dok&#8217;s data rather than the raw API: the compose project, the service name, the health verdict, the reclaimable flag. Run <code>docker inspect</code> for the raw payload.</p>

@@ -25,6 +25,7 @@ chrono = "0.4.45"
 clap = { version = "4.6.6", features = ["derive"] }
 clap_complete = "4.6.9"
 clap_complete_nushell = "4.6.2"
+clap_mangen = "0.3.3"
 futures-util = "0.3.34"
 ratatui = "0.30.2"
 serde = { version = "1.0.229", features = ["derive"] }
@@ -64,6 +65,7 @@ assets = [
     ["target/completions/dok.bash", "usr/share/bash-completion/completions/dok", "644"],
     ["target/completions/_dok", "usr/share/zsh/vendor-completions/_dok", "644"],
     ["target/completions/dok.fish", "usr/share/fish/vendor_completions.d/dok.fish", "644"],
+    ["target/man/*.1.gz", "usr/share/man/man1/", "644"],
 ]
 
 [package.metadata.generate-rpm]
@@ -76,4 +78,5 @@ assets = [
     { source = "target/completions/dok.bash", dest = "/usr/share/bash-completion/completions/dok", mode = "644" },
     { source = "target/completions/_dok", dest = "/usr/share/zsh/site-functions/_dok", mode = "644" },
     { source = "target/completions/dok.fish", dest = "/usr/share/fish/vendor_completions.d/dok.fish", mode = "644" },
+    { source = "target/man/*.1.gz", dest = "/usr/share/man/man1/", mode = "644" },
 ]
