@@ -4,6 +4,24 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Man pages. `man dok` gives the overview and the list of commands, and every
+  command has its own page the way git does it: `man dok-ports`,
+  `man dok-history`. They are rendered by clap_mangen from the same definition
+  the CLI and the completions are built from, so the three cannot disagree.
+  Homebrew, the `.deb` and the `.rpm` install them into `man1`, and every
+  release attaches a `dok-<version>-man.tar.gz`. A hidden `dok man` command
+  does the rendering, for package builds and anyone building from source.
+
+### Fixed
+
+- `brew install --HEAD` installed no shell completions, because the formula
+  only generated them for the prebuilt binary. Completions and man pages now
+  come from whichever binary was installed.
+
 ## [0.3.1] - 2026-10-17
 
 ### Changed

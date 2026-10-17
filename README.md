@@ -374,6 +374,17 @@ dok completions powershell >> $PROFILE
 
 Every release also carries a `dok-<version>-completions.tar.gz` with all six.
 
+## Man pages
+
+```sh
+man dok          # overview and the list of commands
+man dok-ports    # one page per command, the way git does it
+```
+
+Homebrew, the `.deb` and the `.rpm` install them. Every release also carries a
+`dok-<version>-man.tar.gz`. They are generated from the same definition as the
+CLI, so `dok man --out-dir <dir>` produces the same set from any build.
+
 ## Configuration
 
 ```sh

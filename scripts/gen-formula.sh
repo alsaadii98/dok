@@ -81,8 +81,13 @@ class Dok < Formula
       root = Dir["dok-*"].find { |d| File.directory?(d) } || "."
       bin.install "#{root}/dok"
       doc.install "#{root}/README.md", "#{root}/CHANGELOG.md" if File.exist?("#{root}/README.md")
-      generate_completions_from_executable(bin/"dok", "completions")
     end
+
+    # Both from the installed binary, so a --HEAD build gets them too.
+    generate_completions_from_executable(bin/"dok", "completions")
+    # dok(1) and one dok-<command>(1) per command.
+    system bin/"dok", "man", "--out-dir", buildpath/"man"
+    man1.install Dir[buildpath/"man/*.1"]
   end
 
   test do
