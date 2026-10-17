@@ -1,13 +1,13 @@
 {
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "Docker output, made readable - what eza is to ls",
     "homepage": "https://github.com/alsaadii98/dok",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/alsaadii98/dok/releases/download/v0.3.1/dok-0.3.1-x86_64-pc-windows-msvc.zip",
-            "hash": "4378905da94f2a7cb5352b1bd12455079747a2dfe129d40fa0665909b0a30959",
-            "extract_dir": "dok-0.3.1-x86_64-pc-windows-msvc"
+            "url": "https://github.com/alsaadii98/dok/releases/download/v0.3.2/dok-0.3.2-x86_64-pc-windows-msvc.zip",
+            "hash": "1d68ac32fb8659466f96b0f52e243cf5c305c35c34055e20df65411394264da7",
+            "extract_dir": "dok-0.3.2-x86_64-pc-windows-msvc"
         }
     },
     "bin": "dok.exe",
