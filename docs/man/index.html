@@ -65,6 +65,7 @@
     <h2 id="options">Global options</h2>
     <dl class="opts"><dt><code translate="no">--color &lt;COLOR&gt;</code></dt><dd>When to colourise output<span class="meta">default: auto</span><span class="meta">possible values: auto, always, never</span></dd><dt><code translate="no">--icons &lt;ICONS&gt;</code></dt><dd>Which icon set to use<span class="meta">possible values:</span><span class="meta">auto:    Nerd Font glyphs when the terminal looks capable, else unicode</span><span class="meta">nerd:    Nerd Font glyphs (requires a patched font)</span><span class="meta">unicode: Plain unicode symbols</span><span class="meta">none:    No icons at all</span><span class="meta">default: auto</span></dd><dt><code translate="no">--theme &lt;THEME&gt;</code></dt><dd>Theme name (see <code translate="no">dok themes</code>); overrides DOK_THEME and the config file</dd><dt><code translate="no">--json</code></dt><dd>Emit JSON instead of a table. Implies --color never</dd></dl>
     <p class="prose note">Colour and icons turn off by themselves when output is not a terminal, and <code>NO_COLOR</code> is honoured.</p>
+    <p class="prose note">This manual is also installed as man pages: <code>man dok</code> for this page, <code>man dok-ports</code> and so on for each command.</p>
     <h2 id="json">JSON output</h2>
     <div class="prose">
       <p><code>--json</code> works on every command that has something to show. It carries dok&#8217;s data rather than the raw API: the compose project, the service name, the health verdict, the reclaimable flag. Run <code>docker inspect</code> for the raw payload.</p>
@@ -101,7 +102,7 @@
     </dl>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/internals/">dok(7)</a>, <a href="https://github.com/alsaadii98/dok">github.com/alsaadii98/dok</a></p>
-    <div class="manfoot"><span>dok 0.3.1</span><span>2026-10-17</span><span>DOK(1)</span></div>
+    <div class="manfoot"><span>dok 0.3.2</span><span>2026-10-17</span><span>DOK(1)</span></div>
   </main>
 </div>
 <footer class="foot">
