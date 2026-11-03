@@ -4,6 +4,17 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- `dok df` printed an empty 0B table, and `dok prune` found nothing, on any
+  daemon older than Docker 29 (API 1.52). Those daemons describe disk usage
+  in an older layout that the Docker client library does not read, and the
+  data was dropped without an error. dok now reads both layouts, totals the
+  old one the way `docker system df` does, and fails with an error instead of
+  an empty table if a daemon ever answers in a layout it does not know.
+
 ## [0.3.2] - 2026-10-17
 
 ### Added
