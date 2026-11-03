@@ -3,6 +3,7 @@
 mod cmds;
 mod config;
 mod demo;
+mod disk;
 mod dk;
 mod fmt;
 mod json;

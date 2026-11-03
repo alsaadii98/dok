@@ -1,0 +1,166 @@
+{
+  "LayersSize": 12927959,
+  "Images": [
+    {
+      "Containers": 1,
+      "Created": 1776383604,
+      "Id": "sha256:ab3fe4defd29ba6231229a4d41440ac8bde8218e85870e53876277faa24b35c4",
+      "Labels": null,
+      "ParentId": "",
+      "RepoDigests": [
+        "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc"
+      ],
+      "RepoTags": [
+        "alpine:3.20"
+      ],
+      "SharedSize": 0,
+      "Size": 8822697
+    },
+    {
+      "Containers": 1,
+      "Created": 1684449257,
+      "Id": "sha256:b7c873bd97bdc9046fc894e0b216c8aef31e0db4c5b761fb53022e40577ab6c0",
+      "Labels": null,
+      "ParentId": "",
+      "RepoDigests": [
+        "busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662"
+      ],
+      "RepoTags": [
+        "busybox:1.36"
+      ],
+      "SharedSize": 0,
+      "Size": 4105262
+    }
+  ],
+  "Containers": [
+    {
+      "Id": "550f04bc8477b70fc89767fe97c68389ce924495b194c79d2c9bf00ec7c9c953",
+      "Names": [
+        "/done"
+      ],
+      "Image": "busybox:1.36",
+      "ImageID": "sha256:b7c873bd97bdc9046fc894e0b216c8aef31e0db4c5b761fb53022e40577ab6c0",
+      "Command": "sh -c 'echo hi >/d/x'",
+      "Created": 1793726413,
+      "Ports": [],
+      "SizeRootFs": 4105262,
+      "Labels": {},
+      "State": "exited",
+      "Status": "Exited (0) Less than a second ago",
+      "HostConfig": {
+        "NetworkMode": "bridge"
+      },
+      "NetworkSettings": {
+        "Networks": {
+          "bridge": {
+            "IPAMConfig": null,
+            "Links": null,
+            "Aliases": null,
+            "MacAddress": "",
+            "NetworkID": "7351c9b597ca47a6a88cc7ae0f68755e3d01a60472ebfff7d92cd36f02cd85c3",
+            "EndpointID": "",
+            "Gateway": "",
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "DriverOpts": null,
+            "DNSNames": null
+          }
+        }
+      },
+      "Mounts": [
+        {
+          "Type": "volume",
+          "Name": "v2",
+          "Source": "/var/lib/docker/volumes/v2/_data",
+          "Destination": "/d",
+          "Driver": "local",
+          "Mode": "z",
+          "RW": true,
+          "Propagation": ""
+        }
+      ]
+    },
+    {
+      "Id": "fb882992bd2384f5d8ea65fc0fd51cb4c84bdafbda3d8be8ee673b760ddd7326",
+      "Names": [
+        "/up"
+      ],
+      "Image": "alpine:3.20",
+      "ImageID": "sha256:ab3fe4defd29ba6231229a4d41440ac8bde8218e85870e53876277faa24b35c4",
+      "Command": "sh -c 'head -c 3000000 /dev/urandom >/d/x; sleep 1d'",
+      "Created": 1793726413,
+      "Ports": [],
+      "SizeRootFs": 8822697,
+      "Labels": {},
+      "State": "running",
+      "Status": "Up Less than a second",
+      "HostConfig": {
+        "NetworkMode": "bridge"
+      },
+      "NetworkSettings": {
+        "Networks": {
+          "bridge": {
+            "IPAMConfig": null,
+            "Links": null,
+            "Aliases": null,
+            "MacAddress": "02:42:ac:12:00:02",
+            "NetworkID": "7351c9b597ca47a6a88cc7ae0f68755e3d01a60472ebfff7d92cd36f02cd85c3",
+            "EndpointID": "fe0ebb7f38afd5cb279950cd4dacba12b3efe41d8c1dfe138faa751efe0fc100",
+            "Gateway": "172.18.0.1",
+            "IPAddress": "172.18.0.2",
+            "IPPrefixLen": 16,
+            "IPv6Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "DriverOpts": null,
+            "DNSNames": null
+          }
+        }
+      },
+      "Mounts": [
+        {
+          "Type": "volume",
+          "Name": "v1",
+          "Source": "/var/lib/docker/volumes/v1/_data",
+          "Destination": "/d",
+          "Driver": "local",
+          "Mode": "z",
+          "RW": true,
+          "Propagation": ""
+        }
+      ]
+    }
+  ],
+  "Volumes": [
+    {
+      "CreatedAt": "2026-11-03T17:20:13Z",
+      "Driver": "local",
+      "Labels": null,
+      "Mountpoint": "/var/lib/docker/volumes/v1/_data",
+      "Name": "v1",
+      "Options": null,
+      "Scope": "local",
+      "UsageData": {
+        "RefCount": 1,
+        "Size": 3000000
+      }
+    },
+    {
+      "CreatedAt": "2026-11-03T17:20:13Z",
+      "Driver": "local",
+      "Labels": null,
+      "Mountpoint": "/var/lib/docker/volumes/v2/_data",
+      "Name": "v2",
+      "Options": null,
+      "Scope": "local",
+      "UsageData": {
+        "RefCount": 1,
+        "Size": 3
+      }
+    }
+  ],
+  "BuildCache": []
+}

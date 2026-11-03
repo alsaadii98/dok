@@ -61,7 +61,7 @@ pub async fn df(docker: &Docker) -> Result<bollard::models::SystemDataUsageRespo
     if crate::demo::enabled() {
         return Ok(crate::demo::df());
     }
-    Ok(docker.df(None::<bollard::query_parameters::DataUsageOptions>).await?)
+    crate::disk::fetch(docker).await
 }
 
 pub async fn image_history(docker: &Docker, image: &str) -> Result<Vec<ImageHistoryResponseItem>> {
