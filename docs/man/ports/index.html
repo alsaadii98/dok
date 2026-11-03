@@ -58,7 +58,7 @@
     <h2 id="description">Description</h2>
     <div class="prose"><p>One row per published binding, sorted by host port, so finding the owner of a port is a glance or a grep.</p><p>Exposed-but-unpublished ports are skipped, since nothing on the host can reach them. A wildcard binding that Docker reports twice, as <code translate="no">0.0.0.0</code> and <code translate="no">::</code>, collapses into one row. The <code translate="no">BIND</code> column appears only when some binding is narrower than every interface. When two containers claim the same address, port and protocol, both rows are marked.</p></div>
     <h2 id="options">Options</h2>
-    <dl class="opts"><dt><code translate="no">-a, --all</code></dt><dd>Include stopped containers</dd></dl>
+    <dl class="opts"><dt><code translate="no">-a, --all</code></dt><dd>Include stopped containers</dd><dt><code translate="no">-c, --context &lt;NAME&gt;</code></dt><dd>Docker context to use (see <code translate="no">docker context ls</code>); overrides DOCKER_HOST, DOCKER_CONTEXT and the current context</dd></dl>
     <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
     <h2 id="examples">Examples</h2>
     <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok ports" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ports  <span class="c"># every published port</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok ports -a" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ports -a  <span class="c"># include stopped containers</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok ports | grep 5432" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ports | grep 5432  <span class="c"># who owns 5432</span></code></pre></div></div>
@@ -93,7 +93,7 @@
     <p class="prose note">Longer arrays are cut to their first two elements here.</p>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/ps/">dok-ps(1)</a>, <a href="/man/tree/">dok-tree(1)</a>, <a href="/man/internals/">dok(7)</a></p>
-    <div class="manfoot"><span>dok 0.3.3</span><span>2026-11-03</span><span>DOK-PORTS(1)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK-PORTS(1)</span></div>
   </main>
 </div>
 <footer class="foot">

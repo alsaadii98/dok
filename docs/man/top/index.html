@@ -60,7 +60,7 @@
     <h2 id="arguments">Arguments</h2>
     <dl class="opts"><dt><code translate="no">[CONTAINERS]...</code></dt><dd>Containers to inspect; omit for every running container</dd></dl>
     <h2 id="options">Options</h2>
-    <dl class="opts"><dt><code translate="no">--ps-args &lt;PS_ARGS&gt;</code></dt><dd>Arguments passed to ps inside the container</dd><dt><code translate="no">--flat</code></dt><dd>Do not nest child processes under their parent</dd></dl>
+    <dl class="opts"><dt><code translate="no">--ps-args &lt;PS_ARGS&gt;</code></dt><dd>Arguments passed to ps inside the container</dd><dt><code translate="no">--flat</code></dt><dd>Do not nest child processes under their parent</dd><dt><code translate="no">-c, --context &lt;NAME&gt;</code></dt><dd>Docker context to use (see <code translate="no">docker context ls</code>); overrides DOCKER_HOST, DOCKER_CONTEXT and the current context</dd></dl>
     <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
     <h2 id="examples">Examples</h2>
     <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok top" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok top  <span class="c"># every running container</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok top api" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok top api  <span class="c"># one container</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok top api --ps-args &quot;-eo pid,ppid,rss,args&quot;" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok top api --ps-args &quot;-eo pid,ppid,rss,args&quot;  <span class="c"># choose the columns</span></code></pre></div></div>
@@ -106,7 +106,7 @@
 }</code></pre></div>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/inspect/">dok-inspect(1)</a>, <a href="/man/stats/">dok-stats(1)</a>, <a href="/man/internals/">dok(7)</a></p>
-    <div class="manfoot"><span>dok 0.3.3</span><span>2026-11-03</span><span>DOK-TOP(1)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK-TOP(1)</span></div>
   </main>
 </div>
 <footer class="foot">

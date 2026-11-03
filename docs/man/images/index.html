@@ -58,7 +58,7 @@
     <h2 id="description">Description</h2>
     <div class="prose"><p>Images sorted by size, with size and age gradients. There is one row per tag, so an image carrying two tags appears twice; the total counts unique image ids so it agrees with <code translate="no">docker system df</code>.</p><p>Dangling images are marked reclaimable, and the last column counts the containers using each image.</p></div>
     <h2 id="options">Options</h2>
-    <dl class="opts"><dt><code translate="no">-a, --all</code></dt><dd>Include intermediate layers</dd><dt><code translate="no">--dangling</code></dt><dd>Only dangling (&lt;none&gt;) images</dd><dt><code translate="no">-s, --sort &lt;SORT&gt;</code></dt><dd>Sort key<span class="meta">default: size</span><span class="meta">possible values: size, age, name</span></dd></dl>
+    <dl class="opts"><dt><code translate="no">-a, --all</code></dt><dd>Include intermediate layers</dd><dt><code translate="no">--dangling</code></dt><dd>Only dangling (&lt;none&gt;) images</dd><dt><code translate="no">-s, --sort &lt;SORT&gt;</code></dt><dd>Sort key<span class="meta">default: size</span><span class="meta">possible values: size, age, name</span></dd><dt><code translate="no">-c, --context &lt;NAME&gt;</code></dt><dd>Docker context to use (see <code translate="no">docker context ls</code>); overrides DOCKER_HOST, DOCKER_CONTEXT and the current context</dd></dl>
     <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
     <h2 id="examples">Examples</h2>
     <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok images" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok images  <span class="c"># biggest first</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok images -s age" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok images -s age  <span class="c"># newest first</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok images --dangling" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok images --dangling  <span class="c"># only untagged images</span></code></pre></div></div>
@@ -73,7 +73,7 @@
       <span class="k">&quot;created&quot;</span>: {
         <span class="k">&quot;age_human&quot;</span>: <span class="s">&quot;2d&quot;</span>,
         <span class="k">&quot;age_seconds&quot;</span>: <span class="n">172800</span>,
-        <span class="k">&quot;created&quot;</span>: <span class="n">1793563484</span>
+        <span class="k">&quot;created&quot;</span>: <span class="n">1793564031</span>
       },
       <span class="k">&quot;dangling&quot;</span>: <span class="b">false</span>,
       <span class="k">&quot;id&quot;</span>: <span class="s">&quot;sha256:9f2c1a7b3e40&quot;</span>,
@@ -94,7 +94,7 @@
       <span class="k">&quot;created&quot;</span>: {
         <span class="k">&quot;age_human&quot;</span>: <span class="s">&quot;1mo&quot;</span>,
         <span class="k">&quot;age_seconds&quot;</span>: <span class="n">2764800</span>,
-        <span class="k">&quot;created&quot;</span>: <span class="n">1790971484</span>
+        <span class="k">&quot;created&quot;</span>: <span class="n">1790972031</span>
       },
       <span class="k">&quot;dangling&quot;</span>: <span class="b">false</span>,
       <span class="k">&quot;id&quot;</span>: <span class="s">&quot;sha256:57c72fd2a128&quot;</span>,
@@ -115,7 +115,7 @@
     <p class="prose note">Longer arrays are cut to their first two elements here.</p>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/history/">dok-history(1)</a>, <a href="/man/df/">dok-df(1)</a>, <a href="/man/prune/">dok-prune(1)</a>, <a href="/man/internals/">dok(7)</a></p>
-    <div class="manfoot"><span>dok 0.3.3</span><span>2026-11-03</span><span>DOK-IMAGES(1)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK-IMAGES(1)</span></div>
   </main>
 </div>
 <footer class="foot">

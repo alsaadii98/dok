@@ -69,8 +69,13 @@
         return Docker::connect_with_http(&quot;http://127.0.0.1:1&quot;, 1, bollard::API_DEFAULT_VERSION)
             .context(&quot;building the offline demo client&quot;);
     }
-    Docker::connect_with_defaults()
-        .context(&quot;cannot reach the docker daemon (is it running? check DOCKER_HOST)&quot;)
+    let flag = CONTEXT_FLAG.get().and_then(|f| f.as_deref());
+    match crate::context::resolve(flag)? {
+        crate::context::Target::Default =&gt; Docker::connect_with_defaults()
+            .context(&quot;cannot reach the docker daemon (is it running? check DOCKER_HOST)&quot;),
+        crate::context::Target::Named(ep) =&gt; connect_endpoint(&amp;ep)
+            .with_context(|| format!(&quot;cannot use docker context `{}` ({})&quot;, ep.name, ep.host)),
+    }
 }</code></pre></div>
     <h2 id="read-only">Read-only, by construction</h2>
     <div class="prose">
@@ -125,7 +130,7 @@ pub struct Palette {
     </div>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/">dok(1)</a>, <a href="https://github.com/alsaadii98/dok/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a></p>
-    <div class="manfoot"><span>dok 0.3.3</span><span>2026-11-03</span><span>DOK(7)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK(7)</span></div>
   </main>
 </div>
 <footer class="foot">

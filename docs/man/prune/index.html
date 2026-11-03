@@ -58,7 +58,7 @@
     <h2 id="description">Description</h2>
     <div class="prose"><p>Shows what <code translate="no">docker system prune</code> would remove, grouped by kind and sized, then prints the docker command that does it. dok never removes anything, and there is no flag that makes it.</p><p>It draws the same line docker draws: dangling images by default, every unused image with <code translate="no">-a</code>, unused volumes only with <code translate="no">--volumes</code>. The built-in <code translate="no">bridge</code>, <code translate="no">host</code> and <code translate="no">none</code> networks are never listed, because docker refuses to remove them.</p></div>
     <h2 id="options">Options</h2>
-    <dl class="opts"><dt><code translate="no">-a, --all</code></dt><dd>Count every unused image, not only dangling ones (docker's -a)</dd><dt><code translate="no">--volumes</code></dt><dd>Include unused volumes (docker's --volumes)</dd></dl>
+    <dl class="opts"><dt><code translate="no">-a, --all</code></dt><dd>Count every unused image, not only dangling ones (docker's -a)</dd><dt><code translate="no">--volumes</code></dt><dd>Include unused volumes (docker's --volumes)</dd><dt><code translate="no">-c, --context &lt;NAME&gt;</code></dt><dd>Docker context to use (see <code translate="no">docker context ls</code>); overrides DOCKER_HOST, DOCKER_CONTEXT and the current context</dd></dl>
     <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
     <h2 id="examples">Examples</h2>
     <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok prune" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok prune  <span class="c"># what docker system prune would take</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok prune -a" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok prune -a  <span class="c"># count every unused image</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok prune -a --volumes" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok prune -a --volumes  <span class="c"># and unused volumes</span></code></pre></div></div>
@@ -126,7 +126,7 @@
     <p class="prose note">Longer arrays are cut to their first two elements here.</p>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/df/">dok-df(1)</a>, <a href="/man/images/">dok-images(1)</a>, <a href="/man/internals/">dok(7)</a></p>
-    <div class="manfoot"><span>dok 0.3.3</span><span>2026-11-03</span><span>DOK-PRUNE(1)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK-PRUNE(1)</span></div>
   </main>
 </div>
 <footer class="foot">

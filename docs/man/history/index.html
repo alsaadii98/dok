@@ -60,7 +60,7 @@
     <h2 id="arguments">Arguments</h2>
     <dl class="opts"><dt><code translate="no">&lt;IMAGE&gt;</code></dt><dd>Image name, repo:tag or id prefix</dd></dl>
     <h2 id="options">Options</h2>
-    <dl class="opts"><dt><code translate="no">-r, --reverse</code></dt><dd>Newest layer first, the way <code translate="no">docker history</code> prints it</dd><dt><code translate="no">--no-trunc</code></dt><dd>Do not shorten long instructions</dd></dl>
+    <dl class="opts"><dt><code translate="no">-r, --reverse</code></dt><dd>Newest layer first, the way <code translate="no">docker history</code> prints it</dd><dt><code translate="no">--no-trunc</code></dt><dd>Do not shorten long instructions</dd><dt><code translate="no">-c, --context &lt;NAME&gt;</code></dt><dd>Docker context to use (see <code translate="no">docker context ls</code>); overrides DOCKER_HOST, DOCKER_CONTEXT and the current context</dd></dl>
     <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
     <h2 id="examples">Examples</h2>
     <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok history api" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok history api  <span class="c"># resolves a bare repo to any of its tags</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok history api -r" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok history api -r  <span class="c"># newest layer first</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok history postgres:16-alpine --no-trunc" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok history postgres:16-alpine --no-trunc  <span class="c"># keep long instructions whole</span></code></pre></div></div>
@@ -76,7 +76,7 @@
       <span class="k">&quot;created&quot;</span>: {
         <span class="k">&quot;age_human&quot;</span>: <span class="s">&quot;1mo&quot;</span>,
         <span class="k">&quot;age_seconds&quot;</span>: <span class="n">2592000</span>,
-        <span class="k">&quot;created&quot;</span>: <span class="n">1791144284</span>
+        <span class="k">&quot;created&quot;</span>: <span class="n">1791144831</span>
       },
       <span class="k">&quot;fat&quot;</span>: <span class="b">true</span>,
       <span class="k">&quot;id&quot;</span>: <span class="s">&quot;sha256:9f8e7d6c5b4a&quot;</span>,
@@ -92,7 +92,7 @@
       <span class="k">&quot;created&quot;</span>: {
         <span class="k">&quot;age_human&quot;</span>: <span class="s">&quot;1mo&quot;</span>,
         <span class="k">&quot;age_seconds&quot;</span>: <span class="n">2592000</span>,
-        <span class="k">&quot;created&quot;</span>: <span class="n">1791144284</span>
+        <span class="k">&quot;created&quot;</span>: <span class="n">1791144831</span>
       },
       <span class="k">&quot;fat&quot;</span>: <span class="b">false</span>,
       <span class="k">&quot;id&quot;</span>: <span class="s">&quot;&lt;missing&gt;&quot;</span>,
@@ -113,7 +113,7 @@
     <p class="prose note">Longer arrays are cut to their first two elements here.</p>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/images/">dok-images(1)</a>, <a href="/man/df/">dok-df(1)</a>, <a href="/man/internals/">dok(7)</a></p>
-    <div class="manfoot"><span>dok 0.3.3</span><span>2026-11-03</span><span>DOK-HISTORY(1)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK-HISTORY(1)</span></div>
   </main>
 </div>
 <footer class="foot">

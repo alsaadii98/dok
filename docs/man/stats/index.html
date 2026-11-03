@@ -60,7 +60,7 @@
     <h2 id="arguments">Arguments</h2>
     <dl class="opts"><dt><code translate="no">[CONTAINERS]...</code></dt><dd>Limit to these containers</dd></dl>
     <h2 id="options">Options</h2>
-    <dl class="opts"><dt><code translate="no">--interval &lt;INTERVAL&gt;</code></dt><dd>Refresh interval in milliseconds<span class="meta">default: 1500</span></dd></dl>
+    <dl class="opts"><dt><code translate="no">--interval &lt;INTERVAL&gt;</code></dt><dd>Refresh interval in milliseconds<span class="meta">default: 1500</span></dd><dt><code translate="no">-c, --context &lt;NAME&gt;</code></dt><dd>Docker context to use (see <code translate="no">docker context ls</code>); overrides DOCKER_HOST, DOCKER_CONTEXT and the current context</dd></dl>
     <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
     <h2 id="examples">Examples</h2>
     <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok stats" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok stats  <span class="c"># every running container</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok stats api db --interval 500" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok stats api db --interval 500  <span class="c"># two containers, twice a second</span></code></pre></div></div>
@@ -68,7 +68,7 @@
     <p class="prose">None. See the description above.</p>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/top/">dok-top(1)</a>, <a href="/man/ps/">dok-ps(1)</a>, <a href="/man/internals/">dok(7)</a></p>
-    <div class="manfoot"><span>dok 0.3.3</span><span>2026-11-03</span><span>DOK-STATS(1)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK-STATS(1)</span></div>
   </main>
 </div>
 <footer class="foot">

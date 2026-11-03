@@ -60,7 +60,7 @@
     <h2 id="arguments">Arguments</h2>
     <dl class="opts"><dt><code translate="no">&lt;CONTAINERS&gt;...</code></dt><dd>Container names or ids</dd></dl>
     <h2 id="options">Options</h2>
-    <dl class="opts"><dt><code translate="no">-e, --env</code></dt><dd>Print environment variables</dd><dt><code translate="no">--show-secrets</code></dt><dd>Do not mask password/token-looking env values</dd></dl>
+    <dl class="opts"><dt><code translate="no">-e, --env</code></dt><dd>Print environment variables</dd><dt><code translate="no">--show-secrets</code></dt><dd>Do not mask password/token-looking env values</dd><dt><code translate="no">-c, --context &lt;NAME&gt;</code></dt><dd>Docker context to use (see <code translate="no">docker context ls</code>); overrides DOCKER_HOST, DOCKER_CONTEXT and the current context</dd></dl>
     <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
     <h2 id="examples">Examples</h2>
     <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok inspect api" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok inspect api  <span class="c"># by name, service or id prefix</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok inspect api --env" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok inspect api --env  <span class="c"># include environment variables</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok inspect api db" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok inspect api db  <span class="c"># several at once</span></code></pre></div></div>
@@ -132,7 +132,7 @@
 }</code></pre></div>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/ps/">dok-ps(1)</a>, <a href="/man/health/">dok-health(1)</a>, <a href="/man/top/">dok-top(1)</a>, <a href="/man/internals/">dok(7)</a></p>
-    <div class="manfoot"><span>dok 0.3.3</span><span>2026-11-03</span><span>DOK-INSPECT(1)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK-INSPECT(1)</span></div>
   </main>
 </div>
 <footer class="foot">

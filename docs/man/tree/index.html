@@ -58,7 +58,7 @@
     <h2 id="description">Description</h2>
     <div class="prose"><p>Three trees: compose projects and their containers, networks with the IP of each attached container, and volumes with where each is mounted.</p><p>Network and volume membership is read from each container's own settings, since the list endpoints do not report it.</p></div>
     <h2 id="options">Options</h2>
-    <dl class="opts"><dt><code translate="no">--only &lt;ONLY&gt;</code></dt><dd>Show only this section<span class="meta">possible values: projects, networks, volumes</span></dd><dt><code translate="no">-a, --all</code></dt><dd>Include stopped containers</dd></dl>
+    <dl class="opts"><dt><code translate="no">--only &lt;ONLY&gt;</code></dt><dd>Show only this section<span class="meta">possible values: projects, networks, volumes</span></dd><dt><code translate="no">-a, --all</code></dt><dd>Include stopped containers</dd><dt><code translate="no">-c, --context &lt;NAME&gt;</code></dt><dd>Docker context to use (see <code translate="no">docker context ls</code>); overrides DOCKER_HOST, DOCKER_CONTEXT and the current context</dd></dl>
     <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
     <h2 id="examples">Examples</h2>
     <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok tree" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok tree  <span class="c"># all three</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok tree --only networks" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok tree --only networks  <span class="c"># one section</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok tree -a" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok tree -a  <span class="c"># include stopped containers</span></code></pre></div></div>
@@ -180,7 +180,7 @@
     <p class="prose note">Longer arrays are cut to their first two elements here.</p>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/ps/">dok-ps(1)</a>, <a href="/man/ports/">dok-ports(1)</a>, <a href="/man/internals/">dok(7)</a></p>
-    <div class="manfoot"><span>dok 0.3.3</span><span>2026-11-03</span><span>DOK-TREE(1)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK-TREE(1)</span></div>
   </main>
 </div>
 <footer class="foot">

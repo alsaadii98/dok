@@ -58,7 +58,7 @@
     <h2 id="description">Description</h2>
     <div class="prose"><p>Disk usage per category (images, containers, volumes and build cache) with a bar split into the part in use and the part that could be reclaimed.</p><p><code translate="no">-v</code> lists the biggest items in each category, which is usually where the answer to “what ate the disk” is.</p></div>
     <h2 id="options">Options</h2>
-    <dl class="opts"><dt><code translate="no">-v, --verbose</code></dt><dd>Also list the biggest items in each category</dd><dt><code translate="no">--top &lt;TOP&gt;</code></dt><dd>How many items to list per category with --verbose<span class="meta">default: 10</span></dd></dl>
+    <dl class="opts"><dt><code translate="no">-v, --verbose</code></dt><dd>Also list the biggest items in each category</dd><dt><code translate="no">--top &lt;TOP&gt;</code></dt><dd>How many items to list per category with --verbose<span class="meta">default: 10</span></dd><dt><code translate="no">-c, --context &lt;NAME&gt;</code></dt><dd>Docker context to use (see <code translate="no">docker context ls</code>); overrides DOCKER_HOST, DOCKER_CONTEXT and the current context</dd></dl>
     <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
     <h2 id="examples">Examples</h2>
     <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok df" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok df  <span class="c"># one bar per category</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok df -v" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok df -v  <span class="c"># plus the biggest offenders</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok df -v --top 20" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok df -v --top 20  <span class="c"># twenty per category</span></code></pre></div></div>
@@ -255,7 +255,7 @@
     <p class="prose note">Longer arrays are cut to their first two elements here.</p>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/prune/">dok-prune(1)</a>, <a href="/man/images/">dok-images(1)</a>, <a href="/man/internals/">dok(7)</a></p>
-    <div class="manfoot"><span>dok 0.3.3</span><span>2026-11-03</span><span>DOK-DF(1)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK-DF(1)</span></div>
   </main>
 </div>
 <footer class="foot">

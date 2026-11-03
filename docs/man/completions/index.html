@@ -60,13 +60,13 @@
     <h2 id="arguments">Arguments</h2>
     <dl class="opts"><dt><code translate="no">&lt;SHELL&gt;</code></dt><dd>Which shell to generate for<span class="meta">possible values: bash, zsh, fish, nushell, powershell, elvish</span></dd></dl>
     <h2 id="options">Options</h2>
-    <p class="prose">None beyond the global options.</p>
+    <dl class="opts"><dt><code translate="no">-c, --context &lt;NAME&gt;</code></dt><dd>Docker context to use (see <code translate="no">docker context ls</code>); overrides DOCKER_HOST, DOCKER_CONTEXT and the current context</dd></dl>
     <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
     <h2 id="examples">Examples</h2>
     <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok completions zsh &gt; &quot;${fpath[1]}/_dok&quot;" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok completions zsh &gt; &quot;${fpath[1]}/_dok&quot;  <span class="c"># zsh</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok completions bash &gt; /etc/bash_completion.d/dok" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok completions bash &gt; /etc/bash_completion.d/dok  <span class="c"># bash</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok completions fish &gt; ~/.config/fish/completions/dok.fish" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok completions fish &gt; ~/.config/fish/completions/dok.fish  <span class="c"># fish</span></code></pre></div></div>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/">dok(1)</a>, <a href="/man/internals/">dok(7)</a></p>
-    <div class="manfoot"><span>dok 0.3.3</span><span>2026-11-03</span><span>DOK-COMPLETIONS(1)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK-COMPLETIONS(1)</span></div>
   </main>
 </div>
 <footer class="foot">

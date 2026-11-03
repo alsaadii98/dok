@@ -58,7 +58,7 @@
     <h2 id="description">Description</h2>
     <div class="prose"><p>Lists the built-in themes and any defined in the config file, each with a row of swatches. A theme carries a palette of nine colour roles, a glyph set and a layout, so the <code translate="no">ascii</code> theme stays pure ASCII for CI logs and serial consoles.</p><p><code translate="no">--preview</code> renders a sample table in every theme. <code translate="no">--init</code> writes a starter config to <code translate="no">~/.config/dok/config.toml</code>.</p></div>
     <h2 id="options">Options</h2>
-    <dl class="opts"><dt><code translate="no">-p, --preview</code></dt><dd>Render a full sample of every theme</dd><dt><code translate="no">--init</code></dt><dd>Write a starter config file to ~/.config/dok/config.toml</dd></dl>
+    <dl class="opts"><dt><code translate="no">-p, --preview</code></dt><dd>Render a full sample of every theme</dd><dt><code translate="no">--init</code></dt><dd>Write a starter config file to ~/.config/dok/config.toml</dd><dt><code translate="no">-c, --context &lt;NAME&gt;</code></dt><dd>Docker context to use (see <code translate="no">docker context ls</code>); overrides DOCKER_HOST, DOCKER_CONTEXT and the current context</dd></dl>
     <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
     <h2 id="examples">Examples</h2>
     <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok themes" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok themes  <span class="c"># list with swatches</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok themes --preview" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok themes --preview  <span class="c"># a sample table in each</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok ps --theme gruvbox" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ps --theme gruvbox  <span class="c"># use one for a single command</span></code></pre></div></div>
@@ -106,7 +106,7 @@
     <p class="prose note">Longer arrays are cut to their first two elements here.</p>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/">dok(1)</a>, <a href="/man/internals/">dok(7)</a></p>
-    <div class="manfoot"><span>dok 0.3.3</span><span>2026-11-03</span><span>DOK-THEMES(1)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK-THEMES(1)</span></div>
   </main>
 </div>
 <footer class="foot">

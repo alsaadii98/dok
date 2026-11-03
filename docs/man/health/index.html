@@ -58,7 +58,7 @@
     <h2 id="description">Description</h2>
     <div class="prose"><p>Only the containers that declare a healthcheck, unhealthy first. For each one: the status, the failing streak, the probe interval, and the exit code and first line of the last probe's output. That last line is usually the reason a check fails, and <code translate="no">docker inspect</code> buries it.</p><p>The summary counts containers without a healthcheck too, so an empty table and a table missing half the stack do not look the same. dok issues one inspect per container to read the probe log.</p></div>
     <h2 id="options">Options</h2>
-    <dl class="opts"><dt><code translate="no">-a, --all</code></dt><dd>Include stopped containers</dd><dt><code translate="no">-u, --unhealthy</code></dt><dd>Only checks that are failing</dd></dl>
+    <dl class="opts"><dt><code translate="no">-a, --all</code></dt><dd>Include stopped containers</dd><dt><code translate="no">-u, --unhealthy</code></dt><dd>Only checks that are failing</dd><dt><code translate="no">-c, --context &lt;NAME&gt;</code></dt><dd>Docker context to use (see <code translate="no">docker context ls</code>); overrides DOCKER_HOST, DOCKER_CONTEXT and the current context</dd></dl>
     <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
     <h2 id="examples">Examples</h2>
     <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok health" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok health  <span class="c"># every container with a healthcheck</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok health -u" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok health -u  <span class="c"># only the failing ones</span></code></pre></div></div>
@@ -100,7 +100,7 @@
     <p class="prose note">Longer arrays are cut to their first two elements here.</p>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/ps/">dok-ps(1)</a>, <a href="/man/inspect/">dok-inspect(1)</a>, <a href="/man/events/">dok-events(1)</a>, <a href="/man/internals/">dok(7)</a></p>
-    <div class="manfoot"><span>dok 0.3.3</span><span>2026-11-03</span><span>DOK-HEALTH(1)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK-HEALTH(1)</span></div>
   </main>
 </div>
 <footer class="foot">

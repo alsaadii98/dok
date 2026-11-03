@@ -58,7 +58,7 @@
     <h2 id="description">Description</h2>
     <div class="prose"><p>Lists containers grouped by compose project, showing the service name rather than the container name compose generates. Each row carries a short id, a state dot, a health mark when the container runs a healthcheck, published ports as <code translate="no">:host→container</code>, and a relative age.</p><p>Columns shrink to fit the terminal instead of wrapping. Long names, images and port lists are capped at a share of the width and truncated past it, so one outlier cannot push the rest of the table off screen.</p></div>
     <h2 id="options">Options</h2>
-    <dl class="opts"><dt><code translate="no">-a, --all</code></dt><dd>Include stopped containers</dd><dt><code translate="no">--flat</code></dt><dd>Do not group by compose project</dd><dt><code translate="no">-f, --filter &lt;FILTER&gt;</code></dt><dd>Only containers whose name or image matches</dd><dt><code translate="no">-s, --sort &lt;SORT&gt;</code></dt><dd>Sort key<span class="meta">default: name</span><span class="meta">possible values: name, age, state, image</span></dd></dl>
+    <dl class="opts"><dt><code translate="no">-a, --all</code></dt><dd>Include stopped containers</dd><dt><code translate="no">--flat</code></dt><dd>Do not group by compose project</dd><dt><code translate="no">-f, --filter &lt;FILTER&gt;</code></dt><dd>Only containers whose name or image matches</dd><dt><code translate="no">-s, --sort &lt;SORT&gt;</code></dt><dd>Sort key<span class="meta">default: name</span><span class="meta">possible values: name, age, state, image</span></dd><dt><code translate="no">-c, --context &lt;NAME&gt;</code></dt><dd>Docker context to use (see <code translate="no">docker context ls</code>); overrides DOCKER_HOST, DOCKER_CONTEXT and the current context</dd></dl>
     <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
     <h2 id="examples">Examples</h2>
     <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok ps" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ps  <span class="c"># running containers, grouped by project</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok ps -a" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ps -a  <span class="c"># include stopped containers</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok ps --flat -s age" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ps --flat -s age  <span class="c"># one flat list, newest first</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok ps -f postgres" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok ps -f postgres  <span class="c"># only rows whose name or image matches</span></code></pre></div></div>
@@ -72,7 +72,7 @@
       <span class="k">&quot;created&quot;</span>: {
         <span class="k">&quot;age_human&quot;</span>: <span class="s">&quot;6d&quot;</span>,
         <span class="k">&quot;age_seconds&quot;</span>: <span class="n">518400</span>,
-        <span class="k">&quot;created&quot;</span>: <span class="n">1793217884</span>
+        <span class="k">&quot;created&quot;</span>: <span class="n">1793218431</span>
       },
       <span class="k">&quot;health&quot;</span>: <span class="s">&quot;healthy&quot;</span>,
       <span class="k">&quot;id&quot;</span>: <span class="s">&quot;a1b2c3d4e5f6&quot;</span>,
@@ -96,7 +96,7 @@
       <span class="k">&quot;created&quot;</span>: {
         <span class="k">&quot;age_human&quot;</span>: <span class="s">&quot;6d&quot;</span>,
         <span class="k">&quot;age_seconds&quot;</span>: <span class="n">518400</span>,
-        <span class="k">&quot;created&quot;</span>: <span class="n">1793217884</span>
+        <span class="k">&quot;created&quot;</span>: <span class="n">1793218431</span>
       },
       <span class="k">&quot;health&quot;</span>: <span class="s">&quot;healthy&quot;</span>,
       <span class="k">&quot;id&quot;</span>: <span class="s">&quot;c3d4e5f6a1b2&quot;</span>,
@@ -121,7 +121,7 @@
     <p class="prose note">Longer arrays are cut to their first two elements here.</p>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/ports/">dok-ports(1)</a>, <a href="/man/health/">dok-health(1)</a>, <a href="/man/inspect/">dok-inspect(1)</a>, <a href="/man/tree/">dok-tree(1)</a>, <a href="/man/internals/">dok(7)</a></p>
-    <div class="manfoot"><span>dok 0.3.3</span><span>2026-11-03</span><span>DOK-PS(1)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK-PS(1)</span></div>
   </main>
 </div>
 <footer class="foot">
