@@ -4,7 +4,7 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.4.0] - 2026-11-03
 
 ### Added
 
@@ -16,6 +16,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   and `unix://` endpoints are supported, and errors name the context they
   came from. A mistyped name lists the contexts that exist.
 
+### Known gaps
+
+- `ssh://` contexts on a port other than 22 are refused with a short recipe
+  for a `~/.ssh/config` alias, which works. Contexts with `SkipTLSVerify` are
+  refused.
+
+## [0.3.3] - 2026-11-03
+
 ### Fixed
 
 - `dok df` printed an empty 0B table, and `dok prune` found nothing, on any
@@ -24,12 +32,6 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   data was dropped without an error. dok now reads both layouts, totals the
   old one the way `docker system df` does, and fails with an error instead of
   an empty table if a daemon ever answers in a layout it does not know.
-
-### Known gaps
-
-- `ssh://` contexts on a port other than 22 are refused with a short recipe
-  for a `~/.ssh/config` alias, which works. Contexts with `SkipTLSVerify` are
-  refused.
 
 ## [0.3.2] - 2026-10-17
 
