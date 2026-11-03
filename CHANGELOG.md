@@ -6,6 +6,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Docker contexts. `dok --context prod ps` (or `-c prod`) reads the daemon
+  `docker --context prod ps` would, from the contexts the docker CLI keeps in
+  `~/.docker/contexts`. With no flag, dok picks the daemon the way docker
+  does: `DOCKER_HOST`, then `DOCKER_CONTEXT`, then the current context, then
+  the local socket. `ssh://` (macOS and Linux), `tcp://` with or without TLS,
+  and `unix://` endpoints are supported, and errors name the context they
+  came from. A mistyped name lists the contexts that exist.
+
 ### Fixed
 
 - `dok df` printed an empty 0B table, and `dok prune` found nothing, on any
@@ -14,6 +24,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   data was dropped without an error. dok now reads both layouts, totals the
   old one the way `docker system df` does, and fails with an error instead of
   an empty table if a daemon ever answers in a layout it does not know.
+
+### Known gaps
+
+- `ssh://` contexts on a port other than 22 are refused with a short recipe
+  for a `~/.ssh/config` alias, which works. Contexts with `SkipTLSVerify` are
+  refused.
 
 ## [0.3.2] - 2026-10-17
 

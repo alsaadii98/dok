@@ -154,8 +154,27 @@ dok ps -a --demo
 dok df -v --demo
 ```
 
-**Requirements:** a reachable Docker daemon. `dok` honours `DOCKER_HOST`, the
-default `/var/run/docker.sock`, and Windows named pipes. Nothing else.
+**Requirements:** a reachable Docker daemon. `dok` honours `DOCKER_HOST`,
+docker contexts, the default `/var/run/docker.sock`, and Windows named pipes.
+Nothing else.
+
+### Remote hosts
+
+`dok` reads the contexts the docker CLI already has, so a host you can reach
+with `docker --context prod` works the same way:
+
+```sh
+dok --context prod ps
+dok -c staging health
+DOCKER_CONTEXT=prod dok df
+```
+
+Which daemon to use is decided the way docker decides it: `--context`, then
+`DOCKER_HOST`, then `DOCKER_CONTEXT`, then the current context from
+`docker context use`, then the local socket. Contexts over `ssh://` (macOS and
+Linux), `tcp://` with or without TLS, and `unix://` are supported. Two gaps for
+now: `ssh://` on a port other than 22 needs a `~/.ssh/config` alias (dok's
+error spells it out), and contexts with `SkipTLSVerify` are refused.
 
 ## Commands
 
@@ -409,6 +428,7 @@ Theme precedence: `--theme` → `DOK_THEME` → config file → `default`.
 Global flags, valid on every command:
 
 ```
+-c, --context <name>            # docker context to use, as in `docker --context`
 --json                          # emit JSON instead of a table; implies --color never
 --color auto|always|never       # auto respects NO_COLOR and non-tty output
 --icons auto|nerd|unicode|none  # auto picks nerd glyphs on capable terminals
