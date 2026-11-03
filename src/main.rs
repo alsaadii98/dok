@@ -4,6 +4,7 @@ mod cmds;
 mod config;
 mod context;
 mod demo;
+mod disk;
 mod dk;
 mod fmt;
 mod json;

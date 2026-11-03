@@ -16,6 +16,15 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   and `unix://` endpoints are supported, and errors name the context they
   came from. A mistyped name lists the contexts that exist.
 
+### Fixed
+
+- `dok df` printed an empty 0B table, and `dok prune` found nothing, on any
+  daemon older than Docker 29 (API 1.52). Those daemons describe disk usage
+  in an older layout that the Docker client library does not read, and the
+  data was dropped without an error. dok now reads both layouts, totals the
+  old one the way `docker system df` does, and fails with an error instead of
+  an empty table if a daemon ever answers in a layout it does not know.
+
 ### Known gaps
 
 - `ssh://` contexts on a port other than 22 are refused with a short recipe
