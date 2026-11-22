@@ -29,6 +29,9 @@ fn labels(project: &str, service: &str) -> HashMap<String, String> {
         (crate::dk::COMPOSE_PROJECT.to_string(), project.to_string()),
         (crate::dk::COMPOSE_SERVICE.to_string(), service.to_string()),
         ("com.docker.compose.container-number".to_string(), "1".to_string()),
+        ("com.docker.compose.oneoff".to_string(), "False".to_string()),
+        (crate::compose::WORKING_DIR.to_string(), format!("/srv/{project}")),
+        (crate::compose::CONFIG_FILES.to_string(), format!("/srv/{project}/compose.yaml")),
         (
             "org.opencontainers.image.source".to_string(),
             format!("https://github.com/demo-shop/{service}"),
@@ -119,6 +122,32 @@ fn container(
         }),
         ..Default::default()
     }
+}
+
+/// What the demo projects' compose files declare. `demo-shop` asks for more
+/// than is running, so `dok compose --demo demo-shop` has something to report:
+/// a worker declared with two replicas that is down, a search service that
+/// was never started, and a mail catcher behind an inactive profile.
+pub fn compose_declared(project: &str) -> Option<crate::compose::Declared> {
+    let yaml = match project {
+        "demo-shop" => {
+            "services:
+  api: {image: ghcr.io/demo-shop/api:1.4.2}
+  web: {image: nginx:1.27-alpine}
+  postgres: {image: postgres:16-alpine}
+  redis: {image: redis:7-alpine}
+  worker: {image: ghcr.io/demo-shop/worker:1.4.2, deploy: {replicas: 2}}
+  search: {image: opensearchproject/opensearch:2.17.0}
+  mailhog: {image: mailhog/mailhog, profiles: [dev]}
+"
+        }
+        "observability" => "services:\n  grafana: {image: grafana/grafana:11.2.0}\n",
+        _ => return None,
+    };
+    let mut declared = crate::compose::Declared::default();
+    let docs = yaml_rust2::YamlLoader::load_from_str(yaml).ok()?;
+    crate::compose::merge_doc(docs.first()?, &mut declared);
+    Some(declared)
 }
 
 pub fn containers() -> Vec<ContainerSummary> {

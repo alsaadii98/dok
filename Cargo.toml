@@ -37,6 +37,7 @@ sha2 = "0.11.0"
 terminal_size = "0.4.4"
 tokio = { version = "1.53.1", features = ["rt-multi-thread", "macros", "signal"] }
 toml = "1.1.4"
+yaml-rust2 = { version = "0.13", default-features = false }
 
 # Only for restoring the default SIGPIPE handling, so piping into `head`
 # stops quietly instead of panicking.

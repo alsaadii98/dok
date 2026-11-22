@@ -183,17 +183,7 @@ fn render(ct: &ContainerSummary, stub: Stub) -> Vec<String> {
         name_cell.push_str(&c(hg, hc));
     }
 
-    // Image column: dim registry prefix, bright name, coloured tag.
-    let image = ct.image.clone().unwrap_or_default();
-    let (prefix, iname, tag) = fmt::split_image(&image);
-    let icon = theme::image_icon(&image);
-    let image_cell = format!(
-        "{} {}{}{}",
-        c(icon, p().magenta),
-        dim(&prefix),
-        c(&iname, p().fg),
-        c(&format!(":{tag}"), tag_color(&tag))
-    );
+    let image_cell = image_cell(ct.image.as_deref().unwrap_or(""));
 
     vec![
         c(sglyph, scol),
@@ -209,6 +199,18 @@ fn render(ct: &ContainerSummary, stub: Stub) -> Vec<String> {
     ]
 }
 
+/// Image column: dim registry prefix, bright name, coloured tag.
+pub(crate) fn image_cell(image: &str) -> String {
+    let (prefix, iname, tag) = fmt::split_image(image);
+    format!(
+        "{} {}{}{}",
+        c(theme::image_icon(image), p().magenta),
+        dim(&prefix),
+        c(&iname, p().fg),
+        c(&format!(":{tag}"), tag_color(&tag))
+    )
+}
+
 fn tag_color(tag: &str) -> Rgb {
     match tag {
         "latest" => p().yellow,
@@ -219,7 +221,7 @@ fn tag_color(tag: &str) -> Rgb {
 }
 
 /// `up 3h`, `exited (137)`, `restarting`, … — compacted from docker's prose.
-fn status_cell(ct: &ContainerSummary, state: &str, scol: Rgb) -> String {
+pub(crate) fn status_cell(ct: &ContainerSummary, state: &str, scol: Rgb) -> String {
     let raw = ct.status.clone().unwrap_or_default();
     let text = match state {
         "running" => {
@@ -268,7 +270,7 @@ fn compact_duration(s: &str) -> String {
 }
 
 /// `:8080→80  :443→443/tcp` with unpublished ports dimmed away entirely.
-fn ports_cell(ct: &ContainerSummary) -> String {
+pub(crate) fn ports_cell(ct: &ContainerSummary) -> String {
     let Some(ports) = &ct.ports else { return String::new() };
     let mut seen = Vec::new();
     for p in ports {

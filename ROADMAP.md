@@ -52,7 +52,7 @@ codebase.
 
 - [ ] `dok diff <container>` — files changed vs the image, coloured A/C/D
 - [ ] `dok net <name>` — one network in detail: containers, aliases, gateway
-- [ ] `dok compose` — project-level view: services, expected vs actual replicas,
+- [x] `dok compose` — project-level view: services, expected vs actual replicas,
       orphan containers
 - [ ] `dok watch` — `ps` redrawn from the event stream instead of polling
 - [x] Man pages generated from the clap definition: `man dok`, `man dok-ports`

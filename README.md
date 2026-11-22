@@ -181,6 +181,7 @@ error spells it out), and contexts with `SkipTLSVerify` are refused.
 | Command | What it does |
 |---|---|
 | `dok ps` (`ls`) | Containers grouped by compose project — id, state dot, health mark, `:8080→80` ports, relative age |
+| `dok compose [project]` | Compose projects against their compose files — missing services, orphans, replicas short of the count |
 | `dok ports` | Every published port in one table, sorted by port — answers "who owns 5432?" |
 | `dok health` | Only containers with a healthcheck — status, failing streak, last probe |
 | `dok history <image>` | Image layers with size bars and readable Dockerfile instructions |
@@ -197,6 +198,28 @@ error spells it out), and contexts with `SkipTLSVerify` are refused.
 | `dok completions` | Print a completion script for bash, zsh, fish, nushell, powershell or elvish |
 | `dok update` | Check for a newer release and install it in place |
 | `dok uninstall` | Remove dok, or print the exact command that does |
+
+<details>
+<summary><b>dok compose</b> — is the project what the file says?</summary>
+
+<img src="docs/img/compose.svg" alt="dok compose demo-shop" width="820">
+
+```sh
+dok compose           # every project, and which ones are not as declared
+dok compose shop      # one project, service by service (a prefix is enough)
+```
+
+`docker compose ps` lists the containers that exist. `dok compose` starts from
+the compose file instead, so it also shows what is *not* there: services that
+never started (**missing**), containers whose service was deleted from the
+file (**orphan**), and replicas short of `deploy.replicas`. Services behind an
+inactive profile are dimmed, not reported, and `docker compose run` containers
+are listed apart. The footer prints the compose command that would fix it.
+
+The compose files are read only when the daemon is local; through a remote
+context the view says the file check was skipped.
+
+</details>
 
 <details>
 <summary><b>dok ports</b> — who owns 5432?</summary>

@@ -6,6 +6,7 @@ use bollard::models::{ContainerSummary, ImageHistoryResponseItem, ImageSummary, 
 use bollard::query_parameters::{
     ListContainersOptionsBuilder, ListImagesOptionsBuilder, ListNetworksOptions, ListVolumesOptions,
 };
+use std::sync::atomic::{AtomicBool, Ordering};
 
 pub const COMPOSE_PROJECT: &str = "com.docker.compose.project";
 pub const COMPOSE_SERVICE: &str = "com.docker.compose.service";
@@ -31,11 +32,31 @@ pub fn connect() -> Result<Docker> {
     }
     let flag = CONTEXT_FLAG.get().and_then(|f| f.as_deref());
     match crate::context::resolve(flag)? {
-        crate::context::Target::Default => Docker::connect_with_defaults()
-            .context("cannot reach the docker daemon (is it running? check DOCKER_HOST)"),
-        crate::context::Target::Named(ep) => connect_endpoint(&ep)
-            .with_context(|| format!("cannot use docker context `{}` ({})", ep.name, ep.host)),
+        crate::context::Target::Default => {
+            let host = std::env::var("DOCKER_HOST").unwrap_or_default();
+            LOCAL.store(host.is_empty() || is_socket(&host), Ordering::Relaxed);
+            Docker::connect_with_defaults()
+                .context("cannot reach the docker daemon (is it running? check DOCKER_HOST)")
+        }
+        crate::context::Target::Named(ep) => {
+            LOCAL.store(is_socket(&ep.host), Ordering::Relaxed);
+            connect_endpoint(&ep)
+                .with_context(|| format!("cannot use docker context `{}` ({})", ep.name, ep.host))
+        }
     }
+}
+
+/// Whether the daemon runs on this machine, so paths it reports (compose
+/// files, bind mounts) are paths here. Only a local socket or pipe counts: a
+/// tcp:// address on localhost may well be a tunnel to somewhere else.
+static LOCAL: AtomicBool = AtomicBool::new(false);
+
+pub fn is_local() -> bool {
+    LOCAL.load(Ordering::Relaxed)
+}
+
+fn is_socket(host: &str) -> bool {
+    host.starts_with("unix://") || host.starts_with("npipe://")
 }
 
 /// An ssh:// endpoint in the form bollard can dial.
