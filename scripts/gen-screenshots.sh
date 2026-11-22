@@ -43,6 +43,7 @@ capture events   events --since 20m
 capture ports    ports
 capture history  history api
 capture health   health
+capture compose  compose demo-shop
 capture prune    prune
 
 # Static frames for the README.
@@ -59,6 +60,7 @@ still inspect "dok inspect api"
 still ports   "dok ports"
 still history "dok history api"
 still health  "dok health"
+still compose "dok compose demo-shop"
 still prune   "dok prune"
 # Static frames for the two commands that only had casts, so every animation
 # on the site has a still to fall back to under prefers-reduced-motion.
@@ -99,7 +101,7 @@ import sys
 sys.path.insert(0, "scripts")
 from ansi2cast import Scene
 raw = sys.argv[1]
-specs = [("ps -a","ps"),("ports","ports"),("health","health"),("history api","history"),
+specs = [("ps -a","ps"),("compose demo-shop","compose"),("ports","ports"),("health","health"),("history api","history"),
          ("prune","prune"),("images","images"),("df","df-slim"),("inspect api","inspect"),
          ("logs -n 8","logs"),("top api","top"),("tree --only projects","tree-p"),
          ("events --since 20m","events"),("themes","themes")]
@@ -118,6 +120,7 @@ frame() {
 frame ps      "ps -a"                ps
 frame ports   "ports"                ports
 frame health  "health"               health
+frame compose "compose demo-shop"    compose
 frame history "history api"          history
 frame prune   "prune"                prune
 frame images  "images"               images

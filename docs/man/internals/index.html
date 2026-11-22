@@ -47,7 +47,7 @@
 <div class="wrap man">
   <nav class="side" aria-label="Manual">
   <ul class="top"><li><a href="/man/">dok(1) overview</a></li><li><a href="/man/internals/" aria-current="page">dok(7) internals</a></li></ul>
-  <p class="grp">Containers</p><ul><li><a href="/man/ps/">ps</a></li><li><a href="/man/ports/">ports</a></li><li><a href="/man/health/">health</a></li><li><a href="/man/inspect/">inspect</a></li><li><a href="/man/logs/">logs</a></li><li><a href="/man/top/">top</a></li></ul><p class="grp">Images</p><ul><li><a href="/man/images/">images</a></li><li><a href="/man/history/">history</a></li></ul><p class="grp">Disk</p><ul><li><a href="/man/df/">df</a></li><li><a href="/man/prune/">prune</a></li></ul><p class="grp">System</p><ul><li><a href="/man/tree/">tree</a></li><li><a href="/man/events/">events</a></li><li><a href="/man/stats/">stats</a></li></ul><p class="grp">Setup</p><ul><li><a href="/man/themes/">themes</a></li><li><a href="/man/completions/">completions</a></li><li><a href="/man/update/">update</a></li><li><a href="/man/uninstall/">uninstall</a></li></ul>
+  <p class="grp">Containers</p><ul><li><a href="/man/ps/">ps</a></li><li><a href="/man/compose/">compose</a></li><li><a href="/man/ports/">ports</a></li><li><a href="/man/health/">health</a></li><li><a href="/man/inspect/">inspect</a></li><li><a href="/man/logs/">logs</a></li><li><a href="/man/top/">top</a></li></ul><p class="grp">Images</p><ul><li><a href="/man/images/">images</a></li><li><a href="/man/history/">history</a></li></ul><p class="grp">Disk</p><ul><li><a href="/man/df/">df</a></li><li><a href="/man/prune/">prune</a></li></ul><p class="grp">System</p><ul><li><a href="/man/tree/">tree</a></li><li><a href="/man/events/">events</a></li><li><a href="/man/stats/">stats</a></li></ul><p class="grp">Setup</p><ul><li><a href="/man/themes/">themes</a></li><li><a href="/man/completions/">completions</a></li><li><a href="/man/update/">update</a></li><li><a href="/man/uninstall/">uninstall</a></li></ul>
 </nav>
   <main id="main" class="article">
     <div class="manhead" aria-hidden="true"><span>DOK(7)</span><span>dok manual</span><span>DOK(7)</span></div>
@@ -71,10 +71,17 @@
     }
     let flag = CONTEXT_FLAG.get().and_then(|f| f.as_deref());
     match crate::context::resolve(flag)? {
-        crate::context::Target::Default =&gt; Docker::connect_with_defaults()
-            .context(&quot;cannot reach the docker daemon (is it running? check DOCKER_HOST)&quot;),
-        crate::context::Target::Named(ep) =&gt; connect_endpoint(&amp;ep)
-            .with_context(|| format!(&quot;cannot use docker context `{}` ({})&quot;, ep.name, ep.host)),
+        crate::context::Target::Default =&gt; {
+            let host = std::env::var(&quot;DOCKER_HOST&quot;).unwrap_or_default();
+            LOCAL.store(host.is_empty() || is_socket(&amp;host), Ordering::Relaxed);
+            Docker::connect_with_defaults()
+                .context(&quot;cannot reach the docker daemon (is it running? check DOCKER_HOST)&quot;)
+        }
+        crate::context::Target::Named(ep) =&gt; {
+            LOCAL.store(is_socket(&amp;ep.host), Ordering::Relaxed);
+            connect_endpoint(&amp;ep)
+                .with_context(|| format!(&quot;cannot use docker context `{}` ({})&quot;, ep.name, ep.host))
+        }
     }
 }</code></pre></div>
     <h2 id="read-only">Read-only, by construction</h2>
@@ -130,7 +137,7 @@ pub struct Palette {
     </div>
     <h2 id="see-also">See also</h2>
     <p class="prose"><a href="/man/">dok(1)</a>, <a href="https://github.com/alsaadii98/dok/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a></p>
-    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-03</span><span>DOK(7)</span></div>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-22</span><span>DOK(7)</span></div>
   </main>
 </div>
 <footer class="foot">

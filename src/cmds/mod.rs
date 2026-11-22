@@ -1,3 +1,4 @@
+pub mod compose;
 pub mod df;
 pub mod events;
 pub mod health;

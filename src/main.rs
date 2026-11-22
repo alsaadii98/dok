@@ -1,6 +1,7 @@
 //! dok — docker output, made readable.
 
 mod cmds;
+mod compose;
 mod config;
 mod context;
 mod demo;
@@ -100,6 +101,13 @@ enum Cmd {
         /// Sort key
         #[arg(short, long, value_enum, default_value = "name")]
         sort: cmds::ps::PsSort,
+    },
+
+    /// Compose projects as declared against as running: missing services,
+    /// orphans, replicas short of the count
+    Compose {
+        /// Project to show in detail; omit for every project
+        project: Option<String>,
     },
 
     /// Containers with a healthcheck: status, failing streak, last probe
@@ -390,6 +398,7 @@ async fn main() -> Result<()> {
         Cmd::Ps { all, flat, filter, sort } => cmds::ps::run(all, flat, filter, sort).await,
         Cmd::Ports { all } => cmds::ports::run(all).await,
         Cmd::Prune { all, volumes } => cmds::prune::run(all, volumes).await,
+        Cmd::Compose { project } => cmds::compose::run(project).await,
         Cmd::Health { all, failing_only } => cmds::health::run(all, failing_only).await,
         Cmd::History { image, reverse, no_trunc } => {
             cmds::history::run(image, reverse, no_trunc).await

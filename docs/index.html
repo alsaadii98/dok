@@ -76,7 +76,7 @@
     <h2 id="how-h" class="reveal">One socket. No shell-out.</h2>
     <p class="lede">dok talks to the Docker API directly and lays out every table itself. It only ever reads, so it is safe to point at production.</p>
     <ol class="pipe" data-pipeline><li style="--i:0"><span class="st">socket</span><code translate="no">docker.sock</code><span class="dsc">or DOCKER_HOST, or a named pipe</span></li><li style="--i:1"><span class="st">client</span><code translate="no">bollard</code><span class="dsc">the Docker HTTP API, in Rust</span></li><li style="--i:2"><span class="st">views</span><code translate="no">src/dk.rs</code><span class="dsc">names, compose labels, health</span></li><li style="--i:3"><span class="st">layout</span><code translate="no">src/table.rs</code><span class="dsc">measure, cap, shrink, pad</span></li><li style="--i:4"><span class="st">paint</span><code translate="no">src/theme.rs</code><span class="dsc">roles, glyphs, layout</span></li><li style="--i:5"><span class="st">out</span><code translate="no">your terminal</code><span class="dsc">or a pipe, or --json</span></li></ol>
-    <p class="facts"><span><b>10</b> Docker API calls, all reads</span><span><b>0</b> calls to the docker CLI</span><span><b>17</b> commands</span><a class="link" href="/man/internals/">How it works, in detail &rarr;</a></p>
+    <p class="facts"><span><b>10</b> Docker API calls, all reads</span><span><b>0</b> calls to the docker CLI</span><span><b>18</b> commands</span><a class="link" href="/man/internals/">How it works, in detail &rarr;</a></p>
   </div>
 </section>
 

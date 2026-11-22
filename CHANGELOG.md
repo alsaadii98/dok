@@ -4,6 +4,21 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `dok compose`: compose projects checked against their compose files. With
+  no argument it lists every project with services up of those declared and
+  what is wrong; `dok compose <project>` shows each service's replicas running
+  of those declared, image, status and ports, with a line per replica. It
+  reports services the files declare that never started (missing), containers
+  whose service left the files (orphans), and services short of replicas, and
+  prints the `docker compose` command that would fix them. Profile-gated
+  services and `docker compose run` containers are kept apart. The files are
+  read only when the daemon is local, following `include` and merging several
+  `-f` files in order.
+
 ## [0.4.0] - 2026-11-03
 
 ### Added

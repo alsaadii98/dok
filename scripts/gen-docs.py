@@ -87,6 +87,32 @@ COMMANDS: dict[str, dict] = {
         json=("ports",),
         also=["ps", "tree"],
     ),
+    "compose": dict(
+        group="Containers",
+        desc=[
+            "A compose project checked against its own compose files. With no argument, one line per "
+            "project: services up of those declared, containers running, and what is wrong. With a "
+            "project name, one row per service: replicas running of those declared, image, status "
+            "and ports, and a line per replica when there are several, so the one that died shows.",
+            "Services the files declare that never started are missing. Containers whose service "
+            "is no longer in the files are orphans, which `docker compose up --remove-orphans` "
+            "would remove. Services behind a profile that is not active are shown dimmed rather "
+            "than reported, and `docker compose run` containers are listed apart instead of being "
+            "counted as replicas. Replica counts come from `deploy.replicas` or `scale`; files are "
+            "merged in the order compose was given them, and top-level `include` is followed.",
+            "Everything else comes from the labels compose writes on each container. The files "
+            "are only read when the daemon is on this machine: through a remote context their "
+            "paths are the remote host's, so dok says the check was skipped instead of guessing.",
+        ],
+        examples=[
+            ("dok compose", "every project, and which ones are not as declared"),
+            ("dok compose shop", "one project, service by service; a prefix is enough"),
+            ("dok compose shop --json", "the same, for a script"),
+        ],
+        shot="compose.svg",
+        json=("compose",),
+        also=["ps", "tree", "health"],
+    ),
     "health": dict(
         group="Containers",
         desc=[
@@ -368,6 +394,9 @@ SEO: dict[str, tuple[str, str, list[str]]] = {
     "ports": ("Find which Docker container is using a port",
               "dok ports prints every published port across all containers in one table sorted by host port, so finding who owns 5432 takes one glance.",
               ["docker which container is using port", "docker port already in use", "find docker container by port", "docker list published ports", "docker port 5432 in use"]),
+    "compose": ("Check a Docker Compose project against its compose file",
+                "dok compose shows which compose services are missing, down, short of replicas or orphaned, by setting the running containers against the compose file.",
+                ["docker compose status", "docker compose orphan containers", "docker compose missing service", "docker compose replicas running", "docker compose ps alternative"]),
     "health": ("See why a Docker healthcheck is failing",
                "dok health shows only containers with a healthcheck, unhealthy first, with the failing streak and the output of the last probe.",
                ["docker healthcheck failing", "docker container unhealthy why", "docker healthcheck log", "docker health status", "debug docker healthcheck"]),
@@ -416,7 +445,7 @@ SEO: dict[str, tuple[str, str, list[str]]] = {
 }
 
 ORDER = [
-    ("Containers", ["ps", "ports", "health", "inspect", "logs", "top"]),
+    ("Containers", ["ps", "compose", "ports", "health", "inspect", "logs", "top"]),
     ("Images", ["images", "history"]),
     ("Disk", ["df", "prune"]),
     ("System", ["tree", "events", "stats"]),

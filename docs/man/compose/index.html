@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Check a Docker Compose project against its compose file | dok compose</title>
+<meta name="description" content="dok compose shows which compose services are missing, down, short of replicas or orphaned, by setting the running containers against the compose file.">
+<meta name="keywords" content="docker compose status, docker compose orphan containers, docker compose missing service, docker compose replicas running, docker compose ps alternative">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://dok.alsaadii98.com/man/compose/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#070708">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="dok">
+<meta property="og:title" content="Check a Docker Compose project against its compose file | dok compose">
+<meta property="og:description" content="dok compose shows which compose services are missing, down, short of replicas or orphaned, by setting the running containers against the compose file.">
+<meta property="og:url" content="https://dok.alsaadii98.com/man/compose/">
+<meta property="og:image" content="https://dok.alsaadii98.com/img/dok-social.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/man.css">
+<script src="/assets/site.js" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "dok", "item": "https://dok.alsaadii98.com/"}, {"@type": "ListItem", "position": 2, "name": "Manual", "item": "https://dok.alsaadii98.com/man/"}, {"@type": "ListItem", "position": 3, "name": "dok compose", "item": "https://dok.alsaadii98.com/man/compose/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Check a Docker Compose project against its compose file | dok compose", "description": "dok compose shows which compose services are missing, down, short of replicas or orphaned, by setting the running containers against the compose file.", "url": "https://dok.alsaadii98.com/man/compose/", "inLanguage": "en", "about": {"@type": "SoftwareApplication", "name": "dok", "url": "https://dok.alsaadii98.com/", "applicationCategory": "DeveloperApplication", "operatingSystem": "macOS, Linux, Windows"}, "author": {"@type": "Person", "name": "alsaadii98", "url": "https://github.com/alsaadii98"}}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="atmos" aria-hidden="true"></div>
+<p id="live" class="sr" aria-live="polite"></p>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <ul>
+      <li class="opt"><a href="/#commands">commands</a></li>
+      <li class="opt"><a href="/#json">json</a></li>
+      <li class="opt2"><a href="/#install">install</a></li>
+      <li><a href="/man/" aria-current="page">manual</a></li>
+      <li><a class="gh" href="https://github.com/alsaadii98/dok" aria-label="dok on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg><span class="opt2">GitHub</span></a></li>
+    </ul>
+  </div>
+</header>
+<div class="wrap man">
+  <nav class="side" aria-label="Manual">
+  <ul class="top"><li><a href="/man/">dok(1) overview</a></li><li><a href="/man/internals/">dok(7) internals</a></li></ul>
+  <p class="grp">Containers</p><ul><li><a href="/man/ps/">ps</a></li><li><a href="/man/compose/" aria-current="page">compose</a></li><li><a href="/man/ports/">ports</a></li><li><a href="/man/health/">health</a></li><li><a href="/man/inspect/">inspect</a></li><li><a href="/man/logs/">logs</a></li><li><a href="/man/top/">top</a></li></ul><p class="grp">Images</p><ul><li><a href="/man/images/">images</a></li><li><a href="/man/history/">history</a></li></ul><p class="grp">Disk</p><ul><li><a href="/man/df/">df</a></li><li><a href="/man/prune/">prune</a></li></ul><p class="grp">System</p><ul><li><a href="/man/tree/">tree</a></li><li><a href="/man/events/">events</a></li><li><a href="/man/stats/">stats</a></li></ul><p class="grp">Setup</p><ul><li><a href="/man/themes/">themes</a></li><li><a href="/man/completions/">completions</a></li><li><a href="/man/update/">update</a></li><li><a href="/man/uninstall/">uninstall</a></li></ul>
+</nav>
+  <main id="main" class="article">
+    <div class="manhead" aria-hidden="true"><span>DOK-COMPOSE(1)</span><span>dok manual</span><span>DOK-COMPOSE(1)</span></div>
+    <h1><span class="p">$</span> dok compose</h1>
+    <p class="about">Compose projects as declared against as running: missing services, orphans, replicas short of the count</p>
+    <h2 id="synopsis">Synopsis</h2>
+    <div class="code"><pre><code translate="no">dok compose [OPTIONS] [PROJECT]</code></pre></div>
+    <h2 id="description">Description</h2>
+    <div class="prose"><p>A compose project checked against its own compose files. With no argument, one line per project: services up of those declared, containers running, and what is wrong. With a project name, one row per service: replicas running of those declared, image, status and ports, and a line per replica when there are several, so the one that died shows.</p><p>Services the files declare that never started are missing. Containers whose service is no longer in the files are orphans, which <code translate="no">docker compose up --remove-orphans</code> would remove. Services behind a profile that is not active are shown dimmed rather than reported, and <code translate="no">docker compose run</code> containers are listed apart instead of being counted as replicas. Replica counts come from <code translate="no">deploy.replicas</code> or <code translate="no">scale</code>; files are merged in the order compose was given them, and top-level <code translate="no">include</code> is followed.</p><p>Everything else comes from the labels compose writes on each container. The files are only read when the daemon is on this machine: through a remote context their paths are the remote host's, so dok says the check was skipped instead of guessing.</p></div>
+    <h2 id="arguments">Arguments</h2>
+    <dl class="opts"><dt><code translate="no">[PROJECT]</code></dt><dd>Project to show in detail; omit for every project</dd></dl>
+    <h2 id="options">Options</h2>
+    <dl class="opts"><dt><code translate="no">-c, --context &lt;NAME&gt;</code></dt><dd>Docker context to use (see <code translate="no">docker context ls</code>); overrides DOCKER_HOST, DOCKER_CONTEXT and the current context</dd></dl>
+    <p class="prose note">Every command also takes the <a href="/man/#options">global options</a>: <code>--json</code>, <code>--color</code>, <code>--icons</code> and <code>--theme</code>.</p>
+    <h2 id="examples">Examples</h2>
+    <div class="stack"><div class="code"><button class="copy" type="button" data-copy="dok compose" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok compose  <span class="c"># every project, and which ones are not as declared</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok compose shop" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok compose shop  <span class="c"># one project, service by service; a prefix is enough</span></code></pre></div><div class="code"><button class="copy" type="button" data-copy="dok compose shop --json" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok compose shop --json  <span class="c"># the same, for a script</span></code></pre></div></div>
+    <h2 id="output">Output</h2>
+    <figure class="shot"><img src="/img/compose.svg" width="779" height="334" loading="lazy" decoding="async" alt="Output of dok compose against the demo stack"><figcaption>Rendered from <code>dok compose --demo</code>, dok’s built-in example stack.</figcaption></figure>
+    <h2 id="json">JSON output</h2>
+    <div class="code"><button class="copy" type="button" data-copy="dok compose --json" aria-label="Copy command">copy</button><pre><code translate="no"><span class="p">$ </span>dok compose --json
+{
+  <span class="k">&quot;projects&quot;</span>: [
+    {
+      <span class="k">&quot;as_declared&quot;</span>: <span class="b">false</span>,
+      <span class="k">&quot;checked_against_files&quot;</span>: <span class="b">true</span>,
+      <span class="k">&quot;config_files&quot;</span>: [
+        <span class="s">&quot;/srv/demo-shop/compose.yaml&quot;</span>
+      ],
+      <span class="k">&quot;containers_running&quot;</span>: <span class="n">4</span>,
+      <span class="k">&quot;containers_total&quot;</span>: <span class="n">5</span>,
+      <span class="k">&quot;issues&quot;</span>: {
+        <span class="k">&quot;down&quot;</span>: <span class="n">1</span>,
+        <span class="k">&quot;missing&quot;</span>: <span class="n">1</span>
+      },
+      <span class="k">&quot;name&quot;</span>: <span class="s">&quot;demo-shop&quot;</span>,
+      <span class="k">&quot;services_up&quot;</span>: <span class="n">4</span>,
+      <span class="k">&quot;services_wanted&quot;</span>: <span class="n">6</span>,
+      <span class="k">&quot;unchecked_reason&quot;</span>: <span class="b">null</span>,
+      <span class="k">&quot;unhealthy&quot;</span>: <span class="n">0</span>,
+      <span class="k">&quot;working_dir&quot;</span>: <span class="s">&quot;/srv/demo-shop&quot;</span>
+    },
+    {
+      <span class="k">&quot;as_declared&quot;</span>: <span class="b">false</span>,
+      <span class="k">&quot;checked_against_files&quot;</span>: <span class="b">true</span>,
+      <span class="k">&quot;config_files&quot;</span>: [
+        <span class="s">&quot;/srv/observability/compose.yaml&quot;</span>
+      ],
+      <span class="k">&quot;containers_running&quot;</span>: <span class="n">1</span>,
+      <span class="k">&quot;containers_total&quot;</span>: <span class="n">1</span>,
+      <span class="k">&quot;issues&quot;</span>: {},
+      <span class="k">&quot;name&quot;</span>: <span class="s">&quot;observability&quot;</span>,
+      <span class="k">&quot;services_up&quot;</span>: <span class="n">1</span>,
+      <span class="k">&quot;services_wanted&quot;</span>: <span class="n">1</span>,
+      <span class="k">&quot;unchecked_reason&quot;</span>: <span class="b">null</span>,
+      <span class="k">&quot;unhealthy&quot;</span>: <span class="n">1</span>,
+      <span class="k">&quot;working_dir&quot;</span>: <span class="s">&quot;/srv/observability&quot;</span>
+    }
+  ]
+}</code></pre></div>
+    <h2 id="see-also">See also</h2>
+    <p class="prose"><a href="/man/ps/">dok-ps(1)</a>, <a href="/man/tree/">dok-tree(1)</a>, <a href="/man/health/">dok-health(1)</a>, <a href="/man/internals/">dok(7)</a></p>
+    <div class="manfoot"><span>dok 0.4.0</span><span>2026-11-22</span><span>DOK-COMPOSE(1)</span></div>
+  </main>
+</div>
+<footer class="foot">
+  <div class="wrap">
+    <a class="brand" href="/">dok</a>
+    <a href="/man/">Manual</a>
+    <a href="https://github.com/alsaadii98/dok">GitHub</a>
+    <a href="https://crates.io/crates/dok-cli">crates.io</a>
+    <a href="https://github.com/alsaadii98/dok/releases">Releases</a>
+    <a href="https://github.com/alsaadii98/dok/blob/main/LICENSE">MIT</a>
+    <span>&copy; 2026 <a href="https://github.com/alsaadii98">alsaadii98</a></span>
+  </div>
+</footer>
+</body>
+</html>
